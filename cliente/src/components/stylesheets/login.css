@@ -1,0 +1,81 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #000;
+}
+.picture {
+  display: flex;
+  flex: 1;
+  height: 937px;
+  width: 1050px;
+}
+.loginbox {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background-color: #343f56;
+  justify-content: center;
+  align-items: center;
+  font-family: sans-serif;
+}
+.logo {
+  border-radius: 320px;
+  height: 230px;
+  width: 230px;
+  padding: 20px;
+}
+.titleLogin {
+  font-size: 45px;
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+  padding: 10px;
+}
+.textbox {
+  border-radius: 30px;
+  margin: 20px;
+  height: 32px;
+  padding-left: 20px;
+  font-size: 5mm;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+.formLogin {
+  display: flex;
+  flex-direction: column;
+  margin-top: 6mm;
+}
+.btnLogin {
+  margin-left: 20mm;
+  margin-right: 20mm;
+  padding: 10px;
+  margin-top: 30px;
+  margin-bottom: 40px;
+  color: #fff;
+  background-color: #0b1a9e;
+  border-radius: 10px;
+  font-size: 6mm;
+}
+.btnForgot {
+  background-color: #343f56;
+  border-width: 0px;
+  margin-top: 30px;
+  margin-bottom: 60px;
+  font-size: 6mm;
+  color: #fff;
+  font-weight: bold;
+}
+.errorLogin {
+  align-items: center;
+}
+.errorIco {
+  height: 25px;
+  width: 25px;
+  margin-right: 8px;
+}
+.lberror {
+  font-size: 16px;
+  color: #f39c12;
+  font-weight: bold;
+}

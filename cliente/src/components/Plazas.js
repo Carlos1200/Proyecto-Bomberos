@@ -137,11 +137,24 @@ const TextName = styled.div`
 const DateCreated = styled.div`
     color: grey;
 `
-export const Reportes = () => {
+const BtnAgregarNuevo = styled.div`
+    margin-top: 30px;
+    background-color: #67BB6F;
+    border-radius: 20px;
+    font-size: 18px;
+    text-align: center;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding: 10px;
+    width: 240px;
+    margin-left: 30px;
+`
+
+export const Plazas = () => {
     return (
         <Box>
             <Top>
-                <TitleForm>Administración de Reportes</TitleForm>
+                <TitleForm>Administración de Plazas</TitleForm>
                 <ActualUser>
                     <FontAwesomeIcon icon={faFire} style={{ fontSize: "23px", color:"FF0000" }} />
                     <UserTitle>Remberto Montes</UserTitle>
@@ -161,7 +174,7 @@ export const Reportes = () => {
                     <ColumnTitle>Borrar</ColumnTitle>
                 </ColumnTitlesBox>
                 <RowBoxContainer>
-                    <RowBox>
+                <RowBox>
                         <TextName>Diego Abrego</TextName>
                         <DateCreated>Octubre 2020</DateCreated>
                         <FontAwesomeIcon icon={faCheck} style={{ fontSize: "23px", color:"FF0000" }} />
@@ -172,10 +185,11 @@ export const Reportes = () => {
                         <TextName>Rodrigo Gonzalez</TextName>
                         <DateCreated>Octubre 2020</DateCreated>
                         <FontAwesomeIcon icon={faCheck} style={{ fontSize: "23px", color:"FF0000" }} />
-                        <FontAwesomeIcon icon={faEdit} style={{ fontSize: "23px", color:"0C9021" }} />
+                        <FontAwesomeIcon icon={faEdit} style={{ fontSize: "23px", color:"0C9021" }} />                            
                         <FontAwesomeIcon icon={faTrashAlt} style={{ fontSize: "23px", color:"FF0000" }} />
                     </RowBox>
                 </RowBoxContainer>
+                <BtnAgregarNuevo>Agregar Nueva Plaza</BtnAgregarNuevo>
             </ReportsBox>
         </Box>
     )
