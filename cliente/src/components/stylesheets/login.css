@@ -1,30 +1,3 @@
-.container {
-    display:flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: #000;
-}
-.picture {
-    display: flex;
-    flex: 1;
-    height: 937px;
-    width: 1050px;
-}
-.loginbox {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    background-color: #343F56;
-    justify-content: center;
-    align-items: center;
-    font-family: sans-serif;
-}
-.logo{
-    border-radius: 320px;
-    height: 230px;
-    width: 230px;
-    padding: 20px;
-}
 .titleLogin {
     font-size: 45px;
     font-weight: bold;
