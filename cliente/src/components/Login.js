@@ -1,48 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './stylesheets/login.css';
-import styled from "styled-components";
+import Api from '../Api/Api';
 
-
-import login from './imgs/login.jpg';
 import logo from './imgs/logo.png';
 import error from './imgs/error.png';
 
-const Contenedor=styled.div`
-    display:flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: #000;
-`;
-
-const Image=styled.img`
-    height: 100%;
-    width: 100%;
-`;
-
-const LoginBox=styled.div`
-    display: flex;
-    flex-direction: column;
-    background-color: #343F56;
-    justify-content: center;
-    align-items: center;
-`;
-
-const Logo=styled.img`
-    border-radius: 320px;
-    width:100%;
-    max-width: 175px ;
-`;
-
-const TitleLogin=styled.div`
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    color:#FFF;
-    padding: 10px;
-`
-
 export const Login = () => {
 
+    useEffect(()=>{
+        obtenerUsuarios();
+    },[]);
+
+    const obtenerUsuarios=async()=>{
+        const resultado=await Api.get('/usuarios');
+        console.log(resultado.data);
+    }
 
     return (
         <>
@@ -50,13 +22,14 @@ export const Login = () => {
             <div className="picture">
                 
             </div>
-            <div>
+            <div className="loginbox">
                 <div>
-                    <Logo src={logo}/>
+                    <img src={logo} className="logo" />
                 </div>
-                <TitleLogin>
-                    <h1>Inicio de Sesion</h1>
-                </TitleLogin>
+                <div className="titleLogin">
+                    <label>Cuerpo de Bomberos</label><br/>
+                    <label>Inicio de Sesion</label>
+                </div>
                 <div>
                     <form className="formLogin">
                         <div className="formLogin">

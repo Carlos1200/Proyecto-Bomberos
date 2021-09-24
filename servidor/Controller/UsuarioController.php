@@ -13,9 +13,3 @@ class UsuarioController{
 }
 
 ?>
-<!-- 
-
-
-
-
-require('View/V-verUsuarios.php'); -->
