@@ -1,45 +1,54 @@
 .container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: #000;
+  display: flex;  
+  
 }
 .picture {
-  display: flex;
-  flex: 1;
-  height: 937px;
-  width: 1050px;
+  background: url(../imgs/login.jpg);
+  height: 100vh;
+  width: 50%;
+  background-size: cover;
+  background-position: center;
+  
 }
 .loginbox {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  background-color: #343f56;
+  background-color: #343F56;
   justify-content: center;
   align-items: center;
   font-family: sans-serif;
+  width: 50%;
+  flex: 1;
 }
 .logo {
   border-radius: 320px;
   height: 230px;
   width: 230px;
   padding: 20px;
+  
 }
 .titleLogin {
-  font-size: 45px;
+  font-size: 40px;
   font-weight: bold;
   text-align: center;
   color: #fff;
-  padding: 10px;
+  padding: 2px;
 }
 .textbox {
-  border-radius: 30px;
+  background-color: #343F56;
+  border: none;
+  border-bottom: 2px solid#fff;
   margin: 20px;
   height: 32px;
   padding-left: 20px;
   font-size: 5mm;
+  
   margin-top: 10px;
   margin-bottom: 15px;
+}
+
+.textbox:focus{
+  border: 3px solid #555;
 }
 .formLogin {
   display: flex;
@@ -47,15 +56,21 @@
   margin-top: 6mm;
 }
 .btnLogin {
-  margin-left: 20mm;
-  margin-right: 20mm;
-  padding: 10px;
-  margin-top: 30px;
-  margin-bottom: 40px;
-  color: #fff;
-  background-color: #0b1a9e;
-  border-radius: 10px;
-  font-size: 6mm;
+  background-color: #4c53af; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 18px;
+  border-radius: 12px;
+  transition-duration: 0.4s;
+}
+
+.btnLogin:hover {
+  background-color: #E9750B; /* Green */
+  color: white;
 }
 .btnForgot {
   background-color: #343f56;

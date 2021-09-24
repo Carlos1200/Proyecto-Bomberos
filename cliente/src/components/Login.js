@@ -1,6 +1,7 @@
 import React from 'react';
 import './stylesheets/login.css';
 
+
 import login from './imgs/login.jpg';
 import logo from './imgs/logo.png';
 import error from './imgs/error.png';
@@ -11,8 +12,8 @@ export const Login = () => {
     return (
         <>
         <div className="container">
-            <div>
-                <img src={login} className="picture"/>
+            <div className="picture">
+                
             </div>
             <div className="loginbox">
                 <div>
@@ -31,9 +32,12 @@ export const Login = () => {
                         <div className="errorLogin">
                             <img src={error} className="errorIco"/>
                             <label className="lberror">Se ha equivocado en escribir su usuario o contraseña</label>
+                            
                         </div>
+                        <br></br>
                         <button type="button" id="btnLogin" name="btnLogin" className="btnLogin">Ingresar</button>
-                        <button type="button" id="btnForgot" name="btnForgot" className="btnForgot">¿Olvidó su contraseña?</button>
+                        
+                        
                     </form>
                 </div>
             </div>
