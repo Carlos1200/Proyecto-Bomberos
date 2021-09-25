@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { Btn } from "./Btn";
 import {
   faUserTie,
   faFileAlt,
@@ -10,6 +9,8 @@ import {
   faFileSignature,
   faPowerOff,
 } from "@fortawesome/free-solid-svg-icons";
+import { Btn } from "./Btn";
+import Logo from '../assets/LogoBomberos.png';
 
 const Contenedor = styled.div`
   background-color: #343f56;
@@ -40,7 +41,7 @@ export const Sidebar = () => {
     <Contenedor>
       <ContenedorImagen>
         <Image
-          src='https://pbs.twimg.com/profile_images/1196148301231542280/stKHAKiH_400x400.jpg'
+          src={Logo}
           alt='Logo'
         />
         <p>
@@ -81,7 +82,7 @@ export const Sidebar = () => {
         />
       </ContenedorButones>
       <div style={{ marginTop: "4rem" }}>
-        <Btn titulo='Cerrar Sesión' icono={faPowerOff} />
+        <Btn titulo='Cerrar Sesión' icono={faPowerOff} redirect="" />
       </div>
     </Contenedor>
   );
