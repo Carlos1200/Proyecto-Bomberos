@@ -4,21 +4,21 @@ import { Sidebar } from "./Sidebar";
 
 const Contenedor = styled.div({
   height: "100%",
+  width: "100%",
   display: "grid",
+  gridTemplateColumns:"3fr 9fr",
   alignContent: "stretch",
   justifyContent: "start",
 });
 
 const ContSidebar = styled.div({
-  gridColumnStart: 1,
-  gridColumnEnd: 3,
   height: "100%",
 });
 
 const ContContenido = styled.div({
-  gridColumnStart: 3,
-  gridColumnEnd: 12,
   height: "100%",
+  width: "100%",
+  backgroundColor:"red",
 });
 
 export const Menu = ({ children }) => {

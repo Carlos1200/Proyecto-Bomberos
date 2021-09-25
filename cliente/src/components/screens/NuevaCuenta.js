@@ -1,9 +1,10 @@
 import React from 'react'
+import { Menu } from '../Menu'
 
 export const NuevaCuenta = () => {
     return (
-        <div>
+        <Menu>
             <h1>Crear Cuenta</h1>
-        </div>
+        </Menu>
     )
 }
