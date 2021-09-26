@@ -5,7 +5,26 @@ import Api from '../Api/Api';
 import logo from './imgs/logo.png';
 import error from './imgs/error.png';
 
+
+
+
 export const Login = () => {
+
+  /*  useEffect(()=>{
+        const splash = document.querySelector('.splash');
+
+    setTimeout(()=>{ splash.classList.add('display-none'); }, 2000);
+
+
+    },[]);
+
+    const splash = document.querySelector('.splash');
+
+    document.addEventListener('DOMContentLoaded', (e)=>{
+    setTimeout(()=>{
+    splash.classList.add('display-none');
+    }, 2000);
+    })*/
 
     useEffect(()=>{
         obtenerUsuarios();
@@ -18,6 +37,7 @@ export const Login = () => {
 
     return (
         <>
+
         <div className="container">
             <div className="picture">
                 
