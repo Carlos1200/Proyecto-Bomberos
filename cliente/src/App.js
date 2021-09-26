@@ -1,12 +1,12 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Login } from './components/Login';
-import { NuevaCuenta } from './components/NuevaCuenta';
-import { Reportes } from './components/Reportes';
-import { Usuarios } from './components/Usuarios';
-import { Empleados} from './components/Empleados';
-import { Ubicaciones } from './components/Ubicaciones';
-import { Plazas } from './components/Plazas';
+import { Login } from './components/screens/Login';
+import { NuevaCuenta } from './components/screens/NuevaCuenta';
+import { Reportes } from './components/screens/Reportes';
+import { Usuarios } from './components/screens/Usuarios';
+import { Empleados} from './components/screens/Empleados';
+import { Ubicaciones } from './components/screens/Ubicaciones';
+import { Plazas } from './components/screens/Plazas';
 
 import '../src/index.css';
 

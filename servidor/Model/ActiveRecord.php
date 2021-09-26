@@ -21,6 +21,8 @@ class ActiveRecord{
         return $datos;
     }
 
+    public static function insert(){
+        
+    }
+
 }
-
-
