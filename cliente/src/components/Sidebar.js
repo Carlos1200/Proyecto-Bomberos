@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import {
   faUserTie,
@@ -11,6 +11,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Btn } from "./Btn";
 import Logo from '../assets/LogoBomberos.png';
+import { AuthContext } from "../context/Auth/AuthContext";
+import Api from "../Api/Api";
 
 const Contenedor = styled.div`
   background-color: #343f56;
@@ -37,6 +39,18 @@ const ContenedorButones = styled.div`
 `;
 
 export const Sidebar = () => {
+
+  const {cerrarSesion}=useContext(AuthContext);
+
+  const cerrar=async()=>{
+    try {
+      await Api.get('/logout',{withCredentials:true});
+      cerrarSesion();
+    } catch (error) {
+      console.log({error});
+    }
+  }
+
   return (
     <Contenedor>
       <ContenedorImagen>
@@ -82,7 +96,7 @@ export const Sidebar = () => {
         />
       </ContenedorButones>
       <div style={{ marginTop: "4rem" }}>
-        <Btn titulo='Cerrar Sesión' icono={faPowerOff} redirect="" />
+        <Btn titulo='Cerrar Sesión' icono={faPowerOff} redirect="" onpress={cerrar} />
       </div>
     </Contenedor>
   );

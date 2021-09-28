@@ -15,14 +15,14 @@ const Boton = styled.button`
   justify-content: space-evenly;
 
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.02);
   }
 `;
 
-export const Btn = ({ titulo, icono, size, redirect }) => {
+export const Btn = ({ titulo, icono, size, redirect,onpress }) => {
   return (
     <Link to={redirect} style={{ textDecoration: "none" }}>
-      <Boton style={{ fontSize: size ? "15px" : "18px" }}>
+      <Boton style={{ fontSize: size ? "15px" : "18px" }} onClick={onpress}>
         <FontAwesomeIcon icon={icono} style={{ fontSize: "20px" }} />
         {titulo}
       </Boton>

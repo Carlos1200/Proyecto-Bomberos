@@ -7,6 +7,10 @@ const Api = axios.create({
 });
 
 // Api.interceptors.request.use(async (config) => {
+//   config.withCredentials=true;
+// });
+
+// Api.interceptors.request.use(async (config) => {
 //   const token = await AsyncStorage.getItem("token");
 //   if (token) {
 //     config.headers["x-token"] = token;
