@@ -5,6 +5,8 @@ class ActiveRecord{
     protected static $db;
     protected static $tabla='';
     protected static $columnasDB=[];
+    protected static $errores=[];
+
 
     public static function setDB($database){
         self::$db=$database;
@@ -24,5 +26,14 @@ class ActiveRecord{
     public static function insert(){
         
     }
+
+    // public static function sanitizarAtributos($atributos){
+    //     $sanitizado=[];
+
+    //     foreach($atributos as $key =>$value){
+    //         $sanitizado[$key]=self::$db->
+    //     }
+    // }
+
 
 }

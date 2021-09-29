@@ -6,6 +6,7 @@ const Api = axios.create({
   baseURL,
 });
 
+<<<<<<< HEAD
 // Api.interceptors.request.use(async (config) => {
 //   const token = await AsyncStorage.getItem("token");
 //   if (token) {
@@ -14,4 +15,6 @@ const Api = axios.create({
 //   return config;
 // });
 
+=======
+>>>>>>> main
 export default Api;
