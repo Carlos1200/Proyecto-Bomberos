@@ -18,7 +18,6 @@ const ContSidebar = styled.div({
 const ContContenido = styled.div({
   height: "100%",
   width: "100%",
-  backgroundColor:"red",
 });
 
 export const Menu = ({ children }) => {
