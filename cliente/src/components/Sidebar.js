@@ -14,6 +14,7 @@ import Logo from '../assets/LogoBomberos.png';
 import { AuthContext } from "../context/Auth/AuthContext";
 import Api from "../Api/Api";
 
+
 const Contenedor = styled.div`
   background-color: #343f56;
   height: 100%;

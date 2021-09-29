@@ -106,6 +106,7 @@ export const Login = () => {
   );
 };
 
+
 const Container = styled.div`
   display: flex;
 `;
@@ -146,7 +147,6 @@ const FormLogin = styled.form`
   flex-direction: column;
   margin-top: 6mm;
 `;
-
 const DivLogin=styled.div`
   display: flex;
   flex-direction: row;
@@ -157,6 +157,7 @@ const Textbox = styled.input`
   background-color: #343f56;
   border: none;
   border-bottom: 2px solid #fff;
+
   margin: 20px;
   height: 32px;
   padding-left: 20px;
@@ -171,6 +172,7 @@ const TextError=styled.p`
   margin-top: -13px;
   text-align: center;
   color: #f39c12;
+
 `;
 
 const BtnLogin = styled.button`

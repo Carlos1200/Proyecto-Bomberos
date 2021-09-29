@@ -7,6 +7,7 @@ class ActiveRecord{
     protected static $columnasDB=[];
     protected static $errores=[];
 
+
     public static function setDB($database){
         self::$db=$database;
     }
@@ -33,5 +34,6 @@ class ActiveRecord{
     //         $sanitizado[$key]=self::$db->
     //     }
     // }
+
 
 }

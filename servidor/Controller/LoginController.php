@@ -1,6 +1,5 @@
 <?php
 
-
 require_once('Model/Usuario.php');
 include_once "cors.php";
 
@@ -54,5 +53,6 @@ class LoginController{
         $router->render('usuarios/autenticar',[
             'autenticado'=>$autenticado
         ]);
+
     }
 }

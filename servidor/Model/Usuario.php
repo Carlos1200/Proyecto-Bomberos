@@ -4,7 +4,6 @@ class Usuario extends ActiveRecord{
 
     protected static $tabla = 'Usuarios';
     protected static $columnasDB=['idUsuario','NombreUsuario','tipoUsuario','contra'];
-
     public $idUsuario;
     public $NombreUsuario;
     public $tipoUsuario;
@@ -81,6 +80,7 @@ class Usuario extends ActiveRecord{
         }
         return $atributos;
     }
+
 
   
 }
