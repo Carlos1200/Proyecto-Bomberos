@@ -1,6 +1,9 @@
 <?php
 
-require('Model/Usuario.php');
+namespace Controller;
+
+use MVC\Router;
+use Model\Usuario;
 
 class UsuarioController{
     public static function obtenerUsuarios(Router $router){

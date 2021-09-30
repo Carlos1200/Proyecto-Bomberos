@@ -1,5 +1,7 @@
 <?php
 
+namespace Model;
+use \PDO;
 
 class ActiveRecord{
     protected static $db;
@@ -24,6 +26,10 @@ class ActiveRecord{
     }
 
     public static function insert(){
+        
+    }
+
+    public static function VerificarToken(){
         
     }
 

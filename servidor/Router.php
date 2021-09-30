@@ -1,16 +1,18 @@
 <?php
 
+namespace MVC;
+
 class Router{
 
     public $rutasGET=[];
     public $rutasPOST=[];
 
     public function get($url,$fn){
-        $ruta="/Proyecto%20Bomberos/servidor";
+        $ruta=$_ENV['HOST'];
         $this->rutasGET[$ruta.$url]=$fn;
     }
     public function post($url,$fn){
-        $ruta="/Proyecto%20Bomberos/servidor";
+        $ruta=$_ENV['HOST'];
         $this->rutasPOST[$ruta.$url]=$fn;
     }
     

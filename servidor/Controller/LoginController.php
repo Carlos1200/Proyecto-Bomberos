@@ -1,7 +1,10 @@
 <?php
 
-require_once('Model/Usuario.php');
+namespace Controller;
+
 include_once "cors.php";
+use MVC\Router;
+use Model\Usuario;
 
 class LoginController{
     public static function login(Router $router){

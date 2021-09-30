@@ -5,6 +5,87 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFire, faSearch, faCheck, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
+
+
+export const Plazas = () => {
+    return (
+      <Menu>
+        <Box>
+          <Top>
+            <TitleForm>Administración de Plazas</TitleForm>
+            <ActualUser>
+              <FontAwesomeIcon
+                icon={faFire}
+                style={{ fontSize: "23px", color: "FF0000" }}
+              />
+              <UserTitle>Remberto Montes</UserTitle>
+            </ActualUser>
+          </Top>
+          <ReportsBox>
+            <FilterBox>
+              <FontAwesomeIcon
+                icon={faSearch}
+                style={{ fontSize: "26px", color: "#000000" }}
+              />
+              <FilterTextBox>¿Desea un archivo en específico?</FilterTextBox>
+              <BtnFilterSearch>Buscar</BtnFilterSearch>
+            </FilterBox>
+            <ColumnTitlesBox>
+              <ColumnTitle>Jefe de Estacion</ColumnTitle>
+              <ColumnTitle>
+                Fecha de Creación
+                <br />
+                del Reporte
+              </ColumnTitle>
+              <ColumnTitle>
+                Minutos
+                <br />
+                Verificados
+              </ColumnTitle>
+              <ColumnTitle>Acceder</ColumnTitle>
+              <ColumnTitle>Borrar</ColumnTitle>
+            </ColumnTitlesBox>
+            <RowBoxContainer>
+              <RowBox>
+                <TextName>Diego Abrego</TextName>
+                <DateCreated>Octubre 2020</DateCreated>
+                <FontAwesomeIcon
+                  icon={faCheck}
+                  style={{ fontSize: "23px", color: "FF0000" }}
+                />
+                <FontAwesomeIcon
+                  icon={faEdit}
+                  style={{ fontSize: "23px", color: "0C9021" }}
+                />
+                <FontAwesomeIcon
+                  icon={faTrashAlt}
+                  style={{ fontSize: "23px", color: "FF0000" }}
+                />
+              </RowBox>
+              <RowBox>
+                <TextName>Rodrigo Gonzalez</TextName>
+                <DateCreated>Octubre 2020</DateCreated>
+                <FontAwesomeIcon
+                  icon={faCheck}
+                  style={{ fontSize: "23px", color: "FF0000" }}
+                />
+                <FontAwesomeIcon
+                  icon={faEdit}
+                  style={{ fontSize: "23px", color: "0C9021" }}
+                />
+                <FontAwesomeIcon
+                  icon={faTrashAlt}
+                  style={{ fontSize: "23px", color: "FF0000" }}
+                />
+              </RowBox>
+            </RowBoxContainer>
+            <BtnAgregarNuevo>Agregar Nueva Plaza</BtnAgregarNuevo>
+          </ReportsBox>
+        </Box>
+      </Menu>
+    );
+}
+
 const Box = styled.div`
     height: 100%;
     width: 100%;
@@ -149,82 +230,3 @@ const BtnAgregarNuevo = styled.div`
     width: 240px;
     margin-left: 30px;
 `
-
-export const Plazas = () => {
-    return (
-      <Menu>
-        <Box>
-          <Top>
-            <TitleForm>Administración de Plazas</TitleForm>
-            <ActualUser>
-              <FontAwesomeIcon
-                icon={faFire}
-                style={{ fontSize: "23px", color: "FF0000" }}
-              />
-              <UserTitle>Remberto Montes</UserTitle>
-            </ActualUser>
-          </Top>
-          <ReportsBox>
-            <FilterBox>
-              <FontAwesomeIcon
-                icon={faSearch}
-                style={{ fontSize: "26px", color: "#000000" }}
-              />
-              <FilterTextBox>¿Desea un archivo en específico?</FilterTextBox>
-              <BtnFilterSearch>Buscar</BtnFilterSearch>
-            </FilterBox>
-            <ColumnTitlesBox>
-              <ColumnTitle>Jefe de Estacion</ColumnTitle>
-              <ColumnTitle>
-                Fecha de Creación
-                <br />
-                del Reporte
-              </ColumnTitle>
-              <ColumnTitle>
-                Minutos
-                <br />
-                Verificados
-              </ColumnTitle>
-              <ColumnTitle>Acceder</ColumnTitle>
-              <ColumnTitle>Borrar</ColumnTitle>
-            </ColumnTitlesBox>
-            <RowBoxContainer>
-              <RowBox>
-                <TextName>Diego Abrego</TextName>
-                <DateCreated>Octubre 2020</DateCreated>
-                <FontAwesomeIcon
-                  icon={faCheck}
-                  style={{ fontSize: "23px", color: "FF0000" }}
-                />
-                <FontAwesomeIcon
-                  icon={faEdit}
-                  style={{ fontSize: "23px", color: "0C9021" }}
-                />
-                <FontAwesomeIcon
-                  icon={faTrashAlt}
-                  style={{ fontSize: "23px", color: "FF0000" }}
-                />
-              </RowBox>
-              <RowBox>
-                <TextName>Rodrigo Gonzalez</TextName>
-                <DateCreated>Octubre 2020</DateCreated>
-                <FontAwesomeIcon
-                  icon={faCheck}
-                  style={{ fontSize: "23px", color: "FF0000" }}
-                />
-                <FontAwesomeIcon
-                  icon={faEdit}
-                  style={{ fontSize: "23px", color: "0C9021" }}
-                />
-                <FontAwesomeIcon
-                  icon={faTrashAlt}
-                  style={{ fontSize: "23px", color: "FF0000" }}
-                />
-              </RowBox>
-            </RowBoxContainer>
-            <BtnAgregarNuevo>Agregar Nueva Plaza</BtnAgregarNuevo>
-          </ReportsBox>
-        </Box>
-      </Menu>
-    );
-}

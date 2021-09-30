@@ -1,5 +1,8 @@
 <?php
 
+namespace Model;
+use \PDO;
+
 class Usuario extends ActiveRecord{
 
     protected static $tabla = 'Usuarios';
@@ -30,6 +33,7 @@ class Usuario extends ActiveRecord{
             $this->idUsuario=$resultado[0]['idUsuario'];
             $this->NombreUsuario=$resultado[0]['NombreUsuario'];
             $this->tipoUsuario=$resultado[0]['tipoUsuario'];
+            $this->contra=[];
         }
         
     }
