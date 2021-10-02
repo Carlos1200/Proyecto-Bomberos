@@ -19,11 +19,12 @@ class Router{
     public function comprobarRutas(){
         $urlActual= $_SERVER['REQUEST_URI']??'/';
         $metodo =$_SERVER['REQUEST_METHOD'];
+        $path=parse_url($urlActual)['path'];
 
         if($metodo==="GET"){
-            $fn = $this->rutasGET[$urlActual]??null;
+            $fn = $this->rutasGET[$path]??null;
         }else{
-            $fn = $this->rutasPOST[$urlActual]??null;
+            $fn = $this->rutasPOST[$path]??null;
         }
 
         if($fn){

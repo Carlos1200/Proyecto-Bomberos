@@ -9,7 +9,6 @@ import { Ubicaciones } from './components/screens/Ubicaciones';
 import { Plazas } from './components/screens/Plazas';
 import { AuthProvider } from './context/Auth/AuthContext';
 import RutaPrivada from './components/RutaPrivada';
-
 import '../src/index.css';
 
 const App = () => {

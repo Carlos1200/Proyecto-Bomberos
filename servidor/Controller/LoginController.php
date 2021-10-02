@@ -8,7 +8,14 @@ use Model\Usuario;
 
 class LoginController{
     public static function login(Router $router){
+
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        $token=str_replace("token=","",$query);
+
         $usuario=new Usuario($_POST);
+
+        $usuario::VerificarToken($token);
+
         $errores=$usuario->validar();
         if(empty($errores)){
             do{
@@ -17,11 +24,24 @@ class LoginController{
                 $errores=$usuario->getErrores();
 
                 if(empty($errores)){
-                    $autenticado = $usuario->autenticar();
-                
-                    $router->render('usuarios/autenticar',[
-                        'autenticado'=>$autenticado
-                    ]);
+
+                    //Comprobar password
+
+                    $usuario->ComprobarContra();
+
+                    $errores=$usuario->getErrores();
+
+                    if(empty($errores)){
+                        $autenticado = $usuario->autenticar();
+                    
+                        $router->render('usuarios/autenticar',[
+                            'autenticado'=>$autenticado
+                        ]);
+                    }else{
+                        $router->render('errores/error',[
+                            'errores'=>$errores
+                        ]);
+                    }
                 }else{
                     $router->render('errores/error',[
                         'errores'=>$errores
@@ -39,6 +59,7 @@ class LoginController{
 
     }
     public static function logout(Router $router){
+        
         $usuario=new Usuario();
 
         $autenticado=$usuario->cerrarSesion();
@@ -49,13 +70,27 @@ class LoginController{
     }
 
     public static function verificarSesion(Router $router){
+
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        $token=str_replace("token=","",$query);
+
         $usuario=new Usuario();
 
-        $autenticado=$usuario->verificarSesion();
+        $usuario::VerificarToken($token);
 
-        $router->render('usuarios/autenticar',[
-            'autenticado'=>$autenticado
-        ]);
+        $errores=$usuario->getErrores();
+
+        if(empty($errores)){
+            $autenticado=$usuario->verificarSesion();
+
+            $router->render('usuarios/autenticar',[
+                'autenticado'=>$autenticado
+            ]);
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
 
     }
 }

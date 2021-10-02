@@ -9,6 +9,7 @@ export default (state,action)=>{
                 idUsuario:action.payload.idUsuario,
                 NombreUsuario:action.payload.NombreUsuario,
                 tipoUsuario:action.payload.tipoUsuario,
+                UbicacionUsuario:action.payload.UbicacionUsuario,
                 login:action.payload.login,
                 cargando:false,
             }
@@ -19,6 +20,7 @@ export default (state,action)=>{
                 idUsuario:'',
                 NombreUsuario:'',
                 tipoUsuario:'',
+                UbicacionUsuario:'',
                 login:false,
                 cargando:false,
             }
