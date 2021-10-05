@@ -1,10 +1,7 @@
 import React,{createContext,useEffect,useReducer} from 'react';
-import env from 'react-dotenv';
 import AuthReducer from './AuthReducer';
 import {INICIO_SESION,CERRAR_SESION} from '../../types'
 import Api from '../../Api/Api';
-
-const APIKEY=env.API_KEY;
 
 export const AuthContext=createContext();
 
@@ -27,7 +24,7 @@ export const AuthProvider=({children})=>{
 
     const obtenerSesion=async()=>{
         try {
-          const {data}= await Api.get(`/logverificar?token=${APIKEY}`,{withCredentials:true});
+          const {data}= await Api.get(`/logverificar`,{withCredentials:true});
           const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=data;
           dispatch({
               type:INICIO_SESION,

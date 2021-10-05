@@ -2,19 +2,13 @@ import axios from 'axios';
 import env from 'react-dotenv'
 
 const baseURL = env.BASE_URL;
+const APIKEY=env.API_KEY;
 
 const Api = axios.create({
   baseURL,
+  params:{
+    token:APIKEY
+  }
 });
-
-// axios.interceptors.request.use(function (config) {
-//   config.params={
-//     token:APIKEY
-//   }
-
-//   config.withCredentials="true"
-
-//   return config;
-// })
 
 export default Api;

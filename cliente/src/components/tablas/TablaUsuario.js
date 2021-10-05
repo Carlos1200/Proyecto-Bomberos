@@ -3,9 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Api from '../../Api/Api';
-import env from 'react-dotenv'
 
-const APIKEY=env.API_KEY;
 
 export const TablaUsuario = () => {
 
@@ -15,7 +13,7 @@ export const TablaUsuario = () => {
   },[]);
 
   const obtenerUsuarios=async()=>{
-    const {data}=await Api.get(`/usuarios?token=${APIKEY}`);
+    const {data}=await Api.get(`/usuarios`);
 
     setusuarios(data);
   }

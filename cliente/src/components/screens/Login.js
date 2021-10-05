@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
-import env from 'react-dotenv'
 import { useHistory } from "react-router-dom";
 import Logo from "../../assets/LogoBomberos.png";
 import error from "../../assets/error.png";
@@ -11,7 +10,6 @@ import Background from "../../assets/login.jpg";
 import Api from '../../Api/Api';
 import { AuthContext } from "../../context/Auth/AuthContext";
 
-const APIKEY=env.API_KEY;
 const schema=yup.object({
   usuario:yup.string().required("El usuario no debe ir vacio"),
   contra:yup.string().required("La contraseña no debe ir vacio"),
@@ -35,7 +33,7 @@ export const Login = () => {
     formData.append('contra',contra);
 
     try {
-      const {data}=await Api.post(`/login?token=${APIKEY}`,formData,{withCredentials:true});
+      const {data}=await Api.post(`/login`,formData,{withCredentials:true});
       console.log(data);
       const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=data;
 
