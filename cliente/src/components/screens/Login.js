@@ -8,8 +8,7 @@ import Logo from "../../assets/LogoBomberos.png";
 import error from "../../assets/error.png";
 import Background from "../../assets/login.jpg";
 import Api from '../../Api/Api';
-import { AuthContext } from "../../context/Auth/AuthContext"; 
-
+import { AuthContext } from "../../context/Auth/AuthContext";
 
 const schema=yup.object({
   usuario:yup.string().required("El usuario no debe ir vacio"),
@@ -34,17 +33,17 @@ export const Login = () => {
     formData.append('contra',contra);
 
     try {
-      const {data}=await Api.post('/login',formData,{withCredentials:true});
+      const {data}=await Api.post(`/login`,formData,{withCredentials:true});
+      console.log(data);
+      const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=data;
 
-      const {NombreUsuario,idUsuario,login,tipoUsuario}=data;
-
-      inicioSesion(idUsuario,NombreUsuario,tipoUsuario,login);
+      inicioSesion(idUsuario,NombreUsuario,tipoUsuario,UbicacionUsuario,login);
 
       if(data.login){
         history.push("/usuarios");
       }
     } catch (error) {
-      console.log({error});
+      console.log(error.response.data);
       setErrores(error.response.data);
       setTimeout(() => {
         setErrores(null);
@@ -193,15 +192,6 @@ const BtnLogin = styled.button`
   }
 `;
 
-const BtnForgot = styled.button`
-  background-color: #343f56;
-  border-width: 0px;
-  margin-top: 30px;
-  margin-bottom: 60px;
-  font-size: 6mm;
-  color: #fff;
-  font-weight: bold;
-`;
 
 const ErrorLogin = styled.div`
   align-items: center;

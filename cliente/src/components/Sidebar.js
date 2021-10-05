@@ -15,30 +15,6 @@ import { AuthContext } from "../context/Auth/AuthContext";
 import Api from "../Api/Api";
 
 
-const Contenedor = styled.div`
-  background-color: #343f56;
-  height: 100%;
-`;
-
-const Image = styled.img`
-  width: 100px;
-  height: 100px;
-`;
-
-const ContenedorImagen = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-  text-align: center;
-  padding: 1rem;
-`;
-
-const ContenedorButones = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 export const Sidebar = () => {
 
   const {cerrarSesion}=useContext(AuthContext);
@@ -102,3 +78,27 @@ export const Sidebar = () => {
     </Contenedor>
   );
 };
+
+const Contenedor = styled.div`
+  background-color: #343f56;
+  height: 100%;
+`;
+
+const Image = styled.img`
+  width: 100px;
+  height: 100px;
+`;
+
+const ContenedorImagen = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+`;
+
+const ContenedorButones = styled.div`
+  display: flex;
+  flex-direction: column;
+`;

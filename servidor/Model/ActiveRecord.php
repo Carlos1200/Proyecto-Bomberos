@@ -1,9 +1,12 @@
 <?php
 
+namespace Model;
+use \PDO;
 
 class ActiveRecord{
     protected static $db;
     protected static $tabla='';
+    protected static $salt='';
     protected static $columnasDB=[];
     protected static $errores=[];
 
@@ -25,6 +28,14 @@ class ActiveRecord{
 
     public static function insert(){
         
+    }
+
+    public static function VerificarToken($tokenAPI){
+        $token=$_ENV['API_KEY'];
+
+        if($token!==$tokenAPI){
+            self::$errores[]="El token no es válido";
+        }
     }
 
     // public static function sanitizarAtributos($atributos){
