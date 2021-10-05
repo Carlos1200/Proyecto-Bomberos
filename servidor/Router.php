@@ -6,11 +6,11 @@ class Router{
     public $rutasPOST=[];
 
     public function get($url,$fn){
-        $ruta="/Proyecto%20Bomberos/servidor";
+        $ruta="/Proyecto-Bomberos/servidor";
         $this->rutasGET[$ruta.$url]=$fn;
     }
     public function post($url,$fn){
-        $ruta="/Proyecto%20Bomberos/servidor";
+        $ruta="/Proyecto-Bomberos/servidor";
         $this->rutasPOST[$ruta.$url]=$fn;
     }
     
