@@ -14,7 +14,7 @@ export const Background = ({children,titulo}) => {
             <TitleForm>{titulo}</TitleForm>
             <ActualUser>
               <FontAwesomeIcon
-                icon={tipoUsuario==="Admin"?faFire:faHardHat}
+                icon={tipoUsuario==="Administrador"?faFire:faHardHat}
                 style={{ fontSize: "23px", color: "FF0000" }}
               />
               <UserTitle>{NombreUsuario}</UserTitle>

@@ -96,9 +96,7 @@ class Usuario extends ActiveRecord{
     }
 
 
-    public static function getErrores(){
-        return self::$errores;
-    }
+    
 
     public function validar()
     {

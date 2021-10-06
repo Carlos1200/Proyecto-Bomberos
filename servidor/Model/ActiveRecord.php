@@ -26,8 +26,8 @@ class ActiveRecord{
         return $datos;
     }
 
-    public static function insert(){
-        
+    public static function getErrores(){
+        return self::$errores;
     }
 
     public static function VerificarToken($tokenAPI){
@@ -38,13 +38,12 @@ class ActiveRecord{
         }
     }
 
-    // public static function sanitizarAtributos($atributos){
-    //     $sanitizado=[];
-
-    //     foreach($atributos as $key =>$value){
-    //         $sanitizado[$key]=self::$db->
-    //     }
-    // }
+    public static function verificarAdmin(){
+        session_start();
+        if($_SESSION['tipoUsuario']!=="Administrador"){
+            self::$errores[]="No tiene permisos para esta acción";
+        }
+    }
 
 
 }

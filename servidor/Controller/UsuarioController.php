@@ -42,7 +42,9 @@ class UsuarioController{
 
             //Verificar si el usuario no existe
 
-            $errores=$usuario->existeUsuario(true);
+            $usuario->existeUsuario(true);
+
+            $errores=$usuario::getErrores();
 
             if(empty($errores)){
                 //Hashear contraseña

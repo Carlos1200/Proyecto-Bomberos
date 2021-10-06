@@ -7,7 +7,7 @@ export const Btn = ({ titulo, icono, size, redirect,onpress }) => {
   return (
     <Link to={redirect} style={{ textDecoration: "none" }}>
       <Boton style={{ fontSize: size ? "15px" : "18px" }} onClick={onpress}>
-        <FontAwesomeIcon icon={icono} style={{ fontSize: "20px" }} />
+        <FontAwesomeIcon icon={icono} style={{ fontSize: "20px",marginLeft:'4rem',marginRight:'2rem' }} />
         {titulo}
       </Boton>
     </Link>
@@ -23,7 +23,7 @@ const Boton = styled.button`
   font-size: 18px;
   padding: 15px 0;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
 
   &:hover {
     transform: scale(1.02);

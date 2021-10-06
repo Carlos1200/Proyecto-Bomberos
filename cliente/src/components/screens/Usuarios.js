@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch} from '@fortawesome/free-solid-svg-icons';
+import { AnimatePresence } from 'framer-motion';
 import { Menu } from '../Menu'
 import {TablaUsuario} from '../tablas/TablaUsuario';
 import { Background } from '../Background';
+import { UsuarioModal } from '../modal/UsuarioModal';
 export const Usuarios = () => {
+
+  const [visible, setVisible] = useState(false);
 
     return (
       <Menu>
@@ -19,10 +23,16 @@ export const Usuarios = () => {
               <FilterTextBox>¿Desea un archivo en específico?</FilterTextBox>
               <BtnFilterSearch>Buscar</BtnFilterSearch>
             </FilterBox>
-            <TablaUsuario/>
+            <TablaUsuario setVisible={setVisible}/>
             {/* <BtnAgregarNuevo>Agregar Nuevo Usuario</BtnAgregarNuevo> */}
           </ReportsBox>
           </Background>
+          <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {visible&&<UsuarioModal handleClose={()=>setVisible(false)}/>}
+          </AnimatePresence>
       </Menu>
     );
 }

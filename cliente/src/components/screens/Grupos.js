@@ -4,14 +4,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Menu } from './../Menu';
 import {Background} from '../Background';
-import { TablaPlaza } from '../tablas/TablaPlaza';
+import { TablaGroup } from '../tablas/TablaGroup';
 
 
 
-export const Plazas = () => {
+export const Grupos = () => {
     return (
       <Menu>
-        <Background titulo="Administración de Plazas">
+        <Background titulo="Administración de Grupos">
           <ReportsBox>
             <FilterBox>
               <FontAwesomeIcon
@@ -21,7 +21,7 @@ export const Plazas = () => {
               <FilterTextBox>¿Desea un archivo en específico?</FilterTextBox>
               <BtnFilterSearch>Buscar</BtnFilterSearch>
             </FilterBox>
-            <TablaPlaza/>
+            <TablaGroup/>
           </ReportsBox>
         </Background>
       </Menu>

@@ -33,7 +33,7 @@ export const Login = () => {
     formData.append('contra',contra);
 
     try {
-      const {data}=await Api.post(`/login`,formData,{withCredentials:true});
+      const {data}=await Api.post(`/login`,formData);
       console.log(data);
       const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=data;
 

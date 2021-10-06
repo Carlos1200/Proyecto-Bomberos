@@ -8,7 +8,8 @@ const Api = axios.create({
   baseURL,
   params:{
     token:APIKEY
-  }
+  },
+  withCredentials:true
 });
 
 export default Api;

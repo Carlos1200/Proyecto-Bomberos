@@ -5,46 +5,40 @@ import styled from "styled-components";
 import Api from '../../Api/Api';
 
 
-export const TablaUsuario = ({setVisible}) => {
+export const TablaGroup = () => {
 
-  const [usuarioscol, setusuarios] = useState();
+  const [grupocol, setGrupo] = useState();
   useEffect(()=>{
     obtenerUsuarios();
   },[]);
 
   const obtenerUsuarios=async()=>{
-    const {data}=await Api.get(`/usuarios`);
+    const {data}=await Api.get(`/grupo`);
 
-    setusuarios(data);
+    setGrupo(data);
   }
 
   return (
     <Contenedor>
       <ContenedorTabla>
-      {usuarioscol&&(
+      {grupocol&&(
         <Table>
         <HeadTop>
           <ColumTitleBox>
-              <ColumnTitle>Nombre del Usuario</ColumnTitle>
-              <ColumnTitle>Tipo de Usuario</ColumnTitle>
-              <ColumnTitle>Ubicación</ColumnTitle>
+              <ColumnTitle>Nombre del Grupo</ColumnTitle>
               <ColumnTitle>Editar</ColumnTitle>
               <ColumnTitle>Borrar</ColumnTitle>
           </ColumTitleBox>
         </HeadTop>
         <Body>
-            {usuarioscol.map((usuario,index)=>(
+            {grupocol.map((grupo,index)=>(
               <ColumInputBox key={index}>
-                <ColumInput>{usuario.NombreUsuario}</ColumInput>
-                <ColumInput>{usuario.tipoUsuario}</ColumInput>
-                <ColumInput>{usuario.UbicacionUsuario}</ColumInput>
+                <ColumInput>{grupo.nombreGrupo}</ColumInput>
             <ColumInput>
-              <BtnEditar onClick={()=>setVisible(true)}>
-                <FontAwesomeIcon
-                  icon={faEdit}
-                  style={{ fontSize: "23px", color: "0C9021" }}
-                />
-              </BtnEditar>
+              <FontAwesomeIcon
+                icon={faEdit}
+                style={{ fontSize: "23px", color: "0C9021" }}
+              />
             </ColumInput>
             <ColumInput>
               <FontAwesomeIcon
@@ -103,7 +97,7 @@ width: 100%;
 
 const ColumInput = styled.td`
   text-align: center;
-  padding: 7px 0;
+  padding: 5px 0;
     &:first-child{
         border-radius: 20px 0 0 20px;
     }
@@ -111,9 +105,3 @@ const ColumInput = styled.td`
         border-radius: 0 20px 20px 0;
     }
 `;
-
-const BtnEditar=styled.button`
-  border: 0;
-  background-color: transparent;
-  cursor: pointer;
-`

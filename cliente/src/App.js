@@ -10,6 +10,8 @@ import { Plazas } from './components/screens/Plazas';
 import { AuthProvider } from './context/Auth/AuthContext';
 import { GenerarReporte } from './components/screens/GenerarReporte';
 import RutaPrivada from './components/RutaPrivada';
+import { Grupos } from './components/screens/Grupos';
+import { Traslados } from './components/screens/Traslados';
 import '../src/index.css';
 
 const App = () => {
@@ -24,7 +26,9 @@ const App = () => {
           <RutaPrivada exact path='/usuarios' component={Usuarios} />
           <RutaPrivada exact path='/empleados' component={Empleados} />
           <RutaPrivada exact path='/ubicaciones' component={Ubicaciones} />
+          <RutaPrivada exact path='/grupos' component={Grupos} />
           <RutaPrivada exact path='/plazas' component={Plazas} />
+          <RutaPrivada exact path='/traslados' component={Traslados} />
           <RutaPrivada exact path='/generar-reporte' component={GenerarReporte} />
         </Switch>
       </Router>

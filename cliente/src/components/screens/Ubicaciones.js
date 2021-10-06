@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Menu } from '../Menu'
 import {Background} from '../Background';
+import { TablaUbicacion } from '../tablas/TablaUbicacion';
 
 
 export const Ubicaciones = () => {
@@ -19,6 +20,7 @@ export const Ubicaciones = () => {
               <FilterTextBox>¿Desea un archivo en específico?</FilterTextBox>
               <BtnFilterSearch>Buscar</BtnFilterSearch>
             </FilterBox>
+            <TablaUbicacion/>
           </ReportsBox>
         </Background>
       </Menu>
