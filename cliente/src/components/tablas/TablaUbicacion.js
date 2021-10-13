@@ -1,27 +1,18 @@
-import React,{useEffect,useState} from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
-import Api from '../../Api/Api';
+import { UseDatos } from "../../hooks/UseDatos";
 
 
 export const TablaUbicacion = () => {
 
-  const [ubicacioncol, setUbicacion] = useState();
-  useEffect(()=>{
-    obtenerUsuarios();
-  },[]);
-
-  const obtenerUsuarios=async()=>{
-    const {data}=await Api.get(`/ubicacion`);
-
-    setUbicacion(data);
-  }
+  const {datos,cargando} = UseDatos('ubicacion');
 
   return (
     <Contenedor>
       <ContenedorTabla>
-      {ubicacioncol&&(
+      {!cargando&&(
         <Table>
         <HeadTop>
           <ColumTitleBox>
@@ -31,7 +22,7 @@ export const TablaUbicacion = () => {
           </ColumTitleBox>
         </HeadTop>
         <Body>
-            {ubicacioncol.map((ubicacion,index)=>(
+            {datos.map((ubicacion,index)=>(
               <ColumInputBox key={index}>
                 <ColumInput>{ubicacion.nombreUbicacion}</ColumInput>
             <ColumInput>

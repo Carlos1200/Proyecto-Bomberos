@@ -1,27 +1,23 @@
-import React,{useEffect,useState} from "react";
+import React,{useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
-import Api from '../../Api/Api';
+import { UsuarioModal } from "../modal/UsuarioModal";
+import { UseDatos } from "../../hooks/UseDatos";
 
 
-export const TablaUsuario = ({setVisible}) => {
+export const TablaUsuario = () => {
 
-  const [usuarioscol, setusuarios] = useState();
-  useEffect(()=>{
-    obtenerUsuarios();
-  },[]);
-
-  const obtenerUsuarios=async()=>{
-    const {data}=await Api.get(`/usuarios`);
-
-    setusuarios(data);
-  }
+  const [visible, setVisible] = useState(false);
+  const [usuario, setUsuario] = useState();
+ 
+  const {datos,cargando} = UseDatos('usuarios');
 
   return (
     <Contenedor>
       <ContenedorTabla>
-      {usuarioscol&&(
+      {!cargando&&(
         <Table>
         <HeadTop>
           <ColumTitleBox>
@@ -33,13 +29,16 @@ export const TablaUsuario = ({setVisible}) => {
           </ColumTitleBox>
         </HeadTop>
         <Body>
-            {usuarioscol.map((usuario,index)=>(
+            {datos.map((usuario,index)=>(
               <ColumInputBox key={index}>
                 <ColumInput>{usuario.NombreUsuario}</ColumInput>
                 <ColumInput>{usuario.tipoUsuario}</ColumInput>
                 <ColumInput>{usuario.UbicacionUsuario}</ColumInput>
             <ColumInput>
-              <BtnEditar onClick={()=>setVisible(true)}>
+              <BtnEditar onClick={()=>{
+                setVisible(true);
+                setUsuario(usuario);
+              }}>
                 <FontAwesomeIcon
                   icon={faEdit}
                   style={{ fontSize: "23px", color: "0C9021" }}
@@ -58,6 +57,12 @@ export const TablaUsuario = ({setVisible}) => {
       </Table>
       )}
       </ContenedorTabla>
+      <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {visible&&<UsuarioModal handleClose={()=>setVisible(false)} usuario={usuario}/>}
+      </AnimatePresence>
     </Contenedor>
   );
 };

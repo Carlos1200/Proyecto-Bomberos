@@ -6,7 +6,6 @@ import { Backdrop } from "./Backdrop";
 
 const dropIn = {
   hidden: {
-    y: "-100vh",
     opacity: 0,
   },
   visible: {
@@ -35,6 +34,7 @@ export const Modal = ({ handleClose,children}) => {
             initial='hidden'
             animate='visible'
             exit='exit'
+            style={{width:'100%',height:'100%'}}
         >
             {children}
         </motion.div>
@@ -44,7 +44,7 @@ export const Modal = ({ handleClose,children}) => {
 };
 
 const ModalContainer=styled.div`
-    width: clamp(90%,768px,90%);
+    width: clamp(50%,768px,90%);
     max-height: 90%;
 
     margin: auto;
@@ -52,5 +52,6 @@ const ModalContainer=styled.div`
     border-radius: 2rem;
     display: flex;
     align-items: center;
+    justify-content: center;
     background-color: white;
 `;
