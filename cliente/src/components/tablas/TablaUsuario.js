@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
@@ -12,7 +12,8 @@ export const TablaUsuario = () => {
   const [visible, setVisible] = useState(false);
   const [usuario, setUsuario] = useState();
  
-  const {datos,cargando} = UseDatos('usuarios');
+  const {datos,cargando,setConsultarUsarios} = UseDatos('usuarios');
+
 
   return (
     <Contenedor>
@@ -61,7 +62,7 @@ export const TablaUsuario = () => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<UsuarioModal handleClose={()=>setVisible(false)} usuario={usuario}/>}
+            {visible&&<UsuarioModal handleClose={()=>setVisible(false)} usuario={usuario} consultarUsuarios={setConsultarUsarios}/>}
       </AnimatePresence>
     </Contenedor>
   );

@@ -59,8 +59,12 @@ class Usuario extends ActiveRecord{
     }
 
     public function hashearContra(){
-        $contraHasheada=self::hash($this->contra);
-        $this->contra=(binary)$contraHasheada;
+        if($this->contra){
+            $contraHasheada=self::hash($this->contra);
+            $this->contra=(binary)$contraHasheada;
+        }else{
+            $this->contra="";
+        }
     }
 
     public function ComprobarContra(){
@@ -95,7 +99,22 @@ class Usuario extends ActiveRecord{
 
     }
 
+    public function actualizarUsuario(){
+        $query="EXEC actualizarUsuarios :idUsuario, :NombreUsuario, :tipoUsuario, :contra, :UbicacionUsuario";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':idUsuario',$this->idUsuario,PDO::PARAM_INT);
+        $consulta->bindParam(':NombreUsuario',$this->NombreUsuario,PDO::PARAM_STR);
+        $consulta->bindParam(':tipoUsuario',$this->tipoUsuario,PDO::PARAM_STR);
+        $consulta->bindParam(':contra',$this->contra,PDO::PARAM_STR);
+        $consulta->bindParam(':UbicacionUsuario',$this->UbicacionUsuario,PDO::PARAM_STR);
+        $consulta->execute();
 
+        if(!self::$db->rowCount() > 0){
+            self::$errores[]="No se pudo actualizar el usuario";
+        }
+
+        return self::$errores;
+    }
     
 
     public function validar()
@@ -110,12 +129,19 @@ class Usuario extends ActiveRecord{
         return self::$errores;
     }
 
-    public function validarNuevo(){
+    public function validarNuevo($nuevo=true){
+        if(!$nuevo){
+            if(!$this->idUsuario){
+                self::$errores[]="El id es obligatorio";
+            }
+        }
         if(!$this->NombreUsuario){
             self::$errores[]="El usuario es obligatorio";
         }
-        if(!$this->contra){
-            self::$errores[]="La contraseña es obligatoria";
+        if($nuevo){
+            if(!$this->contra){
+                self::$errores[]="La contraseña es obligatoria";
+            }
         }
         if(!$this->tipoUsuario){
             self::$errores[]="El tipo de usuario es obligatorio";
@@ -158,6 +184,17 @@ class Usuario extends ActiveRecord{
         return $atributos;
     }
 
+    public function eliminarUsuario(){
+        $query="EXEC eliminarUsuarios :idUsuario";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':idUsuario',$this->idUsuario,PDO::PARAM_INT);
+        $consulta->execute();
 
+        if(!self::$db->rowCount() > 0){
+            self::$errores[]="No se pudo Eliminar el usuario";
+        }
+
+        return self::$errores;
+    }
   
 }

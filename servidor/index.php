@@ -15,6 +15,8 @@
     //Usuarios
     $router->get('/api/usuarios',[UsuarioController::class,'obtenerUsuarios']);
     $router->post('/api/usuarios',[UsuarioController::class,'nuevoUsuario']);
+    $router->post('/api/usuariosEdit',[UsuarioController::class,'actualizarUsuario']);
+    $router->post('/api/usuariosDelete',[UsuarioController::class,'eliminarUsuario']);
 
 
     //Login

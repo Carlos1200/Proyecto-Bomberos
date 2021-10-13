@@ -5,10 +5,12 @@ export const UseDatos = (consulta) => {
 
     const [datos, setDatos] = useState();
     const [cargando, setCargando] = useState(true);
+    const [consultarUsarios, setConsultarUsarios] = useState(false)
 
     useEffect(()=>{
         obtenerDatos();
-    },[]);
+        setConsultarUsarios(false);
+    },[consultarUsarios]);
   
     const obtenerDatos=async()=>{
       const {data}=await Api.get(`/${consulta}`);
@@ -18,6 +20,7 @@ export const UseDatos = (consulta) => {
     }
     return {
         datos,
-        cargando
+        cargando,
+        setConsultarUsarios
     }
 }

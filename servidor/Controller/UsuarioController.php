@@ -36,6 +36,7 @@ class UsuarioController{
         $usuario=new Usuario($_POST);
         
         $usuario::VerificarToken($token);
+        $usuario::verificarAdmin();
         $errores=$usuario->validarNuevo();
 
         if(empty($errores)){
@@ -71,6 +72,51 @@ class UsuarioController{
             ]);
         }
 
+    }
+
+    public static function actualizarUsuario(Router $router){
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        $token=str_replace("token=","",$query);
+
+        $usuario=new Usuario($_POST);
+        
+        $usuario::VerificarToken($token);
+        $usuario::verificarAdmin();
+        $errores=$usuario->validarNuevo(false);
+        if(empty($errores)){
+            //Hashear contraseña
+            $usuario->hashearContra();
+
+            $errores=$usuario->actualizarUsuario();
+
+            if(!empty($errores)){
+                $router->render('errores/error',[
+                    'errores'=>$errores
+                ]);
+            }
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
+    }
+
+    public function eliminarUsuario(Router $router){
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        $token=str_replace("token=","",$query);
+
+        $usuario=new Usuario($_POST);
+        
+        $usuario::VerificarToken($token);
+        $usuario::verificarAdmin();
+        $errores=$usuario::getErrores();
+        if(empty($errores)){
+            
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
     }
 }
 
