@@ -27,6 +27,8 @@
     //Ubicaciones
     $router->post('/api/ubicacion',[UbicacionesController::class,'nuevaUbicacion']);
     $router->get('/api/ubicacion',[UbicacionesController::class,'obtenerUbicacion']);
+    $router->post('/api/ubicacionEdit',[UbicacionesController::class,'actualizarUbicacion']);
+    $router->post('/api/ubicacionDelete',[UbicacionesController::class,'eliminarUbicacion']);
 
     //Plazas
     $router->post('/api/plaza',[PlazaController::class,'nuevaPlaza']);

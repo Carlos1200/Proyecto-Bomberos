@@ -1,19 +1,34 @@
-import React,{useEffect, useState} from "react";
+import React,{ useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import { UsuarioModal } from "../modal/UsuarioModal";
 import { UseDatos } from "../../hooks/UseDatos";
+import { Eliminar } from "../modal/Eliminar";
+import Api from "../../Api/Api";
 
 
 export const TablaUsuario = () => {
 
   const [visible, setVisible] = useState(false);
+  const [visibleBorrar, setVisibleBorrar] = useState(false);
+  const [usuarioBorrar, setUsuarioBorrar] = useState(null);
   const [usuario, setUsuario] = useState();
  
   const {datos,cargando,setConsultarUsarios} = UseDatos('usuarios');
 
+    const eliminarUsuario=async()=>{
+      try {
+        const formData=new FormData();
+        formData.append("idUsuario",usuarioBorrar);
+        await Api.post('/usuariosDelete',formData);
+        setConsultarUsarios(true);
+        setVisibleBorrar(false);
+      } catch (error) {
+        console.log(error.response.data);
+      }
+    }
 
   return (
     <Contenedor>
@@ -47,10 +62,15 @@ export const TablaUsuario = () => {
               </BtnEditar>
             </ColumInput>
             <ColumInput>
-              <FontAwesomeIcon
-                icon={faTrashAlt}
-                style={{ fontSize: "23px", color: "FF0000" }}
-              />
+              <BtnEliminar onClick={()=>{
+                setVisibleBorrar(true)
+                setUsuarioBorrar(usuario.idUsuario)
+              }}>
+                <FontAwesomeIcon
+                  icon={faTrashAlt}
+                  style={{ fontSize: "23px", color: "FF0000" }}
+                />
+              </BtnEliminar>
             </ColumInput>
               </ColumInputBox>
             ))}
@@ -63,6 +83,12 @@ export const TablaUsuario = () => {
             exitBeforeEnter={true}
             onExitComplete={() => null}>
             {visible&&<UsuarioModal handleClose={()=>setVisible(false)} usuario={usuario} consultarUsuarios={setConsultarUsarios}/>}
+      </AnimatePresence>
+      <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {visibleBorrar&&<Eliminar handleClose={()=>setVisibleBorrar(false)}  eliminarUsuario={eliminarUsuario}/>}
       </AnimatePresence>
     </Contenedor>
   );
@@ -119,6 +145,11 @@ const ColumInput = styled.td`
 `;
 
 const BtnEditar=styled.button`
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+`
+const BtnEliminar=styled.button`
   border: 0;
   background-color: transparent;
   cursor: pointer;

@@ -16,8 +16,13 @@ class Ubicacion extends ActiveRecord{
         $this->nombreUbicacion=$args['nombreUbicacion']??'';
     }
 
-    public function validar()
+    public function validar($nuevo=true)
     {
+        if(!$nuevo){
+            if(!$this->idUbicacion){
+                self::$errores[]="El Nombre de la ubicación es obligatorio";
+            }
+        }
         if(!$this->nombreUbicacion){
             self::$errores[]="El Nombre de la ubicación es obligatorio";
         }
@@ -49,7 +54,37 @@ class Ubicacion extends ActiveRecord{
         return self::$errores;
     }
 
-    
+    public function editarUbicacion(){
+        $query="EXEC actualizarUbicaciones :idUbicacion, :nombreUbicacion";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':idUbicacion',$this->idUbicacion,PDO::PARAM_INT);
+        $consulta->bindParam(':nombreUbicacion',$this->nombreUbicacion,PDO::PARAM_STR);
+        $consulta->execute();
+
+        if(!self::$db->rowCount()>0){
+            self::$errores[]="No se pudo agregar una nueva Ubicacion";
+        }
+
+        return self::$errores;
+    }
+
+    public function eliminarUbicacion(){
+        if($this->idUbicacion){
+            $query="EXEC eliminarUbicaciones :idUbicacion";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(':idUbicacion',$this->idUbicacion,PDO::PARAM_INT);
+            $consulta->execute();
+
+            if(!self::$db->rowCount() > 0){
+                self::$errores[]="No se pudo agregar una nueva Ubicacion";
+            }
+
+        }else{
+            self::$errores[]="El id de ubicación es obligatorio";
+        }
+
+        return self::$errores;
+    }
 }
 
 ?>

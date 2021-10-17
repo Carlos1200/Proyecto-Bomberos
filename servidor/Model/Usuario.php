@@ -176,6 +176,13 @@ class Usuario extends ActiveRecord{
         return($_SESSION);
     }
 
+    public function verificarUsuarioActual(){
+        session_start();
+        if($_SESSION['idUsuario']===$this->idUsuario){
+            self::$errores[]="No se puede eliminar Usuario Actual";
+        }
+    }
+
     public function atributos(){
         $atributos=[];
         foreach(self::$columnasDB as $columna){
@@ -185,13 +192,19 @@ class Usuario extends ActiveRecord{
     }
 
     public function eliminarUsuario(){
-        $query="EXEC eliminarUsuarios :idUsuario";
-        $consulta=self::$db->prepare($query);
-        $consulta->bindParam(':idUsuario',$this->idUsuario,PDO::PARAM_INT);
-        $consulta->execute();
 
-        if(!self::$db->rowCount() > 0){
-            self::$errores[]="No se pudo Eliminar el usuario";
+        if($this->idUsuario){
+
+            $query="EXEC eliminarUsuarios :idUsuario";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(':idUsuario',$this->idUsuario,PDO::PARAM_INT);
+            $consulta->execute();
+
+            if(!self::$db->rowCount() > 0){
+                self::$errores[]="No se pudo Eliminar el usuario";
+            }
+        }else{
+            self::$errores[]="El id es obligatorio";
         }
 
         return self::$errores;

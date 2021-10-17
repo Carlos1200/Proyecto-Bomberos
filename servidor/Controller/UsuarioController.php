@@ -101,17 +101,23 @@ class UsuarioController{
         }
     }
 
-    public function eliminarUsuario(Router $router){
+    public static function eliminarUsuario(Router $router){
         $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
         $token=str_replace("token=","",$query);
-
         $usuario=new Usuario($_POST);
         
         $usuario::VerificarToken($token);
         $usuario::verificarAdmin();
+        $usuario->verificarUsuarioActual();
         $errores=$usuario::getErrores();
         if(empty($errores)){
-            
+            $errores=$usuario->eliminarUsuario();
+
+            if(!empty($errores)){
+                $router->render('errores/error',[
+                    'errores'=>$errores
+                ]);
+            }
         }else{
             $router->render('errores/error',[
                 'errores'=>$errores

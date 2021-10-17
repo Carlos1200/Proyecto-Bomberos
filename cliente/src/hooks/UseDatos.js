@@ -13,10 +13,15 @@ export const UseDatos = (consulta) => {
     },[consultarUsarios]);
   
     const obtenerDatos=async()=>{
-      const {data}=await Api.get(`/${consulta}`);
+
+        try {
+            const {data}=await Api.get(`/${consulta}`);
   
-      setDatos(data);
-      setCargando(false);
+            setDatos(data);
+            setCargando(false);
+        } catch (error) {
+            console.log(error.response.data||"Error en el servidor");
+        }
     }
     return {
         datos,

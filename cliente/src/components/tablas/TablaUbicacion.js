@@ -1,13 +1,34 @@
-import React from "react";
+import React,{useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
+import {UbicacionModal} from '../modal/UbicacionModal'
+import { Eliminar } from "../modal/Eliminar";
 import { UseDatos } from "../../hooks/UseDatos";
+import Api from "../../Api/Api";
 
 
 export const TablaUbicacion = () => {
 
-  const {datos,cargando} = UseDatos('ubicacion');
+  const [visible, setVisible] = useState(false);
+  const [visibleBorrar, setVisibleBorrar] = useState(false);
+  const [ubicacionBorrar, setUbicacionBorrar] = useState(null);
+  const [ubicacion, setUbicacion] = useState();
+
+  const {datos,cargando,setConsultarUsarios} = UseDatos('ubicacion');
+
+  const eliminarUbicacion=async()=>{
+    try {
+      const formData=new FormData();
+      formData.append("idUbicacion",ubicacionBorrar);
+      await Api.post('/ubicacionDelete',formData);
+      setConsultarUsarios(true);
+      setVisibleBorrar(false);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  }
 
   return (
     <Contenedor>
@@ -25,17 +46,27 @@ export const TablaUbicacion = () => {
             {datos.map((ubicacion,index)=>(
               <ColumInputBox key={index}>
                 <ColumInput>{ubicacion.nombreUbicacion}</ColumInput>
-            <ColumInput>
-              <FontAwesomeIcon
-                icon={faEdit}
-                style={{ fontSize: "23px", color: "0C9021" }}
-              />
+                <ColumInput>
+              <BtnEditar onClick={()=>{
+                setVisible(true);
+                setUbicacion(ubicacion);
+              }}>
+                <FontAwesomeIcon
+                  icon={faEdit}
+                  style={{ fontSize: "23px", color: "0C9021" }}
+                />
+              </BtnEditar>
             </ColumInput>
             <ColumInput>
-              <FontAwesomeIcon
-                icon={faTrashAlt}
-                style={{ fontSize: "23px", color: "FF0000" }}
-              />
+              <BtnEliminar onClick={()=>{
+                setVisibleBorrar(true)
+                setUbicacionBorrar(ubicacion.idUbicacion)
+              }}>
+                <FontAwesomeIcon
+                  icon={faTrashAlt}
+                  style={{ fontSize: "23px", color: "FF0000" }}
+                />
+              </BtnEliminar>
             </ColumInput>
               </ColumInputBox>
             ))}
@@ -43,6 +74,18 @@ export const TablaUbicacion = () => {
       </Table>
       )}
       </ContenedorTabla>
+      <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {visible&&<UbicacionModal handleClose={()=>setVisible(false)} ubicacion={ubicacion} consultarUbicacion={setConsultarUsarios}/>}
+      </AnimatePresence>
+      <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {visibleBorrar&&<Eliminar handleClose={()=>setVisibleBorrar(false)}  eliminar={eliminarUbicacion}/>}
+      </AnimatePresence>
     </Contenedor>
   );
 };
@@ -96,3 +139,14 @@ const ColumInput = styled.td`
         border-radius: 0 20px 20px 0;
     }
 `;
+
+const BtnEditar=styled.button`
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+`
+const BtnEliminar=styled.button`
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+`

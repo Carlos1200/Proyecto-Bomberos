@@ -43,8 +43,11 @@ export const Login = () => {
         history.push("/usuarios");
       }
     } catch (error) {
-      console.log(error.response.data);
-      setErrores(error.response.data);
+      if(!error.response){
+        setErrores(["Error en el servidor"])
+      }else{
+        setErrores(error.response.data);
+      }
       setTimeout(() => {
         setErrores(null);
       }, 3000);
