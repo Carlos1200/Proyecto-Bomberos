@@ -1,9 +1,12 @@
 <?php
 
+namespace Model;
+use \PDO;
 
 class ActiveRecord{
     protected static $db;
     protected static $tabla='';
+    protected static $salt='';
     protected static $columnasDB=[];
     protected static $errores=[];
 
@@ -23,17 +26,24 @@ class ActiveRecord{
         return $datos;
     }
 
-    public static function insert(){
-        
+    public static function getErrores(){
+        return self::$errores;
     }
 
-    // public static function sanitizarAtributos($atributos){
-    //     $sanitizado=[];
+    public static function VerificarToken($tokenAPI){
+        $token=$_ENV['API_KEY'];
 
-    //     foreach($atributos as $key =>$value){
-    //         $sanitizado[$key]=self::$db->
-    //     }
-    // }
+        if($token!==$tokenAPI){
+            self::$errores[]="El token no es válido";
+        }
+    }
+
+    public static function verificarAdmin(){
+        session_start();
+        if($_SESSION['tipoUsuario']!=="Administrador"){
+            self::$errores[]="No tiene permisos para esta acción";
+        }
+    }
 
 
 }

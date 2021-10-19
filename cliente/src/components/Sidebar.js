@@ -8,6 +8,8 @@ import {
   faWarehouse,
   faFileSignature,
   faPowerOff,
+  faExchangeAlt,
+  faObjectGroup
 } from "@fortawesome/free-solid-svg-icons";
 import { Btn } from "./Btn";
 import Logo from '../assets/LogoBomberos.png';
@@ -15,37 +17,13 @@ import { AuthContext } from "../context/Auth/AuthContext";
 import Api from "../Api/Api";
 
 
-const Contenedor = styled.div`
-  background-color: #343f56;
-  height: 100%;
-`;
-
-const Image = styled.img`
-  width: 100px;
-  height: 100px;
-`;
-
-const ContenedorImagen = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-  text-align: center;
-  padding: 1rem;
-`;
-
-const ContenedorButones = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 export const Sidebar = () => {
 
   const {cerrarSesion}=useContext(AuthContext);
 
   const cerrar=async()=>{
     try {
-      await Api.get('/logout',{withCredentials:true});
+      await Api.get('/logout');
       cerrarSesion();
     } catch (error) {
       console.log({error});
@@ -86,19 +64,57 @@ export const Sidebar = () => {
           redirect='ubicaciones'
         />
         <Btn
+          titulo='Administrador de Grupos'
+          icono={faObjectGroup}
+          size={true}
+          redirect='grupos'
+        />
+        <Btn
           titulo='Administrador de Plazas'
           icono={faWarehouse}
           redirect='plazas'
+        />
+        <Btn
+          titulo='Traslados'
+          icono={faExchangeAlt}
+          redirect='traslados'
         />
         <Btn
           titulo='Generar un Reporte'
           icono={faFileSignature}
           redirect='generar-reporte'
         />
+        <Btn 
+          titulo='Cerrar Sesión' 
+          icono={faPowerOff} 
+          redirect="" 
+          onpress={cerrar}
+        />
       </ContenedorButones>
-      <div style={{ marginTop: "4rem" }}>
-        <Btn titulo='Cerrar Sesión' icono={faPowerOff} redirect="" onpress={cerrar} />
-      </div>
     </Contenedor>
   );
 };
+
+const Contenedor = styled.div`
+  background-color: #343f56;
+  height: 100%;
+`;
+
+const Image = styled.img`
+  width: 100px;
+  height: 100px;
+`;
+
+const ContenedorImagen = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+`;
+
+const ContenedorButones = styled.div`
+  display: flex;
+  flex-direction: column;
+`;

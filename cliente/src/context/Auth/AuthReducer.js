@@ -1,6 +1,8 @@
 import {INICIO_SESION,CERRAR_SESION} from '../../types'
 
+// eslint-disable-next-line
 export default (state,action)=>{
+    
     switch(action.type){
 
         case INICIO_SESION:
@@ -9,6 +11,7 @@ export default (state,action)=>{
                 idUsuario:action.payload.idUsuario,
                 NombreUsuario:action.payload.NombreUsuario,
                 tipoUsuario:action.payload.tipoUsuario,
+                UbicacionUsuario:action.payload.UbicacionUsuario,
                 login:action.payload.login,
                 cargando:false,
             }
@@ -19,6 +22,7 @@ export default (state,action)=>{
                 idUsuario:'',
                 NombreUsuario:'',
                 tipoUsuario:'',
+                UbicacionUsuario:'',
                 login:false,
                 cargando:false,
             }

@@ -8,7 +8,7 @@ import Logo from "../../assets/LogoBomberos.png";
 import error from "../../assets/error.png";
 import Background from "../../assets/login.jpg";
 import Api from '../../Api/Api';
-import { AuthContext } from "../../context/Auth/AuthContext"; 
+import { AuthContext } from "../../context/Auth/AuthContext";
 
 
 const schema=yup.object({
@@ -34,18 +34,22 @@ export const Login = () => {
     formData.append('contra',contra);
 
     try {
-      const {data}=await Api.post('/login',formData,{withCredentials:true});
+      const {data}=await Api.post(`/login`,formData);
+      console.log(data);
+      const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=data;
 
-      const {NombreUsuario,idUsuario,login,tipoUsuario}=data;
+      inicioSesion(idUsuario,NombreUsuario,tipoUsuario,UbicacionUsuario,login);
 
-      inicioSesion(idUsuario,NombreUsuario,tipoUsuario,login);
 
       if(data.login){
         history.push("/usuarios");
       }
     } catch (error) {
-      console.log({error});
-      setErrores(error.response.data);
+      if(!error.response){
+        setErrores(["Error en el servidor"])
+      }else{
+        setErrores(error.response.data);
+      }
       setTimeout(() => {
         setErrores(null);
       }, 3000);
@@ -193,15 +197,6 @@ const BtnLogin = styled.button`
   }
 `;
 
-const BtnForgot = styled.button`
-  background-color: #343f56;
-  border-width: 0px;
-  margin-top: 30px;
-  margin-bottom: 60px;
-  font-size: 6mm;
-  color: #fff;
-  font-weight: bold;
-`;
 
 const ErrorLogin = styled.div`
   align-items: center;
