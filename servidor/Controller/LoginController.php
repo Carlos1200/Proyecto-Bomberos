@@ -13,37 +13,6 @@ class LoginController{
         $token=str_replace("token=","",$query);
 
         $usuario=new Usuario($_POST);
-        $errores=$usuario->validar();
-        if(empty($errores)){
-            do{
-                $usuario->existeUsuario();
-            
-                $errores=$usuario->getErrores();
-
-                if(empty($errores)){
-                    $autenticado = $usuario->autenticar();
-                
-                    $router->render('usuarios/autenticar',[
-                        'autenticado'=>$autenticado
-                    ]);
-                }else{
-                    $router->render('errores/error',[
-                        'errores'=>$errores
-                    ]);
-                    break;
-                }
-
-            }while(false);
-        }else{
-            $router->render('errores/error',[
-                'errores'=>$errores
-            ]);
-        }
-        
-
-    }
-    public static function logout(Router $router){
-        $usuario=new Usuario();
 
         $usuario::VerificarToken($token);
 
