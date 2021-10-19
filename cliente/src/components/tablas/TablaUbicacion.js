@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
@@ -9,7 +9,7 @@ import { UseDatos } from "../../hooks/UseDatos";
 import Api from "../../Api/Api";
 
 
-export const TablaUbicacion = () => {
+export const TablaUbicacion = ({consultar}) => {
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
@@ -18,6 +18,13 @@ export const TablaUbicacion = () => {
 
   const {datos,cargando,setConsultarUsarios} = UseDatos('ubicacion');
 
+  useEffect(()=>{
+    if(consultar){
+      setConsultarUsarios(consultar);
+    }
+  },[consultar])
+
+  
   const eliminarUbicacion=async()=>{
     try {
       const formData=new FormData();
@@ -150,3 +157,4 @@ const BtnEliminar=styled.button`
   background-color: transparent;
   cursor: pointer;
 `
+

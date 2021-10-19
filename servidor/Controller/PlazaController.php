@@ -64,6 +64,53 @@ class PlazaController{
         }
     }
 
+    public static function actualizarPlaza(Router $router){
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        $token=str_replace("token=","",$query);
+        
+        $plaza=new Plaza($_POST);
+        $plaza::VerificarToken($token);
+        $plaza::verificarAdmin();
+
+        $errores=$plaza->validar(false);
+        if(empty($errores)){
+            $errores=$plaza->editarPlaza();
+            if(!empty($errores)){
+                $router->render('errores/error',[
+                    'errores'=>$errores
+                ]);
+            }
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
+    }
+
+    public static function eliminarPlaza(Router $router){
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        $token=str_replace("token=","",$query);
+        
+        $plaza=new Plaza($_POST);
+        $plaza::VerificarToken($token);
+        $plaza::verificarAdmin();
+        $errores=$plaza::getErrores();
+
+        if(empty($errores)){
+            $errores=$plaza->eliminarPlaza();
+            if(!empty($errores)){
+                $router->render('errores/error',[
+                    'errores'=>$errores
+                ]);
+            }
+
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
+    }
+
 }
 
 ?>

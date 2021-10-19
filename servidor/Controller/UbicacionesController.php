@@ -100,7 +100,7 @@ class UbicacionesController{
         $ubicacion::verificarAdmin();
         $errores=$ubicacion::getErrores();
 
-        if(empty($ubicacion)){
+        if(empty($errores)){
             $errores=$ubicacion->eliminarUbicacion();
             if(!empty($errores)){
                 $router->render('errores/error',[

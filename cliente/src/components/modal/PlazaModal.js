@@ -9,27 +9,26 @@ import { Modal } from '../Modal'
 import Api from '../../Api/Api';
 
 const schema=yup.object({
-  ubicacionNombre:yup.string().required("La ubicación no debe ir vacía"),
+    nombrePlaza:yup.string().required("El nombre de la plaza no debe ir vacía"),
 });
 
-export const UbicacionModal = ({handleClose,ubicacion,consultarUbicacion}) => {
-
+export const PlazaModal = ({handleClose,plaza,consultarPlaza}) => {
 
 
     const { register, handleSubmit,formState: { errors } } = useForm({
       resolver:yupResolver(schema),
       defaultValues:{
-        ubicacionNombre:ubicacion?ubicacion.nombreUbicacion:'',
+        nombrePlaza:plaza?plaza.nombrePlaza:'',
       }
     });
-    const SubmitEditar=async({ubicacionNombre})=>{
+    const SubmitEditar=async({nombrePlaza})=>{
       try {
         const formData=new FormData();
-        formData.append('idUbicacion',ubicacion.idUbicacion);
-        formData.append('nombreUbicacion',ubicacionNombre);
+        formData.append('idPlaza',plaza.idPlaza);
+        formData.append('nombrePlaza',nombrePlaza);
 
-        await Api.post("/ubicacionEdit",formData);
-        consultarUbicacion(true);
+        await Api.post("/plazaEdit",formData);
+        consultarPlaza(true);
         handleClose();
 
       } catch (error) {
@@ -37,13 +36,13 @@ export const UbicacionModal = ({handleClose,ubicacion,consultarUbicacion}) => {
       }
     }
 
-    const SubmitNuevo=async({ubicacionNombre})=>{
+    const SubmitNuevo=async({nombrePlaza})=>{
       try {
         const formData=new FormData();
-        formData.append('nombreUbicacion',ubicacionNombre);
+        formData.append('nombrePlaza',nombrePlaza);
 
-        await Api.post("/ubicacion",formData);
-        consultarUbicacion(true);
+        await Api.post("/plaza",formData);
+        consultarPlaza(true);
         handleClose();
       } catch (error) {
         console.log(error.response.data);
@@ -65,13 +64,13 @@ export const UbicacionModal = ({handleClose,ubicacion,consultarUbicacion}) => {
             />
           </div>
           <Header>
-            <Titulo>{ubicacion?'Editar Ubicación':'Nueva ubicacion'}</Titulo>
+            <Titulo>{plaza?'Editar Plaza':'Nueva Plaza'}</Titulo>
           </Header>
-                <Label>Nombre Ubicación</Label>
-                <Textbox  {...register("ubicacionNombre")} />
-                {errors.ubicacionNombre&& <TextError>{errors.ubicacionNombre.message}</TextError>} 
+                <Label>Nombre Plaza</Label>
+                <Textbox  {...register("nombrePlaza")} />
+                {errors.nombrePlaza&& <TextError>{errors.nombrePlaza.message}</TextError>} 
                 <ContenedorBotones>
-                  <ContenedorBoton onClick={handleSubmit(ubicacion?SubmitEditar:SubmitNuevo)}>
+                  <ContenedorBoton onClick={handleSubmit(plaza?SubmitEditar:SubmitNuevo)}>
                     <FontAwesomeIcon icon={faSave} style={{fontSize:'2rem', color:'#343f56', marginRight:'1rem'}}/>
                     <Label>Guardar Cambios</Label>
                   </ContenedorBoton>

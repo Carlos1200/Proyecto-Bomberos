@@ -29,8 +29,13 @@ class Empleado extends ActiveRecord{
         $this->fechaCreacionEmpleado=$args['fechaCreacionEmpleado']??'';
     }
 
-    public function validar()
+    public function validar($nuevo=true)
     {
+        if(!$nuevo){
+            if(!$this->nombres){
+                self::$errores[]="El Nombre del empleado es obligatorio";
+            }
+        }
         if(!$this->nombres){
             self::$errores[]="El Nombre del empleado es obligatorio";
         }
@@ -58,7 +63,18 @@ class Empleado extends ActiveRecord{
         return self::$errores;
     }
 
-    
+    public function ObtenerEmpleados(){
+        $query="EXEC leerEmpleadoAdmin";
+        $consulta=self::$db->prepare($query);
+        $consulta->execute();
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+
+        return $datos;
+    }
+
+    public function editarEmpleado(){
+        $query="EXEC actualizarEmpleado ";
+    }
     
 }
 

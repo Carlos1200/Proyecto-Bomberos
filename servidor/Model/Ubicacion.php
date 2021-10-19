@@ -62,7 +62,7 @@ class Ubicacion extends ActiveRecord{
         $consulta->execute();
 
         if(!self::$db->rowCount()>0){
-            self::$errores[]="No se pudo agregar una nueva Ubicacion";
+            self::$errores[]="No se pudo editar la Ubicacion";
         }
 
         return self::$errores;
@@ -76,7 +76,7 @@ class Ubicacion extends ActiveRecord{
             $consulta->execute();
 
             if(!self::$db->rowCount() > 0){
-                self::$errores[]="No se pudo agregar una nueva Ubicacion";
+                self::$errores[]="No se pudo eliminar la Ubicacion";
             }
 
         }else{

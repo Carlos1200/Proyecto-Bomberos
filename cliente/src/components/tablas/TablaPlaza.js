@@ -2,26 +2,45 @@ import React,{useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
+import { AnimatePresence } from "framer-motion";
 import Api from '../../Api/Api';
+import { UseDatos } from "../../hooks/UseDatos";
+import { PlazaModal } from "../modal/PlazaModal";
+import { Eliminar } from "../modal/Eliminar";
 
 
-export const TablaPlaza = () => {
+export const TablaPlaza = ({consultar}) => {
 
-  const [plazacol, setPlaza] = useState();
+  const [visible, setVisible] = useState(false);
+  const [visibleBorrar, setVisibleBorrar] = useState(false);
+  const [plazaBorrar, setPlazaBorrar] = useState(null);
+  const [plaza, setPlaza] = useState();
+
+  const {datos,cargando,setConsultarUsarios} = UseDatos('plaza');
+
   useEffect(()=>{
-    obtenerUsuarios();
-  },[]);
+    if(consultar){
+      setConsultarUsarios(consultar);
+    }
+  },[consultar])
 
-  const obtenerUsuarios=async()=>{
-    const {data}=await Api.get(`/plaza`);
-
-    setPlaza(data);
+  const eliminarPlaza=async()=>{
+    try {
+      const formData=new FormData();
+      formData.append("idPlaza",plazaBorrar);
+      await Api.post('/plazaDelete',formData);
+      setConsultarUsarios(true);
+      setVisibleBorrar(false);
+    } catch (error) {
+      console.log(error.response.data);
+    }
   }
+
 
   return (
     <Contenedor>
       <ContenedorTabla>
-      {plazacol&&(
+      {!cargando&&(
         <Table>
         <HeadTop>
           <ColumTitleBox>
@@ -31,20 +50,30 @@ export const TablaPlaza = () => {
           </ColumTitleBox>
         </HeadTop>
         <Body>
-            {plazacol.map((plaza,index)=>(
+            {datos.map((plaza,index)=>(
               <ColumInputBox key={index}>
                 <ColumInput>{plaza.nombrePlaza}</ColumInput>
             <ColumInput>
-              <FontAwesomeIcon
-                icon={faEdit}
-                style={{ fontSize: "23px", color: "0C9021" }}
-              />
+            <BtnEditar onClick={()=>{
+                setVisible(true);
+                setPlaza(plaza);
+              }}>
+                <FontAwesomeIcon
+                  icon={faEdit}
+                  style={{ fontSize: "23px", color: "0C9021" }}
+                />
+              </BtnEditar>
             </ColumInput>
             <ColumInput>
-              <FontAwesomeIcon
-                icon={faTrashAlt}
-                style={{ fontSize: "23px", color: "FF0000" }}
-              />
+            <BtnEliminar onClick={()=>{
+                setVisibleBorrar(true)
+                setPlazaBorrar(plaza.idPlaza)
+              }}>
+                <FontAwesomeIcon
+                  icon={faTrashAlt}
+                  style={{ fontSize: "23px", color: "FF0000" }}
+                />
+              </BtnEliminar>
             </ColumInput>
               </ColumInputBox>
             ))}
@@ -52,6 +81,18 @@ export const TablaPlaza = () => {
       </Table>
       )}
       </ContenedorTabla>
+      <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {visible&&<PlazaModal handleClose={()=>setVisible(false)} plaza={plaza} consultarPlaza={setConsultarUsarios}/>}
+      </AnimatePresence>
+      <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {visibleBorrar&&<Eliminar handleClose={()=>setVisibleBorrar(false)}  eliminar={eliminarPlaza}/>}
+      </AnimatePresence>
     </Contenedor>
   );
 };
@@ -105,3 +146,14 @@ const ColumInput = styled.td`
         border-radius: 0 20px 20px 0;
     }
 `;
+
+const BtnEditar=styled.button`
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+`
+const BtnEliminar=styled.button`
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+`

@@ -1,12 +1,16 @@
-import React from 'react'
+import React,{useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch} from '@fortawesome/free-solid-svg-icons';
+import { faSearch,faPlus} from '@fortawesome/free-solid-svg-icons';
+import { motion,AnimatePresence } from 'framer-motion';
 import { Menu } from '../Menu'
 import {TablaUsuario} from '../tablas/TablaUsuario';
 import { Background } from '../Background';
+import { UsuarioModal } from '../modal/UsuarioModal';
 export const Usuarios = () => {
 
+  const [visible, setVisible] = useState(false);
+  const [consultar, setConsultar] = useState(false);
     return (
       <Menu>
         <Background titulo="Administración de Usuarios">
@@ -19,10 +23,36 @@ export const Usuarios = () => {
               <FilterTextBox>¿Desea un archivo en específico?</FilterTextBox>
               <BtnFilterSearch>Buscar</BtnFilterSearch>
             </FilterBox>
-            <TablaUsuario/>
-            {/* <BtnAgregarNuevo>Agregar Nuevo Usuario</BtnAgregarNuevo> */}
+            <TablaUsuario consultar={consultar}/>
+            <motion.button
+            onClick={()=>{
+              setVisible(true);
+            }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              style={{
+                borderRadius:'100%',
+                backgroundColor:'#67BB6F',
+                padding: '20px',
+                cursor: 'pointer',
+                position: 'absolute',
+                bottom: 20,
+                right: 15
+              }}
+            >
+              <FontAwesomeIcon
+                icon={faPlus}
+                style={{ fontSize: "30px", color: "#000000" }}
+              />
+            </motion.button>
           </ReportsBox>
           </Background>
+          <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {visible&&<UsuarioModal handleClose={()=>setVisible(false)} consultarUsuarios={setConsultar} />}
+          </AnimatePresence>
       </Menu>
     );
 }

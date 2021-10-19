@@ -85,12 +85,12 @@ class Usuario extends ActiveRecord{
     }
     
     public function crearUsuario(){
-        $query="INSERT INTO ".self::$tabla. " (NombreUsuario,tipoUsuario,UbicacionUsuario,contra) VALUES (:NombreUsuario, :tipoUsuario, :UbicacionUsuario, :contra)";
+        $query="EXEC insertarUsuarios :NombreUsuario, :tipoUsuario, :contra, :UbicacionUsuario";
         $consulta=self::$db->prepare($query);
         $consulta->bindParam(':NombreUsuario',$this->NombreUsuario,PDO::PARAM_STR);
         $consulta->bindParam(':tipoUsuario',$this->tipoUsuario,PDO::PARAM_STR);
-        $consulta->bindParam(':UbicacionUsuario',$this->UbicacionUsuario,PDO::PARAM_STR);
         $consulta->bindParam(':contra',$this->contra,PDO::PARAM_STR);
+        $consulta->bindParam(':UbicacionUsuario',$this->UbicacionUsuario,PDO::PARAM_STR);
         $consulta->execute();
         
         if(!self::$db->lastInsertId()>0){
@@ -177,7 +177,6 @@ class Usuario extends ActiveRecord{
     }
 
     public function verificarUsuarioActual(){
-        session_start();
         if($_SESSION['idUsuario']===$this->idUsuario){
             self::$errores[]="No se puede eliminar Usuario Actual";
         }

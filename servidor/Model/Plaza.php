@@ -17,8 +17,13 @@ class Plaza extends ActiveRecord{
         $this->nombrePlaza=$args['nombrePlaza']??'';
     }
 
-    public function validar()
+    public function validar($nuevo=true)
     {
+        if(!$nuevo){
+            if(!$this->idPlaza){
+                self::$errores[]="El id de la plaza es obligatorio";
+            }
+        }
         if(!$this->nombrePlaza){
             self::$errores[]="El Nombre de la plaza es obligatorio";
         }
@@ -38,13 +43,45 @@ class Plaza extends ActiveRecord{
     }
 
     public function nuevaPlaza(){
-        $query="INSERT INTO ".self::$tabla. "(nombrePlaza) VALUES(:nombrePlaza)";
+        $query="EXEC insertarPlaza :nombrePlaza";
         $consulta=self::$db->prepare($query);
         $consulta->bindParam(':nombrePlaza',$this->nombrePlaza,PDO::PARAM_STR);
         $consulta->execute();
 
         if(!self::$db->lastInsertId()>0){
             self::$errores[]="No se pudo agregar una nueva plaza";
+        }
+
+        return self::$errores;
+    }
+
+    public function editarPlaza(){
+        $query="EXEC actualizarPlaza :idPlaza, :nombrePlaza";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':idPlaza',$this->idPlaza,PDO::PARAM_INT);
+        $consulta->bindParam(':nombrePlaza',$this->nombrePlaza,PDO::PARAM_STR);
+        $consulta->execute();
+
+        if(!self::$db->rowCount()>0){
+            self::$errores[]="No se pudo editar la Plaza";
+        }
+
+        return self::$errores;
+    }
+
+    public function eliminarPlaza(){
+        if($this->idPlaza){
+            $query="EXEC eliminarPlaza :idPlaza";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(':idPlaza',$this->idPlaza,PDO::PARAM_INT);
+            $consulta->execute();
+
+            if(!self::$db->rowCount() > 0){
+                self::$errores[]="No se Eliminar la Plaza";
+            }
+
+        }else{
+            self::$errores[]="El id de la Plaza es obligatorio";
         }
 
         return self::$errores;

@@ -11,6 +11,7 @@
     use Controller\PlazaController;
     use Controller\PensionController;
     use Controller\GrupoController;
+    use Controller\EmpleadoController;
 
     //Usuarios
     $router->get('/api/usuarios',[UsuarioController::class,'obtenerUsuarios']);
@@ -33,6 +34,8 @@
     //Plazas
     $router->post('/api/plaza',[PlazaController::class,'nuevaPlaza']);
     $router->get('/api/plaza',[PlazaController::class,'obtenerPlazas']);
+    $router->post('/api/plazaEdit',[PlazaController::class,'actualizarPlaza']);
+    $router->post('/api/plazaDelete',[PlazaController::class,'eliminarPlaza']);
 
     //Pensiones
     $router->post('/api/pension',[PensionController::class,'nuevaPension']);
@@ -41,6 +44,9 @@
     //grupo
     $router->post('/api/grupo',[GrupoController::class,'nuevoGrupo']);
     $router->get('/api/grupo',[GrupoController::class,'obtenerGrupos']);
+    
+    $router->get('/api/empleado',[EmpleadoController::class,'obtenerEmpleados']);
+    $router->post('/api/empleadoEdit',[EmpleadoController::class,'actualizarEmpleados']);
 
     $router->comprobarRutas();
 ?>

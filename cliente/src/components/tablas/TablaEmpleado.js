@@ -1,41 +1,41 @@
-import React,{ useEffect, useState} from "react";
+import React,{useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { AnimatePresence } from "framer-motion";
+import { faEdit, faTrashAlt,faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
-import { UsuarioModal } from "../modal/UsuarioModal";
+import { AnimatePresence } from "framer-motion";
+import Api from '../../Api/Api';
 import { UseDatos } from "../../hooks/UseDatos";
+import { PlazaModal } from "../modal/PlazaModal";
 import { Eliminar } from "../modal/Eliminar";
-import Api from "../../Api/Api";
 
 
-export const TablaUsuario = ({consultar}) => {
+export const TablaEmpleado = ({consultar}) => {
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
-  const [usuarioBorrar, setUsuarioBorrar] = useState(null);
-  const [usuario, setUsuario] = useState();
- 
-  const {datos,cargando,setConsultarUsarios} = UseDatos('usuarios');
+  const [plazaBorrar, setPlazaBorrar] = useState(null);
+  const [plaza, setPlaza] = useState();
 
+  const {datos,cargando,setConsultarUsarios} = UseDatos('empleado');
+  console.log(datos);
   useEffect(()=>{
     if(consultar){
       setConsultarUsarios(consultar);
     }
   },[consultar])
 
-    const eliminarUsuario=async()=>{
-      try {
-        const formData=new FormData();
-        formData.append("idUsuario",usuarioBorrar);
-        const resp=await Api.post('/usuariosDelete',formData);
-        console.log(resp);
-        setConsultarUsarios(true);
-        setVisibleBorrar(false);
-      } catch (error) {
-        console.log(error.response.data);
-      }
+  const eliminarPlaza=async()=>{
+    try {
+      const formData=new FormData();
+      formData.append("idPlaza",plazaBorrar);
+      await Api.post('/plazaDelete',formData);
+      setConsultarUsarios(true);
+      setVisibleBorrar(false);
+    } catch (error) {
+      console.log(error.response.data);
     }
+  }
+
 
   return (
     <Contenedor>
@@ -44,23 +44,32 @@ export const TablaUsuario = ({consultar}) => {
         <Table>
         <HeadTop>
           <ColumTitleBox>
-              <ColumnTitle>Nombre del Usuario</ColumnTitle>
-              <ColumnTitle>Tipo de Usuario</ColumnTitle>
+              <ColumnTitle>Nombre del Empleado</ColumnTitle>
               <ColumnTitle>Ubicación</ColumnTitle>
+              <ColumnTitle>Plaza Nominal</ColumnTitle>
+              <ColumnTitle>Detalles</ColumnTitle>
               <ColumnTitle>Editar</ColumnTitle>
               <ColumnTitle>Borrar</ColumnTitle>
           </ColumTitleBox>
         </HeadTop>
         <Body>
-            {datos.map((usuario,index)=>(
+            {datos.map((empleado,index)=>(
               <ColumInputBox key={index}>
-                <ColumInput>{usuario.NombreUsuario}</ColumInput>
-                <ColumInput>{usuario.tipoUsuario}</ColumInput>
-                <ColumInput>{usuario.UbicacionUsuario}</ColumInput>
+                <ColumInput>{empleado.nombres} {empleado.apellidos}</ColumInput>
+                <ColumInput>{empleado.nombreUbicacion}</ColumInput>
+                <ColumInput>{empleado.nombrePlaza}</ColumInput>
             <ColumInput>
-              <BtnEditar onClick={()=>{
+            <BtnInfo >
+                <FontAwesomeIcon
+                  icon={faInfoCircle}
+                  style={{ fontSize: "23px", color: "#3896D3" }}
+                />
+              </BtnInfo>
+              </ColumInput>
+              <ColumInput>
+            <BtnEditar onClick={()=>{
                 setVisible(true);
-                setUsuario(usuario);
+                setPlaza(empleado);
               }}>
                 <FontAwesomeIcon
                   icon={faEdit}
@@ -69,9 +78,9 @@ export const TablaUsuario = ({consultar}) => {
               </BtnEditar>
             </ColumInput>
             <ColumInput>
-              <BtnEliminar onClick={()=>{
+            <BtnEliminar onClick={()=>{
                 setVisibleBorrar(true)
-                setUsuarioBorrar(usuario.idUsuario)
+                setPlazaBorrar(plaza.idPlaza)
               }}>
                 <FontAwesomeIcon
                   icon={faTrashAlt}
@@ -89,13 +98,13 @@ export const TablaUsuario = ({consultar}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<UsuarioModal handleClose={()=>setVisible(false)} usuario={usuario} consultarUsuarios={setConsultarUsarios}/>}
+            {visible&&<PlazaModal handleClose={()=>setVisible(false)} plaza={plaza} consultarPlaza={setConsultarUsarios}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visibleBorrar&&<Eliminar handleClose={()=>setVisibleBorrar(false)}  eliminar={eliminarUsuario}/>}
+            {visibleBorrar&&<Eliminar handleClose={()=>setVisibleBorrar(false)}  eliminar={eliminarPlaza}/>}
       </AnimatePresence>
     </Contenedor>
   );
@@ -142,7 +151,7 @@ width: 100%;
 
 const ColumInput = styled.td`
   text-align: center;
-  padding: 7px 0;
+  padding: 5px 0;
     &:first-child{
         border-radius: 20px 0 0 20px;
     }
@@ -157,6 +166,12 @@ const BtnEditar=styled.button`
   cursor: pointer;
 `
 const BtnEliminar=styled.button`
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+`
+
+const BtnInfo=styled.button`
   border: 0;
   background-color: transparent;
   cursor: pointer;
