@@ -1,22 +1,22 @@
-import React,{ useEffect, useState} from "react";
+import React,{useEffect, useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
-import { UsuarioModal } from "../modal/UsuarioModal";
-import { UseDatos } from "../../hooks/UseDatos";
+import {UbicacionModal} from '../modal/UbicacionModal'
 import { Eliminar } from "../modal/Eliminar";
+import { UseDatos } from "../../hooks/UseDatos";
 import Api from "../../Api/Api";
 
 
-export const TablaUsuario = ({consultar}) => {
+export const TablaUbicacion = ({consultar}) => {
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
-  const [usuarioBorrar, setUsuarioBorrar] = useState(null);
-  const [usuario, setUsuario] = useState();
- 
-  const {datos,cargando,setConsultarUsarios} = UseDatos('usuarios');
+  const [ubicacionBorrar, setUbicacionBorrar] = useState(null);
+  const [ubicacion, setUbicacion] = useState();
+
+  const {datos,cargando,setConsultarUsarios} = UseDatos('ubicacion');
 
   useEffect(()=>{
     if(consultar){
@@ -24,18 +24,18 @@ export const TablaUsuario = ({consultar}) => {
     }
   },[consultar])
 
-    const eliminarUsuario=async()=>{
-      try {
-        const formData=new FormData();
-        formData.append("idUsuario",usuarioBorrar);
-        const resp=await Api.post('/usuariosDelete',formData);
-        console.log(resp);
-        setConsultarUsarios(true);
-        setVisibleBorrar(false);
-      } catch (error) {
-        console.log(error.response.data);
-      }
+  
+  const eliminarUbicacion=async()=>{
+    try {
+      const formData=new FormData();
+      formData.append("idUbicacion",ubicacionBorrar);
+      await Api.post('/ubicacionDelete',formData);
+      setConsultarUsarios(true);
+      setVisibleBorrar(false);
+    } catch (error) {
+      console.log(error.response.data);
     }
+  }
 
   return (
     <Contenedor>
@@ -44,23 +44,19 @@ export const TablaUsuario = ({consultar}) => {
         <Table>
         <HeadTop>
           <ColumTitleBox>
-              <ColumnTitle>Nombre del Usuario</ColumnTitle>
-              <ColumnTitle>Tipo de Usuario</ColumnTitle>
-              <ColumnTitle>Ubicación</ColumnTitle>
+              <ColumnTitle>Nombre de las Ubicaciones</ColumnTitle>
               <ColumnTitle>Editar</ColumnTitle>
               <ColumnTitle>Borrar</ColumnTitle>
           </ColumTitleBox>
         </HeadTop>
         <Body>
-            {datos.map((usuario,index)=>(
+            {datos.map((ubicacion,index)=>(
               <ColumInputBox key={index}>
-                <ColumInput>{usuario.NombreUsuario}</ColumInput>
-                <ColumInput>{usuario.tipoUsuario}</ColumInput>
-                <ColumInput>{usuario.UbicacionUsuario}</ColumInput>
-            <ColumInput>
+                <ColumInput>{ubicacion.nombreUbicacion}</ColumInput>
+                <ColumInput>
               <BtnEditar onClick={()=>{
                 setVisible(true);
-                setUsuario(usuario);
+                setUbicacion(ubicacion);
               }}>
                 <FontAwesomeIcon
                   icon={faEdit}
@@ -71,7 +67,7 @@ export const TablaUsuario = ({consultar}) => {
             <ColumInput>
               <BtnEliminar onClick={()=>{
                 setVisibleBorrar(true)
-                setUsuarioBorrar(usuario.idUsuario)
+                setUbicacionBorrar(ubicacion.idUbicacion)
               }}>
                 <FontAwesomeIcon
                   icon={faTrashAlt}
@@ -89,13 +85,13 @@ export const TablaUsuario = ({consultar}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<UsuarioModal handleClose={()=>setVisible(false)} usuario={usuario} consultarUsuarios={setConsultarUsarios}/>}
+            {visible&&<UbicacionModal handleClose={()=>setVisible(false)} ubicacion={ubicacion} consultarUbicacion={setConsultarUsarios}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visibleBorrar&&<Eliminar handleClose={()=>setVisibleBorrar(false)}  eliminar={eliminarUsuario}/>}
+            {visibleBorrar&&<Eliminar handleClose={()=>setVisibleBorrar(false)}  eliminar={eliminarUbicacion}/>}
       </AnimatePresence>
     </Contenedor>
   );
@@ -142,7 +138,7 @@ width: 100%;
 
 const ColumInput = styled.td`
   text-align: center;
-  padding: 7px 0;
+  padding: 5px 0;
     &:first-child{
         border-radius: 20px 0 0 20px;
     }
@@ -161,3 +157,4 @@ const BtnEliminar=styled.button`
   background-color: transparent;
   cursor: pointer;
 `
+

@@ -33,7 +33,7 @@ export const Login = () => {
     formData.append('contra',contra);
 
     try {
-      const {data}=await Api.post(`/login`,formData,{withCredentials:true});
+      const {data}=await Api.post(`/login`,formData);
       console.log(data);
       const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=data;
 
@@ -43,8 +43,11 @@ export const Login = () => {
         history.push("/usuarios");
       }
     } catch (error) {
-      console.log(error);
-      setErrores(error.response.data);
+      if(!error.response){
+        setErrores(["Error en el servidor"])
+      }else{
+        setErrores(error.response.data);
+      }
       setTimeout(() => {
         setErrores(null);
       }, 3000);
