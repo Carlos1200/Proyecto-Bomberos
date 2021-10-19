@@ -10,6 +10,7 @@ import Background from "../../assets/login.jpg";
 import Api from '../../Api/Api';
 import { AuthContext } from "../../context/Auth/AuthContext";
 
+
 const schema=yup.object({
   usuario:yup.string().required("El usuario no debe ir vacio"),
   contra:yup.string().required("La contraseña no debe ir vacio"),
@@ -38,6 +39,7 @@ export const Login = () => {
       const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=data;
 
       inicioSesion(idUsuario,NombreUsuario,tipoUsuario,UbicacionUsuario,login);
+
 
       if(data.login){
         history.push("/usuarios");

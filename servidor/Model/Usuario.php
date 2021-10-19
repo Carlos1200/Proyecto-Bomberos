@@ -115,7 +115,6 @@ class Usuario extends ActiveRecord{
 
         return self::$errores;
     }
-    
 
     public function validar()
     {
@@ -208,5 +207,26 @@ class Usuario extends ActiveRecord{
 
         return self::$errores;
     }
+
+    public function cerrarSesion(){
+        session_start();
+        $_SESSION=[];
+        return($_SESSION);
+    }
+
+    public function verificarSesion(){
+        session_start();
+        return($_SESSION);
+    }
+
+    public function atributos(){
+        $atributos=[];
+        foreach(self::$columnasDB as $columna){
+            $atributos[$columna]=$this->$columna;
+        }
+        return $atributos;
+    }
+
+
   
 }

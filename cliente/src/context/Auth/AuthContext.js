@@ -1,9 +1,11 @@
+
 import React,{createContext,useEffect,useReducer} from 'react';
 import AuthReducer from './AuthReducer';
 import {INICIO_SESION,CERRAR_SESION} from '../../types'
 import Api from '../../Api/Api';
 
 export const AuthContext=createContext();
+
 
 export const AuthProvider=({children})=>{
 
@@ -45,6 +47,7 @@ export const AuthProvider=({children})=>{
       }
 
     const inicioSesion=(idUsuario,NombreUsuario,tipoUsuario,UbicacionUsuario,login)=>{
+
         dispatch({
             type:INICIO_SESION,
             payload:{
