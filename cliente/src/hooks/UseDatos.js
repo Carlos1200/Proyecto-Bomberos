@@ -5,12 +5,12 @@ export const UseDatos = (consulta) => {
 
     const [datos, setDatos] = useState();
     const [cargando, setCargando] = useState(true);
-    const [consultarUsarios, setConsultarUsarios] = useState(false)
+    const [consultarDB, setConsultarDB] = useState(false)
 
     useEffect(()=>{
         obtenerDatos();
-        setConsultarUsarios(false);
-    },[consultarUsarios]);
+        setConsultarDB(false);
+    },[consultarDB]);
   
     const obtenerDatos=async()=>{
 
@@ -23,9 +23,9 @@ export const UseDatos = (consulta) => {
             console.log(error.response.data||"Error en el servidor");
         }
     }
-    return {
+    return [
         datos,
         cargando,
-        setConsultarUsarios
-    }
+        setConsultarDB
+    ]
 }
