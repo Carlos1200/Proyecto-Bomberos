@@ -16,10 +16,10 @@ export const TablaEmpleado = ({consultar}) => {
   const [plazaBorrar, setPlazaBorrar] = useState(null);
   const [plaza, setPlaza] = useState();
 
-  const [datos,cargando,setConsultarUsarios] = UseDatos('empleado');
+  const [datos,cargando,setConsultarEmpleados] = UseDatos('empleado');
   useEffect(()=>{
     if(consultar){
-      setConsultarUsarios(consultar);
+      setConsultarEmpleados(consultar);
     }
   },[consultar])
 
@@ -28,7 +28,7 @@ export const TablaEmpleado = ({consultar}) => {
       const formData=new FormData();
       formData.append("idPlaza",plazaBorrar);
       await Api.post('/plazaDelete',formData);
-      setConsultarUsarios(true);
+      setConsultarEmpleados(true);
       setVisibleBorrar(false);
     } catch (error) {
       console.log(error.response.data);
@@ -97,7 +97,7 @@ export const TablaEmpleado = ({consultar}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<PlazaModal handleClose={()=>setVisible(false)} plaza={plaza} consultarPlaza={setConsultarUsarios}/>}
+            {visible&&<PlazaModal handleClose={()=>setVisible(false)} plaza={plaza} consultarPlaza={setConsultarEmpleados}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}

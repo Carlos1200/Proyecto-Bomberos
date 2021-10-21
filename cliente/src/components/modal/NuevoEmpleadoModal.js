@@ -65,10 +65,11 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
     const { register, handleSubmit,formState: { errors },control } = useForm({
       resolver:yupResolver(schema),
     });
-    const agregarEmpleado=({nombres,apellidos,ubicacion,plaza,pension,grupo,creado})=>{
+    const agregarEmpleado=({nombres,apellidos,ubicacion,salario,plaza,pension,grupo,creado})=>{
       const data={
         nombres,
         apellidos,
+        salario,
         ubicacion:ubicacion.idUbicacion,
         plaza:plaza.idPlaza,
         pension:pension.idPension,
@@ -86,7 +87,7 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
     }
 
     const insertarEmpleados=async()=>{
-      console.log(nombresCol);
+      console.log(nombresCol,apellidosCol,salarioCol,grupoCol,pensionCol,ubicacionCol,ubicacionCol,plazaCol,fechaCol);
       const formData=new FormData();
       formData.append('nombres',nombresCol);
       formData.append('apellidos',apellidosCol)
