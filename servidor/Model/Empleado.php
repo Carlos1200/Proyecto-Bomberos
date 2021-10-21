@@ -21,7 +21,7 @@ class Empleado extends ActiveRecord{
         $this->idEmpleado=$args['idEmpleado']??null;
         $this->nombres=$args['nombres']??'';
         $this->apellidos=$args['apellidos']??'';
-        $this->salarioNormal=$args['salarioNormal']??'';
+        $this->salarioNominal=$args['salarioNominal']??'';
         $this->idGrupo=$args['idGrupo']??'';
         $this->idPension=$args['idPension']??'';
         $this->idUbicacion=$args['idUbicacion']??'';
@@ -32,8 +32,8 @@ class Empleado extends ActiveRecord{
     public function validar($nuevo=true)
     {
         if(!$nuevo){
-            if(!$this->nombres){
-                self::$errores[]="El Nombre del empleado es obligatorio";
+            if(!$this->idEmpleado){
+                self::$errores[]="El id del empleado es obligatorio";
             }
         }
         if(!$this->nombres){
@@ -42,7 +42,7 @@ class Empleado extends ActiveRecord{
         if(!$this->apellidos){
             self::$errores[]="El apellido del empleado es obligatorio";
         }
-        if(!$this->salarioNormal){
+        if(!$this->salarioNominal){
             self::$errores[]="El salario del empleado es obligatorio";
         }
         if(!$this->idGrupo){
@@ -57,8 +57,10 @@ class Empleado extends ActiveRecord{
         if(!$this->idPlaza){
             self::$errores[]="La plaza del empleado es obligatorio";
         }
-        if(!$this->fechaCreacionEmpleado){
-            self::$errores[]="La fecha de creación del empleado es obligatorio";
+        if(!$nuevo){
+            if(!$this->fechaCreacionEmpleado){
+                self::$errores[]="La fecha de creación del empleado es obligatorio";
+            }
         }
         return self::$errores;
     }
@@ -73,7 +75,35 @@ class Empleado extends ActiveRecord{
     }
 
     public function editarEmpleado(){
-        $query="EXEC actualizarEmpleado ";
+        $query="EXEC actualizarEmpleado :idEmpleado, :nombres, :apellidos :salarioNominal, :idGrupo, :idPension, :idUbicacion, :idPlaza";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':idEmpleado',$this->idEmpleado,PDO::PARAM_STR);
+        $consulta->bindParam(':nombres',$this->nombres,PDO::PARAM_STR);
+        $consulta->bindParam(':apellidos',$this->apellidos,PDO::PARAM_STR);
+        $consulta->bindParam(':salarioNominal',$this->salarioNominal,PDO::PARAM_STR);
+        $consulta->bindParam(':idGrupo',$this->idGrupo,PDO::PARAM_STR);
+        $consulta->bindParam(':id',$this->nombreGrupo,PDO::PARAM_STR);
+        $consulta->execute();
+    }
+
+    public function nuevosEmpleados(){
+        $query="EXEC insertarEmpleados :nombres, :apellidos, :salarioNominal, :idGrupo, :idPension, :idUbicacion, :idPlaza, :fechaCreacionEmpleado";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':nombres',$this->nombres,PDO::PARAM_STR);
+        $consulta->bindParam(':apellidos',$this->apellidos,PDO::PARAM_STR);
+        $consulta->bindParam(':salarioNominal',$this->salarioNominal,PDO::PARAM_STR);
+        $consulta->bindParam(':idGrupo',$this->idGrupo,PDO::PARAM_STR);
+        $consulta->bindParam(':idPension',$this->idPension,PDO::PARAM_STR);
+        $consulta->bindParam(':idUbicacion',$this->idUbicacion,PDO::PARAM_STR);
+        $consulta->bindParam(':idPlaza',$this->idPlaza,PDO::PARAM_STR);
+        $consulta->bindParam(':fechaCreacionEmpleado',$this->fechaCreacionEmpleado,PDO::PARAM_STR);
+        $consulta->execute();
+
+        if(!self::$db->lastInsertId()>0){
+            self::$errores[]="No se pudo agregar nuevos usuarios";
+        }
+
+        return self::$errores;
     }
     
 }

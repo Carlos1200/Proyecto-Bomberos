@@ -111,7 +111,7 @@ const ContenedorImagen = styled.div`
   align-items: center;
   color: white;
   text-align: center;
-  padding: 1rem;
+  /* padding: 0.5rem; */
 `;
 
 const ContenedorButones = styled.div`

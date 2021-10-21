@@ -16,7 +16,7 @@ export const TablaUsuario = ({consultar}) => {
   const [usuarioBorrar, setUsuarioBorrar] = useState(null);
   const [usuario, setUsuario] = useState();
  
-  const {datos,cargando,setConsultarUsarios} = UseDatos('usuarios');
+  const [datos,cargando,setConsultarUsarios] = UseDatos('usuarios');
 
   useEffect(()=>{
     if(consultar){
@@ -110,7 +110,10 @@ const Contenedor = styled.div`
 const ContenedorTabla=styled.div`
   overflow-y: auto;
   width: 100%;
-  max-height: 28rem;
+  max-height: 26rem;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const Table = styled.table`

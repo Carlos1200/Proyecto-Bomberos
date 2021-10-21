@@ -168,6 +168,12 @@ const Textbox = styled.input`
   margin-top: 10px;
   margin-bottom: 15px;
 
+  &:-webkit-autofill{
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px #343f56 inset;
+  transition: background-color 5000s ease-in-out 0s;
+  }
+
 `;
 
 const TextError=styled.p`

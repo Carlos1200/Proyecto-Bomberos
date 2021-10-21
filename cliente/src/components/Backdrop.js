@@ -6,7 +6,7 @@ import styled from 'styled-components';
 export const Backdrop = ({ children, onClick }) => {
   return (
     <Back
-      onClick={onClick}
+      // onClick={onClick} 
     >
       <motion.div
         initial={{ opacity: 0 }}
