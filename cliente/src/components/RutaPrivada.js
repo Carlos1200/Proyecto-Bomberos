@@ -10,6 +10,7 @@ const RutaPrivada = ({ component: Component, ...props  }) => {
       return <p>Cargando...</p>
     }
 
+
     return ( 
         <Route { ...props } render={ props => !login && !cargando ?  (
             <Redirect to="/" />

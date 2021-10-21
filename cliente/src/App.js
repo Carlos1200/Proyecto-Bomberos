@@ -12,6 +12,7 @@ import { GenerarReporte } from './components/screens/GenerarReporte';
 import RutaPrivada from './components/RutaPrivada';
 import { Grupos } from './components/screens/Grupos';
 import { Traslados } from './components/screens/Traslados';
+
 import '../src/index.css';
 
 const App = () => {

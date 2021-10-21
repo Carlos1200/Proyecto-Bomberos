@@ -11,8 +11,38 @@ class LoginController{
 
         $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
         $token=str_replace("token=","",$query);
-
         $usuario=new Usuario($_POST);
+        $errores=$usuario->validar();
+        if(empty($errores)){
+            do{
+                $usuario->existeUsuario();
+            
+                $errores=$usuario->getErrores();
+
+                if(empty($errores)){
+                    $autenticado = $usuario->autenticar();
+                
+                    $router->render('usuarios/autenticar',[
+                        'autenticado'=>$autenticado
+                    ]);
+                }else{
+                    $router->render('errores/error',[
+                        'errores'=>$errores
+                    ]);
+                    break;
+                }
+
+            }while(false);
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
+        
+
+    }
+    public static function logout(Router $router){
+        $usuario=new Usuario();
 
         $usuario::VerificarToken($token);
 
@@ -61,7 +91,6 @@ class LoginController{
     public static function logout(Router $router){
         
         $usuario=new Usuario();
-
         $autenticado=$usuario->cerrarSesion();
         
         $router->render('usuarios/autenticar',[
