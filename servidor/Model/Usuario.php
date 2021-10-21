@@ -164,29 +164,10 @@ class Usuario extends ActiveRecord{
         return($_SESSION);
     }
 
-    public function cerrarSesion(){
-        session_start();
-        $_SESSION=[];
-        return($_SESSION);
-    }
-
-    public function verificarSesion(){
-        session_start();
-        return($_SESSION);
-    }
-
     public function verificarUsuarioActual(){
         if($_SESSION['idUsuario']===$this->idUsuario){
             self::$errores[]="No se puede eliminar Usuario Actual";
         }
-    }
-
-    public function atributos(){
-        $atributos=[];
-        foreach(self::$columnasDB as $columna){
-            $atributos[$columna]=$this->$columna;
-        }
-        return $atributos;
     }
 
     public function eliminarUsuario(){

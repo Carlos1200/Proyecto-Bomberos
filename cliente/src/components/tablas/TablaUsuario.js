@@ -110,7 +110,7 @@ const Contenedor = styled.div`
 const ContenedorTabla=styled.div`
   overflow-y: auto;
   width: 100%;
-  max-height: 28rem;
+  max-height: 100%;
 `
 
 const Table = styled.table`
