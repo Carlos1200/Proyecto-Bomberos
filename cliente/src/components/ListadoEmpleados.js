@@ -2,38 +2,25 @@ import React,{useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
-import Api from '../../Api/Api';
 
 
-export const TablaGroup = () => {
+export const ListadoEmpleados = ({Empleados}) => {
 
-  const [grupocol, setGrupo] = useState();
-  useEffect(()=>{
-    obtenerUsuarios();
-  },[]);
-
-  const obtenerUsuarios=async()=>{
-    const {data}=await Api.get(`/grupo`);
-
-    setGrupo(data);
-  }
-
-  return (
-    <Contenedor>
+    return (
+        <Contenedor>
       <ContenedorTabla>
-      {grupocol&&(
         <Table>
         <HeadTop>
           <ColumTitleBox>
-              <ColumnTitle>Nombre del Grupo</ColumnTitle>
+              <ColumnTitle>Nombre del Empleado</ColumnTitle>
               <ColumnTitle>Editar</ColumnTitle>
               <ColumnTitle>Borrar</ColumnTitle>
           </ColumTitleBox>
         </HeadTop>
         <Body>
-            {grupocol.map((grupo,index)=>(
+            {Empleados.map((empleado,index)=>(
               <ColumInputBox key={index}>
-                <ColumInput>{grupo.nombreGrupo}</ColumInput>
+                <ColumInput>{empleado.nombres} {empleado.apellidos}</ColumInput>
             <ColumInput>
               <FontAwesomeIcon
                 icon={faEdit}
@@ -50,12 +37,10 @@ export const TablaGroup = () => {
             ))}
         </Body>
       </Table>
-      )}
       </ContenedorTabla>
     </Contenedor>
-  );
-};
-
+    )
+}
 const Contenedor = styled.div`
   display: flex;
   justify-content: center;
@@ -65,7 +50,7 @@ const Contenedor = styled.div`
 const ContenedorTabla=styled.div`
   overflow-y: auto;
   width: 100%;
-  max-height: 28rem;
+  max-height: 19rem;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -75,7 +60,6 @@ const Table = styled.table`
   border-collapse: separate;
   border-spacing: 0 10px;
   width: 100%;
-  height: 100%;
 `;
 
 const ColumTitleBox = styled.tr`

@@ -23,7 +23,12 @@ const dropIn = {
   },
 };
 
-export const Modal = ({ handleClose,children}) => {
+export const Modal = ({ handleClose,children,grande}) => {
+
+  ModalContainer.defaultProps={
+    grande:grande?"clamp(90%,768px,90%)":"clamp(50%,768px,90%)"
+  }
+
   return (
     <Backdrop onClick={handleClose}>
       <ModalContainer
@@ -44,7 +49,7 @@ export const Modal = ({ handleClose,children}) => {
 };
 
 const ModalContainer=styled.div`
-    width: clamp(50%,768px,90%);
+    width: ${props=>props.grande};
     max-height: 90%;
 
     margin: auto;
@@ -54,4 +59,9 @@ const ModalContainer=styled.div`
     align-items: center;
     justify-content: center;
     background-color: white;
+    /* overflow-y: auto;
+
+    &::-webkit-scrollbar {
+    display: none;
+    } */
 `;

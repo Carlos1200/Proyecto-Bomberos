@@ -16,7 +16,7 @@ export const TablaPlaza = ({consultar}) => {
   const [plazaBorrar, setPlazaBorrar] = useState(null);
   const [plaza, setPlaza] = useState();
 
-  const {datos,cargando,setConsultarUsarios} = UseDatos('plaza');
+  const [datos,cargando,setConsultarUsarios] = UseDatos('plaza');
 
   useEffect(()=>{
     if(consultar){
@@ -107,6 +107,9 @@ const ContenedorTabla=styled.div`
   overflow-y: auto;
   width: 100%;
   max-height: 28rem;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const Table = styled.table`

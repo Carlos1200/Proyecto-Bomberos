@@ -16,7 +16,7 @@ export const TablaUbicacion = ({consultar}) => {
   const [ubicacionBorrar, setUbicacionBorrar] = useState(null);
   const [ubicacion, setUbicacion] = useState();
 
-  const {datos,cargando,setConsultarUsarios} = UseDatos('ubicacion');
+  const [datos,cargando,setConsultarUsarios] = UseDatos('ubicacion');
 
   useEffect(()=>{
     if(consultar){
@@ -29,7 +29,8 @@ export const TablaUbicacion = ({consultar}) => {
     try {
       const formData=new FormData();
       formData.append("idUbicacion",ubicacionBorrar);
-      await Api.post('/ubicacionDelete',formData);
+      const resp=await Api.post('/ubicacionDelete',formData);
+      console.log(resp);
       setConsultarUsarios(true);
       setVisibleBorrar(false);
     } catch (error) {
@@ -106,7 +107,10 @@ const Contenedor = styled.div`
 const ContenedorTabla=styled.div`
   overflow-y: auto;
   width: 100%;
-  max-height: 28rem;
+  max-height: 26rem;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const Table = styled.table`
