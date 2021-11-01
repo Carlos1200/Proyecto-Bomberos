@@ -81,6 +81,17 @@ const Label=styled.p`
     margin-bottom: 1rem;
 `
 
+const Textbox = styled.input`
+  background-color: #ffffff;
+  border: 1px solid rgba(0,0,0,0.2);
+  height: 32px;
+  padding-left: 20px;
+  font-size: 5mm;
+  margin: 0;
+  width: 100%;
+  border-radius: 0.2rem;
+`;
+
 const ContenedorBotones=styled.div`
   display: flex;
   justify-content: space-around;
@@ -92,3 +103,9 @@ const ContenedorBoton=styled.div`
   align-items: center;
   cursor: pointer;
 `
+const TextError=styled.p`
+  margin-top: -13px;
+  text-align: center;
+  color: #f39c12;
+
+`;

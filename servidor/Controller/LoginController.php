@@ -11,7 +11,6 @@ class LoginController{
 
         $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
         $token=str_replace("token=","",$query);
-
         $usuario=new Usuario($_POST);
 
         $usuario::VerificarToken($token);
@@ -61,7 +60,6 @@ class LoginController{
     public static function logout(Router $router){
         
         $usuario=new Usuario();
-
         $autenticado=$usuario->cerrarSesion();
         
         $router->render('usuarios/autenticar',[
