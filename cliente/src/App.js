@@ -7,11 +7,12 @@ import { Usuarios } from './components/screens/Usuarios';
 import { Empleados} from './components/screens/Empleados';
 import { Ubicaciones } from './components/screens/Ubicaciones';
 import { Plazas } from './components/screens/Plazas';
-import { AuthProvider } from './context/Auth/AuthContext';
 import { GenerarReporte } from './components/screens/GenerarReporte';
 import RutaPrivada from './components/RutaPrivada';
 import { Grupos } from './components/screens/Grupos';
 import { Traslados } from './components/screens/Traslados';
+import { AuthProvider } from './context/Auth/AuthContext';
+import { EmpleadoProvider } from './context/Empleado/EmpleadoContext';
 
 import '../src/index.css';
 
@@ -40,7 +41,9 @@ const App = () => {
 const AppState=({children})=>{
   return(
     <AuthProvider>
-      {children}
+      <EmpleadoProvider>
+        {children}
+      </EmpleadoProvider>
     </AuthProvider>
 
   )

@@ -9,16 +9,16 @@ export const UseDatos = (consulta) => {
 
     useEffect(()=>{
         obtenerDatos();
-        setConsultarDB(false);
+        // eslint-disable-next-line
     },[consultarDB]);
   
     const obtenerDatos=async()=>{
 
         try {
             const {data}=await Api.get(`/${consulta}`);
-  
             setDatos(data);
             setCargando(false);
+            setConsultarDB(false);
         } catch (error) {
             console.log(error.response.data||"Error en el servidor");
         }

@@ -14,7 +14,7 @@ import Api from '../../Api/Api';
 
 export const UsuarioModal = ({handleClose,usuario,consultarUsuarios}) => {
 
-    const {datos,cargando} = UseDatos('ubicacion');
+    const [datos,cargando] = UseDatos('ubicacion');
     const [checked, setChecked] = useState(!usuario?true:false);
     const schema=yup.object({
       nombre:yup.string().required("El usuario no debe ir vacío"),

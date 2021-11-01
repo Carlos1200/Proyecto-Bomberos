@@ -10,6 +10,7 @@ export const TablaGroup = () => {
   const [grupocol, setGrupo] = useState();
   useEffect(()=>{
     obtenerUsuarios();
+    // eslint-disable-next-line
   },[]);
 
   const obtenerUsuarios=async()=>{

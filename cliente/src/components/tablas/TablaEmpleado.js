@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
 import Api from '../../Api/Api';
 import { UseDatos } from "../../hooks/UseDatos";
-import { PlazaModal } from "../modal/PlazaModal";
+import { EditarEmpleadoModal } from "../modal/EditarEmpleadoModal";
 import { Eliminar } from "../modal/Eliminar";
 
 
@@ -13,21 +13,22 @@ export const TablaEmpleado = ({consultar}) => {
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
-  const [plazaBorrar, setPlazaBorrar] = useState(null);
-  const [plaza, setPlaza] = useState();
+  const [empleadoBorrar, setEmpleadoBorrar] = useState(null);
+  const [empleado, setEmpleado] = useState();
 
   const [datos,cargando,setConsultarEmpleados] = UseDatos('empleado');
   useEffect(()=>{
     if(consultar){
       setConsultarEmpleados(consultar);
     }
+    // eslint-disable-next-line
   },[consultar])
 
-  const eliminarPlaza=async()=>{
+  const eliminarEmpleado=async()=>{
     try {
       const formData=new FormData();
-      formData.append("idPlaza",plazaBorrar);
-      await Api.post('/plazaDelete',formData);
+      formData.append("idEmpleado",empleadoBorrar);
+      await Api.post('/empleadoDelete',formData);
       setConsultarEmpleados(true);
       setVisibleBorrar(false);
     } catch (error) {
@@ -68,7 +69,7 @@ export const TablaEmpleado = ({consultar}) => {
               <ColumInput>
             <BtnEditar onClick={()=>{
                 setVisible(true);
-                setPlaza(empleado);
+                setEmpleado(empleado.idEmpleado);
               }}>
                 <FontAwesomeIcon
                   icon={faEdit}
@@ -79,7 +80,7 @@ export const TablaEmpleado = ({consultar}) => {
             <ColumInput>
             <BtnEliminar onClick={()=>{
                 setVisibleBorrar(true)
-                setPlazaBorrar(plaza.idPlaza)
+                setEmpleadoBorrar(empleado.idEmpleado)
               }}>
                 <FontAwesomeIcon
                   icon={faTrashAlt}
@@ -97,13 +98,13 @@ export const TablaEmpleado = ({consultar}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<PlazaModal handleClose={()=>setVisible(false)} plaza={plaza} consultarPlaza={setConsultarEmpleados}/>}
+            {visible&&<EditarEmpleadoModal handleClose={()=>setVisible(false)} empleadoId={empleado} consultarEmpleados={setConsultarEmpleados}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visibleBorrar&&<Eliminar handleClose={()=>setVisibleBorrar(false)}  eliminar={eliminarPlaza}/>}
+            {visibleBorrar&&<Eliminar handleClose={()=>setVisibleBorrar(false)}  eliminar={eliminarEmpleado}/>}
       </AnimatePresence>
     </Contenedor>
   );
@@ -118,7 +119,7 @@ const Contenedor = styled.div`
 const ContenedorTabla=styled.div`
   overflow-y: auto;
   width: 100%;
-  max-height: 28rem;
+  max-height: 26rem;
   &::-webkit-scrollbar {
     display: none;
   }

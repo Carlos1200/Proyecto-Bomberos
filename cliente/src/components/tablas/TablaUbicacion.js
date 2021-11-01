@@ -22,8 +22,8 @@ export const TablaUbicacion = ({consultar}) => {
     if(consultar){
       setConsultarUsarios(consultar);
     }
+    // eslint-disable-next-line
   },[consultar])
-
   
   const eliminarUbicacion=async()=>{
     try {

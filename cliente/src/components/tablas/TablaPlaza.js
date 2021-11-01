@@ -22,6 +22,7 @@ export const TablaPlaza = ({consultar}) => {
     if(consultar){
       setConsultarUsarios(consultar);
     }
+    // eslint-disable-next-line
   },[consultar])
 
   const eliminarPlaza=async()=>{

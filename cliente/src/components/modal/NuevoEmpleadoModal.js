@@ -16,7 +16,6 @@ const schema=yup.object({
   nombres:yup.string().required("Los nombres son obligatorios"),
   apellidos:yup.string().required("Los apellidos son obligatorios"),
   salario:yup.string().test('validar numero positivo',"El salario debe ser positivo",function(value){
-    // const { path, createError } = this;
     const numero=Number(value);
     return (numero>0);
     
@@ -57,7 +56,7 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
 
 
   useEffect(()=>{
-    if(!cargandoUbicacion||!cargandoPlaza||!cargandoPension||!cargandoGrupo){
+    if(!cargandoUbicacion&&!cargandoPlaza&&!cargandoPension&&!cargandoGrupo){
       setCargando(false);
     }
   },[cargandoUbicacion,cargandoPlaza,cargandoPension,cargandoGrupo])
@@ -67,6 +66,7 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
     });
     const agregarEmpleado=({nombres,apellidos,ubicacion,salario,plaza,pension,grupo,creado})=>{
       const data={
+        id:empleados.length+1,
         nombres,
         apellidos,
         salario,
@@ -74,7 +74,8 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
         plaza:plaza.idPlaza,
         pension:pension.idPension,
         grupo:grupo.idGrupo,
-        fechaCreacionEmpleado:creado
+        fechaCreacionEmpleado:creado,
+        plazaNombre:plaza.nombrePlaza
       }
 
       setEmpleados([
@@ -85,9 +86,12 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
       crearString(data);
       
     }
+    const removerEmpleado=(id)=>{
+      const empleado=empleados.filter(empleado=>empleado.id!==id);
+      setEmpleados(empleado);
+    }
 
     const insertarEmpleados=async()=>{
-      console.log(nombresCol,apellidosCol,salarioCol,grupoCol,pensionCol,ubicacionCol,ubicacionCol,plazaCol,fechaCol);
       const formData=new FormData();
       formData.append('nombres',nombresCol);
       formData.append('apellidos',apellidosCol)
@@ -99,8 +103,7 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
       formData.append('fechaCreacionEmpleado',fechaCol);
 
       try {
-        const resp=await Api.post("/empleado",formData);
-      console.log(resp);
+      await Api.post("/empleado",formData);
       consultarEmpleados(true);
       handleClose();
       } catch (error) {
@@ -217,7 +220,7 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
             </Form>
 
                   <div style={{gridArea:'table'}}>
-          <ListadoEmpleados Empleados={empleados}/>
+          <ListadoEmpleados Empleados={empleados} eliminaListado={removerEmpleado}/>
                   </div>
 
             {empleados.length!==0&&(

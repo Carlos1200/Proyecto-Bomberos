@@ -1,10 +1,10 @@
-import React,{useEffect,useState} from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 
 
-export const ListadoEmpleados = ({Empleados}) => {
+export const ListadoEmpleados = ({Empleados,eliminaListado}) => {
 
     return (
         <Contenedor>
@@ -13,7 +13,7 @@ export const ListadoEmpleados = ({Empleados}) => {
         <HeadTop>
           <ColumTitleBox>
               <ColumnTitle>Nombre del Empleado</ColumnTitle>
-              <ColumnTitle>Editar</ColumnTitle>
+              <ColumnTitle>Plaza</ColumnTitle>
               <ColumnTitle>Borrar</ColumnTitle>
           </ColumTitleBox>
         </HeadTop>
@@ -21,17 +21,14 @@ export const ListadoEmpleados = ({Empleados}) => {
             {Empleados.map((empleado,index)=>(
               <ColumInputBox key={index}>
                 <ColumInput>{empleado.nombres} {empleado.apellidos}</ColumInput>
+                <ColumInput>{empleado.plazaNombre}</ColumInput>
             <ColumInput>
-              <FontAwesomeIcon
-                icon={faEdit}
-                style={{ fontSize: "23px", color: "0C9021" }}
-              />
-            </ColumInput>
-            <ColumInput>
+            <BtnEliminar onClick={()=>eliminaListado(empleado.id)}>
               <FontAwesomeIcon
                 icon={faTrashAlt}
                 style={{ fontSize: "23px", color: "FF0000" }}
               />
+            </BtnEliminar>
             </ColumInput>
               </ColumInputBox>
             ))}
@@ -92,3 +89,9 @@ const ColumInput = styled.td`
         border-radius: 0 20px 20px 0;
     }
 `;
+
+const BtnEliminar=styled.button`
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+`

@@ -22,6 +22,7 @@ export const TablaUsuario = ({consultar}) => {
     if(consultar){
       setConsultarUsarios(consultar);
     }
+    // eslint-disable-next-line
   },[consultar])
 
     const eliminarUsuario=async()=>{

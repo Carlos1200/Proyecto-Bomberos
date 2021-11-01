@@ -57,7 +57,7 @@ class Empleado extends ActiveRecord{
         if(!$this->idPlaza){
             self::$errores[]="La plaza del empleado es obligatorio";
         }
-        if(!$nuevo){
+        if($nuevo){
             if(!$this->fechaCreacionEmpleado){
                 self::$errores[]="La fecha de creación del empleado es obligatorio";
             }
@@ -75,14 +75,16 @@ class Empleado extends ActiveRecord{
     }
 
     public function editarEmpleado(){
-        $query="EXEC actualizarEmpleado :idEmpleado, :nombres, :apellidos :salarioNominal, :idGrupo, :idPension, :idUbicacion, :idPlaza";
+        $query="EXEC actualizarEmpleado :idEmpleado, :nombres, :apellidos, :salarioNominal, :idGrupo, :idPension, :idUbicacion, :idPlaza";
         $consulta=self::$db->prepare($query);
         $consulta->bindParam(':idEmpleado',$this->idEmpleado,PDO::PARAM_STR);
         $consulta->bindParam(':nombres',$this->nombres,PDO::PARAM_STR);
         $consulta->bindParam(':apellidos',$this->apellidos,PDO::PARAM_STR);
         $consulta->bindParam(':salarioNominal',$this->salarioNominal,PDO::PARAM_STR);
         $consulta->bindParam(':idGrupo',$this->idGrupo,PDO::PARAM_STR);
-        $consulta->bindParam(':id',$this->nombreGrupo,PDO::PARAM_STR);
+        $consulta->bindParam(':idPension',$this->idPension,PDO::PARAM_STR);
+        $consulta->bindParam(':idUbicacion',$this->idUbicacion,PDO::PARAM_STR);
+        $consulta->bindParam(':idPlaza',$this->idPlaza,PDO::PARAM_STR);
         $consulta->execute();
     }
 
@@ -104,6 +106,39 @@ class Empleado extends ActiveRecord{
         }
 
         return self::$errores;
+    }
+
+    public function eliminarEmpleado(){
+        if($this->idEmpleado){
+            $query="EXEC eliminarEmpleado :idEmpleado";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(':idEmpleado',$this->idEmpleado,PDO::PARAM_INT);
+            $consulta->execute();
+
+            if(!self::$db->rowCount() > 0){
+                self::$errores[]="No se Eliminar el Empleado";
+            }
+
+        }else{
+            self::$errores[]="El id del empleado es obligatorio";
+        }
+
+        return self::$errores;
+    }
+
+    public function leerEmpleadoDetalles(){
+        
+        if($this->idEmpleado){
+            $query="EXEC leerEmpleadoDetalles :idEmpleado";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(':idEmpleado',$this->idEmpleado,PDO::PARAM_INT);
+            $consulta->execute();
+            $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $datos;
+        }else{
+            self::$errores[]="El id del empleado es obligatorio";
+        }
+
     }
     
 }
