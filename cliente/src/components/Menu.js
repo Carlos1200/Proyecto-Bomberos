@@ -2,14 +2,15 @@ import React from "react";
 import styled from "styled-components";
 import { Sidebar } from "./Sidebar";
 
-const Contenedor = styled.div({
-  height: "100%",
-  width: "100%",
-  display: "grid",
-  gridTemplateColumns:"3fr 9fr",
-  alignContent: "stretch",
-  justifyContent: "start",
-});
+const Contenedor = styled.div`
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns:3fr 9fr;
+  align-content: stretch;
+  justify-content: start;
+  overflow-y: hidden;
+`
 
 const ContSidebar = styled.div({
   height: "100%",

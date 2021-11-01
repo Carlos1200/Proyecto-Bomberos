@@ -1,4 +1,5 @@
 <?php
+namespace MVC;
 
 $dominioPermitido = "http://localhost:3000";
 header("Access-Control-Allow-Origin: $dominioPermitido");
