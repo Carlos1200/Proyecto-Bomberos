@@ -3,10 +3,10 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
-export const Btn = ({ titulo, icono, size, redirect,onpress }) => {
+export const Btn = ({ titulo, icono, size, redirect,onpress,disable=false }) => {
   return (
     <Link to={redirect} style={{ textDecoration: "none" }}>
-      <Boton style={{ fontSize: size ? "15px" : "18px" }} onClick={onpress}>
+      <Boton style={{ fontSize: size ? "15px" : "18px" }} onClick={onpress} disabled={disable}>
         <FontAwesomeIcon icon={icono} style={{ fontSize: "20px",marginLeft:'4rem',marginRight:'2rem' }} />
         {titulo}
       </Boton>

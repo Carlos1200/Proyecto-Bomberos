@@ -9,27 +9,27 @@ import { Modal } from '../Modal'
 import Api from '../../Api/Api';
 
 const schema=yup.object({
-    nombrePlaza:yup.string().required("El nombre de la plaza no debe ir vacía"),
+    nombreGrupo:yup.string().required("El nombre del grupo no debe ir vacío"),
 });
 
-export const PlazaModal = ({handleClose,plaza,consultarPlaza}) => {
+export const GrupoModal = ({handleClose,grupo,consultarGrupo}) => {
 
 
     const { register, handleSubmit,formState: { errors } } = useForm({
       resolver:yupResolver(schema),
       defaultValues:{
-        nombrePlaza:plaza?plaza.nombrePlaza:'',
+        nombreGrupo:grupo?grupo.nombreGrupo:'',
       }
     });
-    const SubmitEditar=async({nombrePlaza})=>{
+    const SubmitEditar=async({nombreGrupo})=>{
       try {
-        consultarPlaza(false);
+        consultarGrupo(false)
         const formData=new FormData();
-        formData.append('idPlaza',plaza.idPlaza);
-        formData.append('nombrePlaza',nombrePlaza);
+        formData.append('idGrupo',grupo.idGrupo);
+        formData.append('nombreGrupo',nombreGrupo);
 
-        await Api.post("/plazaEdit",formData);
-        consultarPlaza(true);
+        await Api.post("/grupoEdit",formData);
+        consultarGrupo(true);
         handleClose();
 
       } catch (error) {
@@ -37,14 +37,14 @@ export const PlazaModal = ({handleClose,plaza,consultarPlaza}) => {
       }
     }
 
-    const SubmitNuevo=async({nombrePlaza})=>{
+    const SubmitNuevo=async({nombreGrupo})=>{
       try {
-        consultarPlaza(false);
+        consultarGrupo(false)
         const formData=new FormData();
-        formData.append('nombrePlaza',nombrePlaza);
+        formData.append('nombreGrupo',nombreGrupo);
 
-        await Api.post("/plaza",formData);
-        consultarPlaza(true);
+        await Api.post("/grupo",formData);
+        consultarGrupo(true);
         handleClose();
       } catch (error) {
         console.log(error.response.data);
@@ -66,13 +66,13 @@ export const PlazaModal = ({handleClose,plaza,consultarPlaza}) => {
             />
           </div>
           <Header>
-            <Titulo>{plaza?'Editar Plaza':'Nueva Plaza'}</Titulo>
+            <Titulo>{grupo?'Editar Grupo':'Nuevo Grupo'}</Titulo>
           </Header>
-                <Label>Nombre Plaza</Label>
-                <Textbox  {...register("nombrePlaza")} />
-                {errors.nombrePlaza&& <TextError>{errors.nombrePlaza.message}</TextError>} 
+                <Label>Nombre Grupo</Label>
+                <Textbox  {...register("nombreGrupo")} />
+                {errors.nombreGrupo&& <TextError>{errors.nombreGrupo.message}</TextError>} 
                 <ContenedorBotones>
-                  <ContenedorBoton onClick={handleSubmit(plaza?SubmitEditar:SubmitNuevo)}>
+                  <ContenedorBoton onClick={handleSubmit(grupo?SubmitEditar:SubmitNuevo)}>
                     <FontAwesomeIcon icon={faSave} style={{fontSize:'2rem', color:'#343f56', marginRight:'1rem'}}/>
                     <Label>Guardar Cambios</Label>
                   </ContenedorBoton>

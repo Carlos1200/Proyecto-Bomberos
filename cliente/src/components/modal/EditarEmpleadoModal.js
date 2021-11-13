@@ -92,6 +92,7 @@ export const EditarEmpleadoModal = ({
   });
 
   const editarEmpleado = async({nombres,apellidos,salario,ubicacion,plaza,pension,grupo}) => {
+    consultarEmpleados(false);
     const formData=new FormData();
     formData.append('idEmpleado',empleadoId);
     formData.append('nombres',nombres);
@@ -103,6 +104,7 @@ export const EditarEmpleadoModal = ({
     formData.append('idPlaza',plaza.idPlaza)
 
     try {
+      consultarEmpleados(false);
       await Api.post("/empleadoEdit",formData);
       consultarEmpleados(true);
       handleClose();

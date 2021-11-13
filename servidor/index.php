@@ -43,6 +43,8 @@
     //!Grupo
     $router->post('/api/grupo',[GrupoController::class,'nuevoGrupo']);
     $router->get('/api/grupo',[GrupoController::class,'obtenerGrupos']);
+    $router->post('/api/grupoEdit',[GrupoController::class,'actualizarGrupo']);
+    $router->post('/api/grupoDelete',[GrupoController::class,'eliminarGrupo']);
 
     //!Empleados
     $router->get('/api/empleado',[EmpleadoController::class,'obtenerEmpleados']);

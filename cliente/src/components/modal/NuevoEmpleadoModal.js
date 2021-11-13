@@ -92,6 +92,7 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
     }
 
     const insertarEmpleados=async()=>{
+      consultarEmpleados(false);
       const formData=new FormData();
       formData.append('nombres',nombresCol);
       formData.append('apellidos',apellidosCol)

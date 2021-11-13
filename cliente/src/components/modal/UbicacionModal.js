@@ -24,6 +24,7 @@ export const UbicacionModal = ({handleClose,ubicacion,consultarUbicacion}) => {
     });
     const SubmitEditar=async({ubicacionNombre})=>{
       try {
+        consultarUbicacion(false)
         const formData=new FormData();
         formData.append('idUbicacion',ubicacion.idUbicacion);
         formData.append('nombreUbicacion',ubicacionNombre);
@@ -39,6 +40,7 @@ export const UbicacionModal = ({handleClose,ubicacion,consultarUbicacion}) => {
 
     const SubmitNuevo=async({ubicacionNombre})=>{
       try {
+        consultarUbicacion(false)
         const formData=new FormData();
         formData.append('nombreUbicacion',ubicacionNombre);
 

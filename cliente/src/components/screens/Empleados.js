@@ -14,7 +14,7 @@ export const Empleados = () => {
   const [consultar, setConsultar] = useState(false);
     return (
       <Menu>
-        <Background titulo="Administración de Empleados">
+        <Background titulo="Administración de Empleados" setConsultar={setConsultar}>
           <ReportsBox>
             <FilterBox>
               <FontAwesomeIcon

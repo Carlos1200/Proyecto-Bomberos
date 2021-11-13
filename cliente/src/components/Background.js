@@ -1,17 +1,31 @@
-import React,{useContext} from 'react'
+import React,{useContext,useState} from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFire,faHardHat} from '@fortawesome/free-solid-svg-icons';
+import { faFire,faHardHat,faFileExcel} from '@fortawesome/free-solid-svg-icons';
+import { AnimatePresence } from "framer-motion";
 import {AuthContext} from '../context/Auth/AuthContext';
+import { ArchivoEmpleadoModal } from './modal/ArchivoEmpleadoModal';
 
-export const Background = ({children,titulo}) => {
+export const Background = ({children,titulo,setConsultar}) => {
 
     const {NombreUsuario,tipoUsuario} = useContext(AuthContext);
+    
+    const [visible, setVisible] = useState(false)
 
     return (
+      <>
         <Box>
           <Top>
             <TitleForm>{titulo}</TitleForm>
+            {titulo==="Administración de Empleados"?(
+              <ExcelBtn type="button" onClick={()=>setVisible(true)} >
+                <ExcelText>Importar Excel</ExcelText>
+                <FontAwesomeIcon
+                  icon={faFileExcel}
+                  style={{ fontSize: "23px", color: "1F6E43" }}
+                /> 
+              </ExcelBtn>
+            ):null}
             <ActualUser>
               <FontAwesomeIcon
                 icon={tipoUsuario==="Administrador"?faFire:faHardHat}
@@ -22,6 +36,13 @@ export const Background = ({children,titulo}) => {
           </Top>
           {children}
         </Box>
+        <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {visible&&<ArchivoEmpleadoModal handleClose={()=>setVisible(false)} setConsultar={setConsultar}/>}
+        </AnimatePresence>
+      </>
     )
 }
 const Box = styled.div`
@@ -67,4 +88,24 @@ const ActualUser = styled.div`
 const UserTitle = styled.div`
     color: #343F56;
     margin-left: 20px;
+`
+
+const ExcelBtn=styled.button`
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 1rem;
+    padding: 0 1rem;
+    border: 0;
+    transition: background-color .3s ease-in-out;
+    &:hover{
+      background-color: rgba(255,255,255,0.4);
+
+    }
+`
+
+const ExcelText=styled.p`
+  color: #343F56;
+  margin-right: .7rem;
 `

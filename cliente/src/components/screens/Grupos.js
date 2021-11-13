@@ -1,14 +1,19 @@
-import React from 'react'
+import React,{useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {  faSearch } from '@fortawesome/free-solid-svg-icons';
+import {  faSearch,faPlus } from '@fortawesome/free-solid-svg-icons';
+import { motion,AnimatePresence } from 'framer-motion';
 import { Menu } from './../Menu';
 import {Background} from '../Background';
 import { TablaGroup } from '../tablas/TablaGroup';
+import { GrupoModal } from '../modal/GrupoModal';
 
 
 
 export const Grupos = () => {
+  
+  const [visible, setVisible] = useState(false);
+  const [consultar, setConsultar] = useState(false);
     return (
       <Menu>
         <Background titulo="Administración de Grupos">
@@ -21,9 +26,36 @@ export const Grupos = () => {
               <FilterTextBox>¿Desea un archivo en específico?</FilterTextBox>
               <BtnFilterSearch>Buscar</BtnFilterSearch>
             </FilterBox>
-            <TablaGroup/>
+            <TablaGroup consultar={consultar}/>
+            <motion.button
+            onClick={()=>{
+              setVisible(true);
+            }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              style={{
+                borderRadius:'100%',
+                backgroundColor:'#67BB6F',
+                padding: '20px',
+                cursor: 'pointer',
+                position: 'absolute',
+                bottom: 20,
+                right: 15
+              }}
+            >
+              <FontAwesomeIcon
+                icon={faPlus}
+                style={{ fontSize: "30px", color: "#000000" }}
+              />
+            </motion.button>
           </ReportsBox>
         </Background>
+        <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {visible&&<GrupoModal handleClose={()=>setVisible(false)} consultarGrupo={setConsultar}/>}
+      </AnimatePresence>
       </Menu>
     );
 }
