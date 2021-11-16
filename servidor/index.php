@@ -48,10 +48,14 @@
 
     //!Empleados
     $router->get('/api/empleado',[EmpleadoController::class,'obtenerEmpleados']);
+    $router->post('/api/empleadoFiltro',[EmpleadoController::class,'obtenerEmpleadosFiltrados']);
     $router->post('/api/empleado',[EmpleadoController::class,'insertarUsuarios']);
     $router->post('/api/empleadoEdit',[EmpleadoController::class,'actualizarEmpleados']);
     $router->post('/api/empleadoDelete',[EmpleadoController::class,'eliminarEmpleado']);
     $router->post('/api/empleadoDetalle',[EmpleadoController::class,'ObtenerDetalleEmpleado']);
+
+    //!Traslados
+    $router->post('/api/traslado',[EmpleadoController::class,'insertarTraslado']);
 
     $router->comprobarRutas();
 ?>
