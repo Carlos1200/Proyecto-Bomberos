@@ -73,11 +73,11 @@ export const Traslados = () => {
                 />
               </FilterTextBox>
               </FilterBox>
-              <div style={{backgroundColor:"red"}}>
+              <ContenedorEnvio >
                 {empleadosSeleccionados.map(empleado=>(
                   <EmpleadosSeleccion key={empleado.idEmpleado} empleado={empleado}/>
                 ))}
-                </div>
+                </ContenedorEnvio>
               </div>
             </Contenedor>
             ):null}
@@ -139,4 +139,9 @@ const JefeNombre=styled.p`
 const Contenedor=styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+`
+
+const ContenedorEnvio=styled.div`
+  overflow-y: auto;
+  max-height: 10rem;
 `

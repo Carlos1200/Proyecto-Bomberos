@@ -111,7 +111,7 @@ const Contenedor = styled.div`
 const ContenedorTabla=styled.div`
   overflow-y: auto;
   width: 100%;
-  max-height: 26rem;
+  height: 60vh;
   &::-webkit-scrollbar {
     display: none;
   }

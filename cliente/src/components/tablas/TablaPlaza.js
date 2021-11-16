@@ -107,10 +107,10 @@ const Contenedor = styled.div`
 const ContenedorTabla=styled.div`
   overflow-y: auto;
   width: 100%;
-  max-height: 28rem;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  height: 60vh;
+  scrollbar-width: thin;
+  scrollbar-color: blue orange;
+  
 `
 
 const Table = styled.table`
