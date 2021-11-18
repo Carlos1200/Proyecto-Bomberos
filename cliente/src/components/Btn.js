@@ -24,8 +24,8 @@ const Boton = styled.button`
   padding: 15px 0;
   display: flex;
   justify-content: flex-start;
-
+  transition: background-color .3s ease-in-out;
   &:hover {
-    transform: scale(1.02);
+    background-color: #222938;
   }
 `;

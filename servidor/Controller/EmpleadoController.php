@@ -49,6 +49,27 @@ class EmpleadoController{
         }
     }
 
+    public static function obtenerEmpleadosDetalle(Router $router){
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        $token=str_replace("token=","",$query);
+
+        $empleado=new Empleado($_POST);
+
+        $empleado::VerificarToken($token);
+        $errores=$empleado::getErrores();
+
+        if(empty($errores)){
+            $empleados=$empleado->ObtenerEmpleadosDetalles();
+            $router->render('empleados/empleados',[
+                'empleados'=>$empleados
+            ]);
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
+    }
+
     public static function actualizarEmpleados(Router $router){
         $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
         $token=str_replace("token=","",$query);

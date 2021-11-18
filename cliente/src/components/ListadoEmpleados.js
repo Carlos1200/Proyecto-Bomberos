@@ -21,9 +21,9 @@ export const ListadoEmpleados = ({Empleados,eliminaListado}) => {
             {Empleados.map((empleado,index)=>(
               <ColumInputBox key={index}>
                 <ColumInput>{empleado.nombres} {empleado.apellidos}</ColumInput>
-                <ColumInput>{empleado.plazaNombre}</ColumInput>
+                <ColumInput>{empleado.nombrePlaza}</ColumInput>
             <ColumInput>
-            <BtnEliminar onClick={()=>eliminaListado(empleado.id)}>
+            <BtnEliminar onClick={()=>eliminaListado(empleado.id?empleado.id:empleado.idEmpleado)}>
               <FontAwesomeIcon
                 icon={faTrashAlt}
                 style={{ fontSize: "23px", color: "FF0000" }}
@@ -47,7 +47,7 @@ const Contenedor = styled.div`
 const ContenedorTabla=styled.div`
   overflow-y: auto;
   width: 100%;
-  max-height: 19rem;
+  height: 100%;
   &::-webkit-scrollbar {
     display: none;
   }

@@ -12,7 +12,6 @@ import RutaPrivada from './components/RutaPrivada';
 import { Grupos } from './components/screens/Grupos';
 import { Traslados } from './components/screens/Traslados';
 import { AuthProvider } from './context/Auth/AuthContext';
-import { EmpleadoProvider } from './context/Empleado/EmpleadoContext';
 
 import '../src/index.css';
 
@@ -41,9 +40,7 @@ const App = () => {
 const AppState=({children})=>{
   return(
     <AuthProvider>
-      <EmpleadoProvider>
         {children}
-      </EmpleadoProvider>
     </AuthProvider>
 
   )

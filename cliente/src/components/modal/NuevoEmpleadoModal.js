@@ -75,7 +75,7 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
         pension:pension.idPension,
         grupo:grupo.idGrupo,
         fechaCreacionEmpleado:creado,
-        plazaNombre:plaza.nombrePlaza
+        nombrePlaza:plaza.nombrePlaza
       }
 
       setEmpleados([

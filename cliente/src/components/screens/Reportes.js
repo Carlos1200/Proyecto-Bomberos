@@ -70,3 +70,22 @@ const BtnFilterSearch = styled.div`
     font-size: 18px;
     border-radius: 20px;
 `
+
+const ContenedorTabla=styled.div`
+overflow-y: auto;
+height: 60vh;
+  &::-webkit-scrollbar {
+  width: 12px;               /* width of the entire scrollbar */
+}
+
+  &::-webkit-scrollbar-track {
+  background: #e2e2e2;        /* color of the tracking area */
+  border-radius: 2rem;
+}
+
+  &::-webkit-scrollbar-thumb {
+  background-color: #343F56;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid #e2e2e2;  /* creates padding around scroll thumb */
+}
+`
