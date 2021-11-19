@@ -126,7 +126,11 @@ export const EmpleadosSeleccion = ({ empleado, ubicaciones, plazas,grupos,posici
       <div>
         <Nombres>Justificación</Nombres>
         <Justificacion placeholder='Escribe la Justificación del traslado' onChange={(e)=>{
-          empleadosFormulario.current[posicion].descripcion=e.target.value;
+          if(e.target.value){
+            empleadosFormulario.current[posicion].descripcion=e.target.value;
+          }else{
+            empleadosFormulario.current[posicion].descripcion="-";
+          }
         }} />
       </div>
       </ContenedorColumnas>

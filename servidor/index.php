@@ -2,7 +2,6 @@
 
     require_once('./app.php');
     use MVC\Router;
-    
 
     $router= new Router();
     use Controller\UsuarioController;
@@ -12,6 +11,7 @@
     use Controller\PensionController;
     use Controller\GrupoController;
     use Controller\EmpleadoController;
+    use Controller\TrasladoController;
 
     //!Usuarios
     $router->get('/api/usuarios',[UsuarioController::class,'obtenerUsuarios']);
@@ -56,7 +56,7 @@
     $router->post('/api/empleadoDetalle',[EmpleadoController::class,'ObtenerDetalleEmpleado']);
 
     //!Traslados
-    $router->post('/api/traslado',[EmpleadoController::class,'insertarTraslado']);
+    $router->post('/api/traslado',[TrasladoController::class,'crearTraslado']);
 
     $router->comprobarRutas();
 ?>
