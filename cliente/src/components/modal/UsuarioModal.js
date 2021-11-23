@@ -38,6 +38,7 @@ export const UsuarioModal = ({handleClose,usuario,consultarUsuarios}) => {
     });
     const SubmitEdit=async({nombre,ubicacion,tipo})=>{
       try {
+        consultarUsuarios(false);
         const formData=new FormData();
         formData.append('idUsuario',usuario.idUsuario);
         formData.append('NombreUsuario',nombre);
@@ -54,6 +55,7 @@ export const UsuarioModal = ({handleClose,usuario,consultarUsuarios}) => {
     }
     const SubmitNuevo=async({nombre,ubicacion,tipo,password})=>{
       try {
+        consultarUsuarios(false);
         const formData=new FormData();
         formData.append('NombreUsuario',nombre);
         formData.append('tipoUsuario',tipo.value);

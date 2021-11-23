@@ -13,6 +13,7 @@ class Empleado extends ActiveRecord{
     public $idGrupo;
     public $idPension;
     public $idUbicacion;
+    public $nombreUbicacion;
     public $idPlaza;
     public $fechaCreacionEmpleado;
     
@@ -25,6 +26,7 @@ class Empleado extends ActiveRecord{
         $this->idGrupo=$args['idGrupo']??'';
         $this->idPension=$args['idPension']??'';
         $this->idUbicacion=$args['idUbicacion']??'';
+        $this->nombreUbicacion=$args['nombreUbicacion']??'';
         $this->idPlaza=$args['idPlaza']??'';
         $this->fechaCreacionEmpleado=$args['fechaCreacionEmpleado']??'';
     }
@@ -71,6 +73,24 @@ class Empleado extends ActiveRecord{
         $consulta->execute();
         $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
 
+        return $datos;
+    }
+
+    public function ObtenerEmpleadosFiltrados(){
+        $query="EXEC leerEmpleadoJefe :nombreUbicacion";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':nombreUbicacion',$this->nombreUbicacion,PDO::PARAM_STR);
+        $consulta->execute();
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $datos;
+    }
+
+    public function ObtenerEmpleadosDetalles(){
+        $query="EXEC leerEmpleadoJefe :idEmpleado";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':idEmpleado',$this->idEmpleado,PDO::PARAM_STR);
+        $consulta->execute();
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
         return $datos;
     }
 

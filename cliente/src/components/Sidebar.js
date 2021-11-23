@@ -117,4 +117,20 @@ const ContenedorImagen = styled.div`
 const ContenedorButones = styled.div`
   display: flex;
   flex-direction: column;
+  height: 70vh;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+  width: 12px;               /* width of the entire scrollbar */
+}
+
+  &::-webkit-scrollbar-track {
+  background: #343F56;        /* color of the tracking area */
+  border-radius: 2rem;
+}
+
+  &::-webkit-scrollbar-thumb {
+  background-color: #e2e2e2 ;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid #343F56;  /* creates padding around scroll thumb */
+}
 `;

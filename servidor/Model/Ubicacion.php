@@ -55,7 +55,7 @@ class Ubicacion extends ActiveRecord{
     }
 
     public function editarUbicacion(){
-        $query="EXEC actualizarUbicaciones :idUbicacion, :nombreUbicacion";
+        $query="EXEC actualizarUbicacion :idUbicacion, :nombreUbicacion";
         $consulta=self::$db->prepare($query);
         $consulta->bindParam(':idUbicacion',$this->idUbicacion,PDO::PARAM_INT);
         $consulta->bindParam(':nombreUbicacion',$this->nombreUbicacion,PDO::PARAM_STR);
@@ -70,7 +70,7 @@ class Ubicacion extends ActiveRecord{
 
     public function eliminarUbicacion(){
         if($this->idUbicacion){
-            $query="EXEC eliminarUbicaciones :idUbicacion";
+            $query="EXEC eliminarUbicacion :idUbicacion";
             $consulta=self::$db->prepare($query);
             $consulta->bindParam(':idUbicacion',$this->idUbicacion,PDO::PARAM_INT);
             $consulta->execute();

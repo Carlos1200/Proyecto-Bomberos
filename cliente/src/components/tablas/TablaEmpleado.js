@@ -9,7 +9,7 @@ import { EditarEmpleadoModal } from "../modal/EditarEmpleadoModal";
 import { Eliminar } from "../modal/Eliminar";
 
 
-export const TablaEmpleado = ({consultar}) => {
+export const TablaEmpleado = ({consultar,notificacion}) => {
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
@@ -20,6 +20,7 @@ export const TablaEmpleado = ({consultar}) => {
   useEffect(()=>{
     if(consultar){
       setConsultarEmpleados(consultar);
+      notificacion();
     }
     // eslint-disable-next-line
   },[consultar])
@@ -30,6 +31,7 @@ export const TablaEmpleado = ({consultar}) => {
       formData.append("idEmpleado",empleadoBorrar);
       await Api.post('/empleadoDelete',formData);
       setConsultarEmpleados(true);
+      notificacion();
       setVisibleBorrar(false);
     } catch (error) {
       console.log(error.response.data);
@@ -117,12 +119,8 @@ const Contenedor = styled.div`
 `;
 
 const ContenedorTabla=styled.div`
-  overflow-y: auto;
   width: 100%;
-  max-height: 26rem;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  
 `
 
 const Table = styled.table`
@@ -130,6 +128,7 @@ const Table = styled.table`
   border-spacing: 0 10px;
   width: 100%;
   height: 100%;
+  padding-right: 10px;
 `;
 
 const ColumTitleBox = styled.tr`

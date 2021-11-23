@@ -1,8 +1,8 @@
 import React,{useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch,faPlus} from '@fortawesome/free-solid-svg-icons';
-import { motion,AnimatePresence } from 'framer-motion';
+import { faSearch} from '@fortawesome/free-solid-svg-icons';
+import { AnimatePresence } from 'framer-motion';
 import { Menu } from '../Menu'
 import {TablaUsuario} from '../tablas/TablaUsuario';
 import { Background } from '../Background';
@@ -13,7 +13,7 @@ export const Usuarios = () => {
   const [consultar, setConsultar] = useState(false);
     return (
       <Menu>
-        <Background titulo="Administración de Usuarios">
+        <Background titulo="Administración de Usuarios" insertar={()=>setVisible(true)}>
           <ReportsBox>
             <FilterBox>
               <FontAwesomeIcon
@@ -23,28 +23,9 @@ export const Usuarios = () => {
               <FilterTextBox>¿Desea un archivo en específico?</FilterTextBox>
               <BtnFilterSearch>Buscar</BtnFilterSearch>
             </FilterBox>
+            <ContenedorTabla>
             <TablaUsuario consultar={consultar}/>
-            <motion.button
-            onClick={()=>{
-              setVisible(true);
-            }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              style={{
-                borderRadius:'100%',
-                backgroundColor:'#67BB6F',
-                padding: '20px',
-                cursor: 'pointer',
-                position: 'absolute',
-                bottom: 20,
-                right: 15
-              }}
-            >
-              <FontAwesomeIcon
-                icon={faPlus}
-                style={{ fontSize: "30px", color: "#000000" }}
-              />
-            </motion.button>
+            </ContenedorTabla>
           </ReportsBox>
           </Background>
           <AnimatePresence
@@ -103,4 +84,22 @@ const BtnFilterSearch = styled.div`
     padding-left: 20px;
     font-size: 18px;
     border-radius: 20px;
+`
+
+const ContenedorTabla=styled.div`
+  height: 60vh;
+  &::-webkit-scrollbar {
+  width: 12px;               /* width of the entire scrollbar */
+}
+
+  &::-webkit-scrollbar-track {
+  background: #A0A0A0;        /* color of the tracking area */
+  border-radius: 2rem;
+}
+
+  &::-webkit-scrollbar-thumb {
+  background-color: #343F56;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid #A0A0A0;  /* creates padding around scroll thumb */
+}
 `

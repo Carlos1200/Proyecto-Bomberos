@@ -1,28 +1,46 @@
 import React,{useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
-import Api from '../../Api/Api';
+import { Eliminar } from "../modal/Eliminar";
+import { UseDatos } from "../../hooks/UseDatos";
+import Api from "../../Api/Api";
+import { GrupoModal } from "../modal/GrupoModal";
 
 
-export const TablaGroup = () => {
+export const TablaGroup = ({consultar}) => {
 
-  const [grupocol, setGrupo] = useState();
+  const [grupo, setGrupo] = useState();
+  const [visible, setVisible] = useState(false);
+  const [visibleBorrar, setVisibleBorrar] = useState(false);
+  const [grupoBorrar, setGrupoBorrar] = useState(null);
+
+  const [datos,cargando,setConsultarGrupo] = UseDatos('grupo');
+
   useEffect(()=>{
-    obtenerUsuarios();
+    if(consultar){
+      setConsultarGrupo(consultar);
+    }
     // eslint-disable-next-line
-  },[]);
+  },[consultar])
 
-  const obtenerUsuarios=async()=>{
-    const {data}=await Api.get(`/grupo`);
-
-    setGrupo(data);
+  const eliminarGrupo=async()=>{
+    try {
+      const formData=new FormData();
+      formData.append("idGrupo",grupoBorrar);
+      await Api.post('/grupoDelete',formData);
+      setConsultarGrupo(true);
+      setVisibleBorrar(false);
+    } catch (error) {
+      console.log(error.response.data);
+    }
   }
 
   return (
     <Contenedor>
       <ContenedorTabla>
-      {grupocol&&(
+      {!cargando&&(
         <Table>
         <HeadTop>
           <ColumTitleBox>
@@ -32,20 +50,30 @@ export const TablaGroup = () => {
           </ColumTitleBox>
         </HeadTop>
         <Body>
-            {grupocol.map((grupo,index)=>(
+            {datos.map((grupo,index)=>(
               <ColumInputBox key={index}>
                 <ColumInput>{grupo.nombreGrupo}</ColumInput>
             <ColumInput>
+            <BtnEditar onClick={()=>{
+              setGrupo(grupo)
+              setVisible(true);
+            }}>
               <FontAwesomeIcon
                 icon={faEdit}
                 style={{ fontSize: "23px", color: "0C9021" }}
               />
+              </BtnEditar>
             </ColumInput>
             <ColumInput>
+            <BtnEliminar onClick={()=>{
+              setVisibleBorrar(true)
+              setGrupoBorrar(grupo.idGrupo)
+            }}>
               <FontAwesomeIcon
                 icon={faTrashAlt}
                 style={{ fontSize: "23px", color: "FF0000" }}
               />
+              </BtnEliminar>
             </ColumInput>
               </ColumInputBox>
             ))}
@@ -53,6 +81,18 @@ export const TablaGroup = () => {
       </Table>
       )}
       </ContenedorTabla>
+      <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {visible&&<GrupoModal handleClose={()=>setVisible(false)} grupo={grupo} consultarGrupo={setConsultarGrupo}/>}
+      </AnimatePresence>
+      <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {visibleBorrar&&<Eliminar handleClose={()=>setVisibleBorrar(false)}  eliminar={eliminarGrupo}/>}
+      </AnimatePresence>
     </Contenedor>
   );
 };
@@ -64,12 +104,7 @@ const Contenedor = styled.div`
 `;
 
 const ContenedorTabla=styled.div`
-  overflow-y: auto;
   width: 100%;
-  max-height: 28rem;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 `
 
 const Table = styled.table`
@@ -77,6 +112,7 @@ const Table = styled.table`
   border-spacing: 0 10px;
   width: 100%;
   height: 100%;
+  padding-right: 10px;
 `;
 
 const ColumTitleBox = styled.tr`
@@ -109,3 +145,14 @@ const ColumInput = styled.td`
         border-radius: 0 20px 20px 0;
     }
 `;
+
+const BtnEditar=styled.button`
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+`
+const BtnEliminar=styled.button`
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+`

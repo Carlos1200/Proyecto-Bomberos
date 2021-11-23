@@ -2,7 +2,6 @@
 
     require_once('./app.php');
     use MVC\Router;
-    
 
     $router= new Router();
     use Controller\UsuarioController;
@@ -12,6 +11,7 @@
     use Controller\PensionController;
     use Controller\GrupoController;
     use Controller\EmpleadoController;
+    use Controller\TrasladoController;
 
     //!Usuarios
     $router->get('/api/usuarios',[UsuarioController::class,'obtenerUsuarios']);
@@ -43,13 +43,20 @@
     //!Grupo
     $router->post('/api/grupo',[GrupoController::class,'nuevoGrupo']);
     $router->get('/api/grupo',[GrupoController::class,'obtenerGrupos']);
+    $router->post('/api/grupoEdit',[GrupoController::class,'actualizarGrupo']);
+    $router->post('/api/grupoDelete',[GrupoController::class,'eliminarGrupo']);
 
     //!Empleados
     $router->get('/api/empleado',[EmpleadoController::class,'obtenerEmpleados']);
+    $router->post('/api/empleadoFiltro',[EmpleadoController::class,'obtenerEmpleadosFiltrados']);
+    $router->post('/api/empleadoDetalle',[EmpleadoController::class,'obtenerEmpleadosDetalle']);
     $router->post('/api/empleado',[EmpleadoController::class,'insertarUsuarios']);
     $router->post('/api/empleadoEdit',[EmpleadoController::class,'actualizarEmpleados']);
     $router->post('/api/empleadoDelete',[EmpleadoController::class,'eliminarEmpleado']);
     $router->post('/api/empleadoDetalle',[EmpleadoController::class,'ObtenerDetalleEmpleado']);
+
+    //!Traslados
+    $router->post('/api/traslado',[TrasladoController::class,'crearTraslado']);
 
     $router->comprobarRutas();
 ?>

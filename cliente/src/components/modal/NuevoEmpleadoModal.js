@@ -75,7 +75,7 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
         pension:pension.idPension,
         grupo:grupo.idGrupo,
         fechaCreacionEmpleado:creado,
-        plazaNombre:plaza.nombrePlaza
+        nombrePlaza:plaza.nombrePlaza
       }
 
       setEmpleados([
@@ -92,6 +92,7 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
     }
 
     const insertarEmpleados=async()=>{
+      consultarEmpleados(false);
       const formData=new FormData();
       formData.append('nombres',nombresCol);
       formData.append('apellidos',apellidosCol)

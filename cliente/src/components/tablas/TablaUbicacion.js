@@ -105,12 +105,7 @@ const Contenedor = styled.div`
 `;
 
 const ContenedorTabla=styled.div`
-  overflow-y: auto;
   width: 100%;
-  max-height: 26rem;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 `
 
 const Table = styled.table`
@@ -118,6 +113,7 @@ const Table = styled.table`
   border-spacing: 0 10px;
   width: 100%;
   height: 100%;
+  padding-right: 10px;
 `;
 
 const ColumTitleBox = styled.tr`

@@ -15,12 +15,16 @@ class Grupo extends ActiveRecord{
         $this->nombreGrupo=$args['nombreGrupo']??'';
     }
 
-    public function validar()
+    public function validar($nuevo=true)
     {
-        if(!$this->nombreGrupo){
-            self::$errores[]="El Nombre del Grupo es obligatorio";
+        if(!$nuevo){
+            if(!$this->idGrupo){
+                self::$errores[]="El id de la plaza es obligatorio";
+            }
         }
-        return self::$errores;
+        if(!$this->nombreGrupo){
+            self::$errores[]="El Nombre de la plaza es obligatorio";
+        }
     }
 
     public function existeGrupo(){
@@ -35,8 +39,22 @@ class Grupo extends ActiveRecord{
         }
     }
 
+    public function EditarGrupo(){
+        $query="EXEC actualizarGrupo :idGrupo, :nombreGrupo";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':nombreGrupo',$this->nombreGrupo,PDO::PARAM_STR);
+        $consulta->bindParam(':idGrupo',$this->idGrupo,PDO::PARAM_INT);
+        $consulta->execute();
+
+        if(!self::$db->rowCount()>0){
+            self::$errores[]="No se pudo editar el grupo";
+        }
+
+        return self::$errores;
+    }
+
     public function nuevoGrupo(){
-        $query="INSERT INTO ".self::$tabla. "(nombreGrupo) VALUES(:nombreGrupo)";
+        $query="EXEC insertarGrupo :nombreGrupo";
         $consulta=self::$db->prepare($query);
         $consulta->bindParam(':nombreGrupo',$this->nombreGrupo,PDO::PARAM_STR);
         $consulta->execute();
@@ -45,6 +63,27 @@ class Grupo extends ActiveRecord{
             self::$errores[]="No se pudo agregar un nuevo Grupo";
         }
 
+        return self::$errores;
+    }
+
+    public function obtenerGrupos(){
+        $query="EXEC leerGrupo";
+        $consulta=self::$db->prepare($query);
+        $consulta->execute();
+        $resultado=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $resultado;
+    }
+
+    public function eliminarGrupo(){
+        if($this->idGrupo){
+        $query="EXEC eliminarGrupo :idGrupo";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':idGrupo',$this->idGrupo,PDO::PARAM_INT);
+        $consulta->execute();
+
+        }else{
+            self::$errores[]="El id del grupo es obligatorio";
+        }
         return self::$errores;
     }
 }
