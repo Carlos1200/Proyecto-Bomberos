@@ -79,15 +79,15 @@
         public function crearTraslado(){
             $sql="EXEC insertarHistorialTrasladosLotes :plazaAnterior,:plazaActual,:ubicacionAnterior,:ubicacionActual,:grupoAnterior,:grupoActual,:fechaCambio,:descripcion,:fechaCreacion";
             $query=self::$db->prepare($sql);
-            $query->bindValue(":plazaAnterior",$this->plazaAnterior,PDO::PARAM_STR);
-            $query->bindValue(":plazaActual",$this->plazaActual,PDO::PARAM_STR);
-            $query->bindValue(":ubicacionAnterior",$this->ubicacionAnterior,PDO::PARAM_STR);
-            $query->bindValue(":ubicacionActual",$this->ubicacionActual,PDO::PARAM_STR);
-            $query->bindValue(":grupoAnterior",$this->grupoAnterior,PDO::PARAM_STR);
-            $query->bindValue(":grupoActual",$this->grupoActual,PDO::PARAM_STR);
-            $query->bindValue(":fechaCambio",$this->fechaCambio,PDO::PARAM_STR);
-            $query->bindValue(":descripcion",$this->descripcion,PDO::PARAM_STR);
-            $query->bindValue(":fechaCreacion",$this->fechaCreacion,PDO::PARAM_STR);
+            $query->bindParam(":plazaAnterior",$this->plazaAnterior,PDO::PARAM_STR);
+            $query->bindParam(":plazaActual",$this->plazaActual,PDO::PARAM_STR);
+            $query->bindParam(":ubicacionAnterior",$this->ubicacionAnterior,PDO::PARAM_STR);
+            $query->bindParam(":ubicacionActual",$this->ubicacionActual,PDO::PARAM_STR);
+            $query->bindParam(":grupoAnterior",$this->grupoAnterior,PDO::PARAM_STR);
+            $query->bindParam(":grupoActual",$this->grupoActual,PDO::PARAM_STR);
+            $query->bindParam(":fechaCambio",$this->fechaCambio,PDO::PARAM_STR);
+            $query->bindParam(":descripcion",$this->descripcion,PDO::PARAM_STR);
+            $query->bindParam(":fechaCreacion",$this->fechaCreacion,PDO::PARAM_STR);
             $query->execute();
             
             if(!self::$db->lastInsertId()>0){
@@ -102,26 +102,24 @@
         public function crearTrasladoIndividual(){
             $idReporteHistorial='';
 
-            for($i=1;$i<=$this->idHistorialTraslados;$i++){
+            for($i=1;$i<=intval($this->idHistorialTraslados);$i++){
                 if($i==1){
-                    $idReporteHistorial.=$this->idTraslado;
+                    $idReporteHistorial=$this->idTraslado;
                 }else{
-                    $idReporteHistorial.=','.$this->idTraslado;
+                    $idReporteHistorial=$idReporteHistorial.','.$this->idTraslado;
                 }
             }
-
             $sql="EXEC ingresarReportesdeHistorial :idReporteHistorial,:tituloHistorial,:idHistorialTraslados,:idEmpleados";
             $query=self::$db->prepare($sql);
-            $query->bindValue(":idReporteHistorial",$idReporteHistorial,PDO::PARAM_STR);
-            $query->bindValue(":tituloHistorial",$this->tituloHistorial,PDO::PARAM_STR);
-            $query->bindValue(":idHistorialTraslados",$this->idHistorialTraslados,PDO::PARAM_STR);
-            $query->bindValue(":idEmpleados",$this->idEmpleados,PDO::PARAM_STR);
+            $query->bindParam(":idReporteHistorial",$idReporteHistorial,PDO::PARAM_STR);
+            $query->bindParam(":tituloHistorial",$this->tituloHistorial,PDO::PARAM_STR);
+            $query->bindParam(":idHistorialTraslados",$this->idHistorialTraslados,PDO::PARAM_STR);
+            $query->bindParam(":idEmpleados",$this->idEmpleados,PDO::PARAM_STR);
             $query->execute();
-            
-            if(!self::$db->lastInsertId()>0){
-                self::$errores[]="No se pudo agregar los traslados";
-            }
 
+            // if(!self::$db->lastInsertId()>0){
+            //     self::$errores[]="No se pudo agregar los traslados";
+            // }
             return self::$errores;
         }
 

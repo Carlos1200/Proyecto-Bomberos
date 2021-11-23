@@ -5,6 +5,7 @@ import { faWindowClose,faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "../Modal";
 import { EmpleadosSeleccion } from "../EmpleadosSeleccion";
 import { UseDatos } from "../../hooks/UseDatos";
+import { UseTraslados } from "../../hooks/UseTraslados";
 
 export const TrasladosModal = ({ handleClose, empleados }) => {
   const [datosUbicacion, cargandoUbicacion] = UseDatos("ubicacion");
@@ -13,6 +14,9 @@ export const TrasladosModal = ({ handleClose, empleados }) => {
   const [cargando, setCargando] = useState(true);
   const empleadosFormulario = useRef([]);
   const [cantidad, setCantidad] = useState(0);
+
+  const {PrepararDatos}=UseTraslados();
+
   useEffect(()=>{
     setCantidad(empleados.length-1);
   },[empleados])
@@ -59,7 +63,10 @@ export const TrasladosModal = ({ handleClose, empleados }) => {
               />
             ))}
           </ContenedorEmpleados>
-          <Btn type="button" onClick={()=>{console.log(empleadosFormulario.current)}}>
+          <Btn type="button" onClick={()=>{
+            PrepararDatos(empleadosFormulario.current)
+            handleClose();  
+          }}>
           <Text>Agregar</Text>
           <FontAwesomeIcon
             icon={faSignInAlt}

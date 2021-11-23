@@ -34,11 +34,8 @@ export const Login = () => {
 
     try {
       const {data}=await Api.post(`/login`,formData);
-      console.log(data);
       const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=data;
-
       inicioSesion(idUsuario,NombreUsuario,tipoUsuario,UbicacionUsuario,login);
-
       if(data.login){
         history.push("/usuarios");
       }

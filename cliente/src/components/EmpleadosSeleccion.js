@@ -1,7 +1,4 @@
 import React,{useState,useEffect} from "react";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import Select from "react-select";
 import styled from "styled-components";
 import Api from "../Api/Api";
@@ -27,14 +24,17 @@ export const EmpleadosSeleccion = ({ empleado, ubicaciones, plazas,grupos,posici
 
             const {data}=await Api.post('empleadoDetalle',formData);
             setEmpleadoDetalle(data[0]);
-
             const empleadoCompleto={
               ...data[0],
               idUbicacion:ubicaciones.find(ubicacion=>ubicacion.nombreUbicacion===data[0].nombreUbicacion).idUbicacion,
               idPlaza:plazas.find(plaza=>plaza.nombrePlaza===data[0].nombrePlaza).idPlaza,
               idGrupo:grupos.find(grupo=>grupo.nombreGrupo===data[0].nombreGrupo).idGrupo,
-              descripcion:"",
-              fechaCambio:fecha
+              descripcion:"-",
+              ubicacionAnterior:data[0].nombreUbicacion,
+              plazaAnterior:data[0].nombrePlaza,
+              grupoAnterior:data[0].nombreGrupo,
+              fechaCambio:fecha,
+              titulo:"Traslado"
             }
 
             empleadosFormulario.current[posicion]=empleadoCompleto;

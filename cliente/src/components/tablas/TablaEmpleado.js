@@ -9,7 +9,7 @@ import { EditarEmpleadoModal } from "../modal/EditarEmpleadoModal";
 import { Eliminar } from "../modal/Eliminar";
 
 
-export const TablaEmpleado = ({consultar}) => {
+export const TablaEmpleado = ({consultar,notificacion}) => {
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
@@ -20,6 +20,7 @@ export const TablaEmpleado = ({consultar}) => {
   useEffect(()=>{
     if(consultar){
       setConsultarEmpleados(consultar);
+      notificacion();
     }
     // eslint-disable-next-line
   },[consultar])
@@ -30,6 +31,7 @@ export const TablaEmpleado = ({consultar}) => {
       formData.append("idEmpleado",empleadoBorrar);
       await Api.post('/empleadoDelete',formData);
       setConsultarEmpleados(true);
+      notificacion();
       setVisibleBorrar(false);
     } catch (error) {
       console.log(error.response.data);

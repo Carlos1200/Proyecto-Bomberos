@@ -1,6 +1,7 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import toast, { Toaster } from 'react-hot-toast';
 import {  faSearch } from '@fortawesome/free-solid-svg-icons';
 import { AnimatePresence } from 'framer-motion';
 import { Menu } from '../Menu'
@@ -12,9 +13,21 @@ import { NuevoEmpleadoModal } from '../modal/NuevoEmpleadoModal';
 export const Empleados = () => {
   const [visible, setVisible] = useState(false);
   const [consultar, setConsultar] = useState(false);
+
+  useEffect(()=>{
+    if(consultar){
+      mostrarNotificacion();
+    }
+  },[consultar])
+
+  const mostrarNotificacion=()=>{
+    toast.success('Operación realizada correctamente');
+  }
+
     return (
       <Menu>
         <Background titulo="Administración de Empleados" setConsultar={setConsultar} insertar={()=>setVisible(true)}>
+          <Toaster position="top-right" />
           <ReportsBox>
             <FilterBox>
               <FontAwesomeIcon
@@ -26,7 +39,7 @@ export const Empleados = () => {
             </FilterBox>
             <ContenedorTabla>
 
-            <TablaEmpleado consultar={consultar}/>
+            <TablaEmpleado consultar={consultar} notificacion={mostrarNotificacion} />
             </ContenedorTabla>
           </ReportsBox>
           </Background>
