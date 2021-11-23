@@ -9,7 +9,7 @@ import { PlazaModal } from "../modal/PlazaModal";
 import { Eliminar } from "../modal/Eliminar";
 
 
-export const TablaPlaza = ({consultar}) => {
+export const TablaPlaza = ({consultar,mostrarNotificacion}) => {
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
@@ -32,8 +32,9 @@ export const TablaPlaza = ({consultar}) => {
       await Api.post('/plazaDelete',formData);
       setConsultarUsarios(true);
       setVisibleBorrar(false);
+      mostrarNotificacion()
     } catch (error) {
-      console.log(error.response.data);
+      mostrarNotificacion(true)
     }
   }
 
@@ -86,7 +87,7 @@ export const TablaPlaza = ({consultar}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<PlazaModal handleClose={()=>setVisible(false)} plaza={plaza} consultarPlaza={setConsultarUsarios}/>}
+            {visible&&<PlazaModal handleClose={()=>setVisible(false)} plaza={plaza} consultarPlaza={setConsultarUsarios} mostrarNotificacion={mostrarNotificacion}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}

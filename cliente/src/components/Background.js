@@ -6,7 +6,7 @@ import { AnimatePresence } from "framer-motion";
 import {AuthContext} from '../context/Auth/AuthContext';
 import { ArchivoEmpleadoModal } from './modal/ArchivoEmpleadoModal';
 
-export const Background = ({children,titulo,setConsultar,insertar}) => {
+export const Background = ({children,titulo,setConsultar,insertar,notificacion}) => {
 
     const {NombreUsuario,tipoUsuario} = useContext(AuthContext);
     
@@ -49,7 +49,7 @@ export const Background = ({children,titulo,setConsultar,insertar}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<ArchivoEmpleadoModal handleClose={()=>setVisible(false)} setConsultar={setConsultar}/>}
+            {visible&&<ArchivoEmpleadoModal handleClose={()=>setVisible(false)} setConsultar={setConsultar} notificacion={notificacion}/>}
         </AnimatePresence>
       </>
     )

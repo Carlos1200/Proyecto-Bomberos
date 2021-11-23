@@ -6,7 +6,7 @@ import { ExcelInput } from '../ExcelInput';
 import { Modal } from '../Modal';
 import Api from '../../Api/Api';
 
-export const ArchivoEmpleadoModal = ({handleClose,setConsultar}) => {
+export const ArchivoEmpleadoModal = ({handleClose,setConsultar,notificacion}) => {
 
   const [empleado, setEmpleado] = useState(null);
   const [cargando, setCargando] = useState(false);
@@ -30,6 +30,7 @@ export const ArchivoEmpleadoModal = ({handleClose,setConsultar}) => {
       setConsultar(true);
       setCargando(false)
       handleClose();
+      notificacion();
       } catch (error) {
         setCargando(false)
         console.log(error.response.data);

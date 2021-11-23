@@ -9,7 +9,7 @@ import { EditarEmpleadoModal } from "../modal/EditarEmpleadoModal";
 import { Eliminar } from "../modal/Eliminar";
 
 
-export const TablaEmpleado = ({consultar,notificacion}) => {
+export const TablaEmpleado = ({consultar,notificacion,notificacionError}) => {
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
@@ -34,7 +34,12 @@ export const TablaEmpleado = ({consultar,notificacion}) => {
       notificacion();
       setVisibleBorrar(false);
     } catch (error) {
-      console.log(error.response.data);
+      if(error.response){
+        notificacionError(error.response.data[0]||"Ocurrió un error");
+      }else{
+        notificacionError("Ocurrió un error");
+      }
+      
     }
   }
 
@@ -100,7 +105,7 @@ export const TablaEmpleado = ({consultar,notificacion}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<EditarEmpleadoModal handleClose={()=>setVisible(false)} empleadoId={empleado} consultarEmpleados={setConsultarEmpleados}/>}
+            {visible&&<EditarEmpleadoModal handleClose={()=>setVisible(false)} empleadoId={empleado} consultarEmpleados={setConsultarEmpleados} notificacion={notificacion} notificacionError={notificacionError}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}

@@ -12,7 +12,7 @@ const schema=yup.object({
     nombreGrupo:yup.string().required("El nombre del grupo no debe ir vacío"),
 });
 
-export const GrupoModal = ({handleClose,grupo,consultarGrupo}) => {
+export const GrupoModal = ({handleClose,grupo,consultarGrupo,mostrarNotificacion}) => {
 
 
     const { register, handleSubmit,formState: { errors } } = useForm({
@@ -31,9 +31,9 @@ export const GrupoModal = ({handleClose,grupo,consultarGrupo}) => {
         await Api.post("/grupoEdit",formData);
         consultarGrupo(true);
         handleClose();
-
+        mostrarNotificacion();
       } catch (error) {
-        console.log(error.response.data);
+        mostrarNotificacion(true)
       }
     }
 
@@ -46,8 +46,9 @@ export const GrupoModal = ({handleClose,grupo,consultarGrupo}) => {
         await Api.post("/grupo",formData);
         consultarGrupo(true);
         handleClose();
+        mostrarNotificacion()
       } catch (error) {
-        console.log(error.response.data);
+        mostrarNotificacion(true)
       }
     }
 

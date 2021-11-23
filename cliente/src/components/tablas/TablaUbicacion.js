@@ -9,7 +9,7 @@ import { UseDatos } from "../../hooks/UseDatos";
 import Api from "../../Api/Api";
 
 
-export const TablaUbicacion = ({consultar}) => {
+export const TablaUbicacion = ({consultar,mostrarNotificacion}) => {
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
@@ -33,8 +33,9 @@ export const TablaUbicacion = ({consultar}) => {
       console.log(resp);
       setConsultarUsarios(true);
       setVisibleBorrar(false);
+      mostrarNotificacion()
     } catch (error) {
-      console.log(error.response.data);
+      mostrarNotificacion(false);
     }
   }
 
@@ -86,7 +87,7 @@ export const TablaUbicacion = ({consultar}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<UbicacionModal handleClose={()=>setVisible(false)} ubicacion={ubicacion} consultarUbicacion={setConsultarUsarios}/>}
+            {visible&&<UbicacionModal handleClose={()=>setVisible(false)} ubicacion={ubicacion} consultarUbicacion={setConsultarUsarios} mostrarNotificacion={mostrarNotificacion}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}

@@ -12,7 +12,7 @@ const schema=yup.object({
   ubicacionNombre:yup.string().required("La ubicación no debe ir vacía"),
 });
 
-export const UbicacionModal = ({handleClose,ubicacion,consultarUbicacion}) => {
+export const UbicacionModal = ({handleClose,ubicacion,consultarUbicacion,mostrarNotificacion}) => {
 
 
 
@@ -32,9 +32,10 @@ export const UbicacionModal = ({handleClose,ubicacion,consultarUbicacion}) => {
         await Api.post("/ubicacionEdit",formData);
         consultarUbicacion(true);
         handleClose();
-
+        mostrarNotificacion();
       } catch (error) {
         console.log(error.response.data);
+        mostrarNotificacion(true)
       }
     }
 
@@ -47,8 +48,9 @@ export const UbicacionModal = ({handleClose,ubicacion,consultarUbicacion}) => {
         await Api.post("/ubicacion",formData);
         consultarUbicacion(true);
         handleClose();
+        mostrarNotificacion()
       } catch (error) {
-        console.log(error.response.data);
+        mostrarNotificacion(true)
       }
     }
 

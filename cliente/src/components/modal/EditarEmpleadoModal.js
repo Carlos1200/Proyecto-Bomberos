@@ -46,6 +46,8 @@ export const EditarEmpleadoModal = ({
   handleClose,
   consultarEmpleados,
   empleadoId,
+  notificacion,
+  notificacionError
 }) => {
   const [datosUbicacion, cargandoUbicacion] = UseDatos("ubicacion");
   const [datosPlaza, cargandoPlaza] = UseDatos("plaza");
@@ -81,6 +83,7 @@ export const EditarEmpleadoModal = ({
     cargandoPension,
     cargandoGrupo,
     detalles,
+    notificacionError
   ]);
 
   const {
@@ -108,8 +111,10 @@ export const EditarEmpleadoModal = ({
       await Api.post("/empleadoEdit",formData);
       consultarEmpleados(true);
       handleClose();
+      notificacion();
     } catch (error) {
       console.log(error.response.data);
+      notificacionError(error.response.data[0]||"Ocurrió un error");
     }
 
   };

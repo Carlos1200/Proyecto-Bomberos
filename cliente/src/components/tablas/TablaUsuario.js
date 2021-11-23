@@ -9,7 +9,7 @@ import { Eliminar } from "../modal/Eliminar";
 import Api from "../../Api/Api";
 
 
-export const TablaUsuario = ({consultar}) => {
+export const TablaUsuario = ({consultar,mostrarNotificacion}) => {
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
@@ -33,8 +33,10 @@ export const TablaUsuario = ({consultar}) => {
         console.log(resp);
         setConsultarUsarios(true);
         setVisibleBorrar(false);
+        mostrarNotificacion();
       } catch (error) {
         console.log(error.response.data);
+        mostrarNotificacion(true);
       }
     }
 
@@ -90,7 +92,7 @@ export const TablaUsuario = ({consultar}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<UsuarioModal handleClose={()=>setVisible(false)} usuario={usuario} consultarUsuarios={setConsultarUsarios}/>}
+            {visible&&<UsuarioModal handleClose={()=>setVisible(false)} usuario={usuario} consultarUsuarios={setConsultarUsarios} mostrarNotificacion={mostrarNotificacion}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}

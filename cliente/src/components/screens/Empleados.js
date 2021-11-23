@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react'
+import React,{ useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import toast, { Toaster } from 'react-hot-toast';
@@ -14,20 +14,18 @@ export const Empleados = () => {
   const [visible, setVisible] = useState(false);
   const [consultar, setConsultar] = useState(false);
 
-  useEffect(()=>{
-    if(consultar){
-      mostrarNotificacion();
-    }
-  },[consultar])
-
   const mostrarNotificacion=()=>{
     toast.success('Operación realizada correctamente');
   }
 
+  const mostrarNotificacionError=(error)=>{
+    toast.error(error);
+  }
+
     return (
       <Menu>
-        <Background titulo="Administración de Empleados" setConsultar={setConsultar} insertar={()=>setVisible(true)}>
-          <Toaster position="top-right" />
+        <Background titulo="Administración de Empleados" notificacion={mostrarNotificacion} setConsultar={setConsultar} insertar={()=>setVisible(true)} >
+          <Toaster position="top-right" toastOptions={{style:{zIndex:9999}}} />
           <ReportsBox>
             <FilterBox>
               <FontAwesomeIcon
@@ -39,7 +37,7 @@ export const Empleados = () => {
             </FilterBox>
             <ContenedorTabla>
 
-            <TablaEmpleado consultar={consultar} notificacion={mostrarNotificacion} />
+            <TablaEmpleado consultar={consultar} notificacion={mostrarNotificacion} notificacionError={mostrarNotificacionError} />
             </ContenedorTabla>
           </ReportsBox>
           </Background>

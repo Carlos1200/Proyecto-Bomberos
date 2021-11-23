@@ -9,7 +9,7 @@ import Api from "../../Api/Api";
 import { GrupoModal } from "../modal/GrupoModal";
 
 
-export const TablaGroup = ({consultar}) => {
+export const TablaGroup = ({consultar,mostrarNotificacion}) => {
 
   const [grupo, setGrupo] = useState();
   const [visible, setVisible] = useState(false);
@@ -32,8 +32,9 @@ export const TablaGroup = ({consultar}) => {
       await Api.post('/grupoDelete',formData);
       setConsultarGrupo(true);
       setVisibleBorrar(false);
+      mostrarNotificacion()
     } catch (error) {
-      console.log(error.response.data);
+      mostrarNotificacion(true)
     }
   }
 
@@ -85,7 +86,7 @@ export const TablaGroup = ({consultar}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<GrupoModal handleClose={()=>setVisible(false)} grupo={grupo} consultarGrupo={setConsultarGrupo}/>}
+            {visible&&<GrupoModal handleClose={()=>setVisible(false)} grupo={grupo} consultarGrupo={setConsultarGrupo} mostrarNotificacion={mostrarNotificacion}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}

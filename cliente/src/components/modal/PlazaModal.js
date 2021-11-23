@@ -12,7 +12,7 @@ const schema=yup.object({
     nombrePlaza:yup.string().required("El nombre de la plaza no debe ir vacía"),
 });
 
-export const PlazaModal = ({handleClose,plaza,consultarPlaza}) => {
+export const PlazaModal = ({handleClose,plaza,consultarPlaza,mostrarNotificacion}) => {
 
 
     const { register, handleSubmit,formState: { errors } } = useForm({
@@ -31,9 +31,9 @@ export const PlazaModal = ({handleClose,plaza,consultarPlaza}) => {
         await Api.post("/plazaEdit",formData);
         consultarPlaza(true);
         handleClose();
-
+        mostrarNotificacion()
       } catch (error) {
-        console.log(error.response.data);
+        mostrarNotificacion(true)
       }
     }
 
@@ -46,8 +46,9 @@ export const PlazaModal = ({handleClose,plaza,consultarPlaza}) => {
         await Api.post("/plaza",formData);
         consultarPlaza(true);
         handleClose();
+        mostrarNotificacion()
       } catch (error) {
-        console.log(error.response.data);
+        mostrarNotificacion(true)
       }
     }
 

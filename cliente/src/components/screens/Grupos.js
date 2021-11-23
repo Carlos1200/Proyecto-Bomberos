@@ -1,6 +1,7 @@
 import React,{useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import toast, { Toaster } from 'react-hot-toast';
 import {  faSearch } from '@fortawesome/free-solid-svg-icons';
 import { AnimatePresence } from 'framer-motion';
 import { Menu } from './../Menu';
@@ -14,9 +15,19 @@ export const Grupos = () => {
   
   const [visible, setVisible] = useState(false);
   const [consultar, setConsultar] = useState(false);
+
+  const mostrarNotificacion=(error=false)=>{
+    if(error){
+      toast.error("Ocurrió un error");
+    }else{
+      toast.success('Operación realizada correctamente');
+    }
+  }
+
     return (
       <Menu>
         <Background titulo="Administración de Grupos" insertar={()=>setVisible(true)}>
+          <Toaster position="top-right"/>
           <ReportsBox>
             <FilterBox>
               <FontAwesomeIcon
@@ -27,7 +38,7 @@ export const Grupos = () => {
               <BtnFilterSearch>Buscar</BtnFilterSearch>
             </FilterBox>
             <ContenedorTabla>
-              <TablaGroup consultar={consultar}/>
+              <TablaGroup consultar={consultar} mostrarNotificacion={mostrarNotificacion}/>
             </ContenedorTabla>
           </ReportsBox>
         </Background>
@@ -35,7 +46,7 @@ export const Grupos = () => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<GrupoModal handleClose={()=>setVisible(false)} consultarGrupo={setConsultar}/>}
+            {visible&&<GrupoModal handleClose={()=>setVisible(false)} consultarGrupo={setConsultar} mostrarNotificacion={mostrarNotificacion}/>}
       </AnimatePresence>
       </Menu>
     );

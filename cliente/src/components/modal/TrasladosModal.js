@@ -7,7 +7,7 @@ import { EmpleadosSeleccion } from "../EmpleadosSeleccion";
 import { UseDatos } from "../../hooks/UseDatos";
 import { UseTraslados } from "../../hooks/UseTraslados";
 
-export const TrasladosModal = ({ handleClose, empleados }) => {
+export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limpiarEmpleados }) => {
   const [datosUbicacion, cargandoUbicacion] = UseDatos("ubicacion");
   const [datosPlaza, cargandoPlaza] = UseDatos("plaza");
   const [datosGrupo, cargandoGrupo] = UseDatos("grupo");
@@ -65,7 +65,9 @@ export const TrasladosModal = ({ handleClose, empleados }) => {
           </ContenedorEmpleados>
           <Btn type="button" onClick={()=>{
             PrepararDatos(empleadosFormulario.current)
+            limpiarEmpleados();
             handleClose();  
+            mostrarNotificacion();
           }}>
           <Text>Agregar</Text>
           <FontAwesomeIcon

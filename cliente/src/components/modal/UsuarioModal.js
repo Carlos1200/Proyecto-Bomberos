@@ -12,7 +12,7 @@ import Api from '../../Api/Api';
 
 
 
-export const UsuarioModal = ({handleClose,usuario,consultarUsuarios}) => {
+export const UsuarioModal = ({handleClose,usuario,consultarUsuarios,mostrarNotificacion}) => {
 
     const [datos,cargando] = UseDatos('ubicacion');
     const [checked, setChecked] = useState(!usuario?true:false);
@@ -48,9 +48,11 @@ export const UsuarioModal = ({handleClose,usuario,consultarUsuarios}) => {
         await Api.post("/usuariosEdit",formData);
         consultarUsuarios(true);
         handleClose();
+        mostrarNotificacion();
 
       } catch (error) {
         console.log({error});
+        mostrarNotificacion(true);
       }
     }
     const SubmitNuevo=async({nombre,ubicacion,tipo,password})=>{
@@ -65,9 +67,10 @@ export const UsuarioModal = ({handleClose,usuario,consultarUsuarios}) => {
         await Api.post("/usuarios",formData);
         consultarUsuarios(true);
         handleClose();
-
+        mostrarNotificacion();
       } catch (error) {
         console.log({error});
+        mostrarNotificacion(true);
       }
     }
 
@@ -189,7 +192,6 @@ const Check=styled.input`
   -ms-transform: scale(2);
   -webkit-transform: scale(2);
   padding: 10px;
-  margin-top: 10px;
 `
 
 const ContenedorContra=styled.div`

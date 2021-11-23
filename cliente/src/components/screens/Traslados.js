@@ -1,5 +1,6 @@
 import React, { useContext,useEffect,useState } from 'react'
 import styled from "styled-components";
+import toast, { Toaster } from 'react-hot-toast';
 import Select from 'react-select'
 import { Menu } from './../Menu';
 import {Background} from '../Background';
@@ -49,10 +50,27 @@ export const Traslados = () => {
     setEmpleadosSeleccionados(seleccionar);
   }
 
+  const limpiarEmpleados=()=>{
+
+    setEmpleados([...empleados,...empleadosSeleccionados]);
+
+    setEmpleadosSeleccionados([]);
+    
+  }
+
+  const mostrarNotificacion=(error=false)=>{
+    if(error){
+      toast.error("Ocurrió un error");
+    }else{
+      toast.success('Operación realizada correctamente');
+    }
+  }
+
     return (
       <>
       <Menu>
         <Background titulo="Administrador de Traslados">
+          <Toaster position="top-right"/>
           <ReportsBox>
             
             <Title>Selección de Empleados a Trasladar</Title>
@@ -98,7 +116,7 @@ export const Traslados = () => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<TrasladosModal handleClose={()=>setVisible(false)} empleados={empleadosSeleccionados}/>}
+            {visible&&<TrasladosModal handleClose={()=>setVisible(false)} empleados={empleadosSeleccionados} mostrarNotificacion={mostrarNotificacion} limpiarEmpleados={limpiarEmpleados}/>}
       </AnimatePresence>
       </>
     );
