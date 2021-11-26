@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext,useState } from "react";
 import styled from "styled-components";
 import {
   faUserTie,
@@ -9,17 +9,22 @@ import {
   faFileSignature,
   faPowerOff,
   faExchangeAlt,
-  faObjectGroup
+  faObjectGroup,
+  faRandom
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Btn } from "./Btn";
 import Logo from '../assets/LogoBomberos.png';
 import { AuthContext } from "../context/Auth/AuthContext";
 import Api from "../Api/Api";
+import { CerrarSesion } from "./modal/CerrarSesion";
+import { AnimatePresence } from "framer-motion";
 
 
 export const Sidebar = () => {
 
   const {cerrarSesion}=useContext(AuthContext);
+  const [visible, setVisible] = useState(false);
 
   const cerrar=async()=>{
     try {
@@ -31,6 +36,7 @@ export const Sidebar = () => {
   }
 
   return (
+    <>
     <Contenedor>
       <ContenedorImagen>
         <Image
@@ -75,6 +81,11 @@ export const Sidebar = () => {
           redirect='plazas'
         />
         <Btn
+          titulo='Administrador de Traslados'
+          icono={faRandom}
+          redirect='admin-traslados'
+        />
+        <Btn
           titulo='Traslados'
           icono={faExchangeAlt}
           redirect='traslados'
@@ -84,14 +95,23 @@ export const Sidebar = () => {
           icono={faFileSignature}
           redirect='generar-reporte'
         />
-        <Btn 
-          titulo='Cerrar Sesión' 
-          icono={faPowerOff} 
-          redirect="" 
-          onpress={cerrar}
-        />
+        <Boton
+          onClick={()=>{
+            setVisible(true);
+          }}
+        >
+          <FontAwesomeIcon icon={faPowerOff} style={{ fontSize: "20px",marginLeft:'4rem',marginRight:'2rem' }} />
+          Cerrar Sesión
+        </Boton>
       </ContenedorButones>
     </Contenedor>
+    <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {visible&&<CerrarSesion handleClose={()=>setVisible(false)}  cerrarSesion={cerrar}/>}
+    </AnimatePresence>
+    </>
   );
 };
 
@@ -133,4 +153,20 @@ const ContenedorButones = styled.div`
   border-radius: 20px;       /* roundness of the scroll thumb */
   border: 3px solid #343F56;  /* creates padding around scroll thumb */
 }
+`;
+
+const Boton = styled.button`
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+  background-color: transparent;
+  color: white;
+  font-size: 18px;
+  padding: 15px 0;
+  display: flex;
+  justify-content: flex-start;
+  transition: background-color .3s ease-in-out;
+  &:hover {
+    background-color: #222938;
+  }
 `;

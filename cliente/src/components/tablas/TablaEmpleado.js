@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from "react";
+import React,{useContext, useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt,faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
@@ -7,30 +7,24 @@ import Api from '../../Api/Api';
 import { UseDatos } from "../../hooks/UseDatos";
 import { EditarEmpleadoModal } from "../modal/EditarEmpleadoModal";
 import { Eliminar } from "../modal/Eliminar";
+import { EmpleadosContext } from "../../context/empleados/EmpleadosContext";
 
 
-export const TablaEmpleado = ({consultar,notificacion,notificacionError}) => {
+export const TablaEmpleado = ({notificacion,notificacionError}) => {
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
   const [empleadoBorrar, setEmpleadoBorrar] = useState(null);
   const [empleado, setEmpleado] = useState();
-
-  const [datos,cargando,setConsultarEmpleados] = UseDatos('empleado');
-  useEffect(()=>{
-    if(consultar){
-      setConsultarEmpleados(consultar);
-      notificacion();
-    }
-    // eslint-disable-next-line
-  },[consultar])
+  
+  const {empleados,cargando,setConsultar}=useContext(EmpleadosContext);
 
   const eliminarEmpleado=async()=>{
     try {
       const formData=new FormData();
       formData.append("idEmpleado",empleadoBorrar);
       await Api.post('/empleadoDelete',formData);
-      setConsultarEmpleados(true);
+      setConsultar(true);
       notificacion();
       setVisibleBorrar(false);
     } catch (error) {
@@ -60,7 +54,7 @@ export const TablaEmpleado = ({consultar,notificacion,notificacionError}) => {
           </ColumTitleBox>
         </HeadTop>
         <Body>
-            {datos.map((empleado,index)=>(
+            {empleados.map((empleado,index)=>(
               <ColumInputBox key={index}>
                 <ColumInput>{empleado.nombres} {empleado.apellidos}</ColumInput>
                 <ColumInput>{empleado.nombreUbicacion}</ColumInput>
@@ -105,7 +99,7 @@ export const TablaEmpleado = ({consultar,notificacion,notificacionError}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<EditarEmpleadoModal handleClose={()=>setVisible(false)} empleadoId={empleado} consultarEmpleados={setConsultarEmpleados} notificacion={notificacion} notificacionError={notificacionError}/>}
+            {visible&&<EditarEmpleadoModal handleClose={()=>setVisible(false)} empleadoId={empleado} notificacion={notificacion} notificacionError={notificacionError}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}

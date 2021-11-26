@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from "react";
+import React,{useContext, useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
@@ -7,30 +7,25 @@ import Api from '../../Api/Api';
 import { UseDatos } from "../../hooks/UseDatos";
 import { PlazaModal } from "../modal/PlazaModal";
 import { Eliminar } from "../modal/Eliminar";
+import { PlazasContext } from "../../context/plazas/PlazasContext";
 
 
-export const TablaPlaza = ({consultar,mostrarNotificacion}) => {
+export const TablaPlaza = ({mostrarNotificacion}) => {
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
   const [plazaBorrar, setPlazaBorrar] = useState(null);
   const [plaza, setPlaza] = useState();
 
-  const [datos,cargando,setConsultarUsarios] = UseDatos('plaza');
+  const {cargando,plazas,setConsultar}=useContext(PlazasContext);
 
-  useEffect(()=>{
-    if(consultar){
-      setConsultarUsarios(consultar);
-    }
-    // eslint-disable-next-line
-  },[consultar])
 
   const eliminarPlaza=async()=>{
     try {
       const formData=new FormData();
       formData.append("idPlaza",plazaBorrar);
       await Api.post('/plazaDelete',formData);
-      setConsultarUsarios(true);
+      setConsultar(true);
       setVisibleBorrar(false);
       mostrarNotificacion()
     } catch (error) {
@@ -52,7 +47,7 @@ export const TablaPlaza = ({consultar,mostrarNotificacion}) => {
           </ColumTitleBox>
         </HeadTop>
         <Body>
-            {datos.map((plaza,index)=>(
+            {plazas.map((plaza,index)=>(
               <ColumInputBox key={index}>
                 <ColumInput>{plaza.nombrePlaza}</ColumInput>
             <ColumInput>
@@ -87,7 +82,7 @@ export const TablaPlaza = ({consultar,mostrarNotificacion}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<PlazaModal handleClose={()=>setVisible(false)} plaza={plaza} consultarPlaza={setConsultarUsarios} mostrarNotificacion={mostrarNotificacion}/>}
+            {visible&&<PlazaModal handleClose={()=>setVisible(false)} plaza={plaza} mostrarNotificacion={mostrarNotificacion}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}

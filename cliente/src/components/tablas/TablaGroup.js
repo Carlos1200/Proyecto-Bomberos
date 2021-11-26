@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from "react";
+import React,{useContext, useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
@@ -7,30 +7,24 @@ import { Eliminar } from "../modal/Eliminar";
 import { UseDatos } from "../../hooks/UseDatos";
 import Api from "../../Api/Api";
 import { GrupoModal } from "../modal/GrupoModal";
+import { GrupoContext } from "../../context/grupos/GrupoContext";
 
 
-export const TablaGroup = ({consultar,mostrarNotificacion}) => {
+export const TablaGroup = ({mostrarNotificacion}) => {
 
   const [grupo, setGrupo] = useState();
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
   const [grupoBorrar, setGrupoBorrar] = useState(null);
 
-  const [datos,cargando,setConsultarGrupo] = UseDatos('grupo');
-
-  useEffect(()=>{
-    if(consultar){
-      setConsultarGrupo(consultar);
-    }
-    // eslint-disable-next-line
-  },[consultar])
+  const {cargando,setConsultar,grupos}=useContext(GrupoContext);
 
   const eliminarGrupo=async()=>{
     try {
       const formData=new FormData();
       formData.append("idGrupo",grupoBorrar);
       await Api.post('/grupoDelete',formData);
-      setConsultarGrupo(true);
+      setConsultar(true);
       setVisibleBorrar(false);
       mostrarNotificacion()
     } catch (error) {
@@ -51,7 +45,7 @@ export const TablaGroup = ({consultar,mostrarNotificacion}) => {
           </ColumTitleBox>
         </HeadTop>
         <Body>
-            {datos.map((grupo,index)=>(
+            {grupos.map((grupo,index)=>(
               <ColumInputBox key={index}>
                 <ColumInput>{grupo.nombreGrupo}</ColumInput>
             <ColumInput>
@@ -86,7 +80,7 @@ export const TablaGroup = ({consultar,mostrarNotificacion}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<GrupoModal handleClose={()=>setVisible(false)} grupo={grupo} consultarGrupo={setConsultarGrupo} mostrarNotificacion={mostrarNotificacion}/>}
+            {visible&&<GrupoModal handleClose={()=>setVisible(false)} grupo={grupo} mostrarNotificacion={mostrarNotificacion}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}

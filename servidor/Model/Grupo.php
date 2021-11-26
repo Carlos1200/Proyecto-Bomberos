@@ -53,6 +53,17 @@ class Grupo extends ActiveRecord{
         return self::$errores;
     }
 
+    public function grupoFiltro(){ 
+        $query="EXEC busquedaGrupos :nombreGrupo";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':nombreGrupo',$this->nombreGrupo,PDO::PARAM_STR);
+        $consulta->execute();
+
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+
+        return $datos;
+    }
+
     public function nuevoGrupo(){
         $query="EXEC insertarGrupo :nombreGrupo";
         $consulta=self::$db->prepare($query);

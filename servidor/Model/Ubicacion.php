@@ -41,6 +41,17 @@ class Ubicacion extends ActiveRecord{
         }
     }
 
+    public function ubicacionFiltro(){ 
+        $query="EXEC busquedaUbicaciones :nombreUbicacion";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':nombreUbicacion',$this->nombreUbicacion,PDO::PARAM_STR);
+        $consulta->execute();
+
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+
+        return $datos;
+    }
+
     public function nuevaUbicacion(){
         $query="INSERT INTO ".self::$tabla. "(nombreUbicacion) VALUES(:nombreUbicacion)";
         $consulta=self::$db->prepare($query);

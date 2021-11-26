@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose,faSave,} from '@fortawesome/free-solid-svg-icons';
@@ -7,13 +7,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup'
 import { Modal } from '../Modal'
 import Api from '../../Api/Api';
+import { GrupoContext } from '../../context/grupos/GrupoContext';
 
 const schema=yup.object({
     nombreGrupo:yup.string().required("El nombre del grupo no debe ir vacío"),
 });
 
-export const GrupoModal = ({handleClose,grupo,consultarGrupo,mostrarNotificacion}) => {
+export const GrupoModal = ({handleClose,grupo,mostrarNotificacion}) => {
 
+
+  const {setConsultar}=useContext(GrupoContext);
 
     const { register, handleSubmit,formState: { errors } } = useForm({
       resolver:yupResolver(schema),
@@ -23,13 +26,13 @@ export const GrupoModal = ({handleClose,grupo,consultarGrupo,mostrarNotificacion
     });
     const SubmitEditar=async({nombreGrupo})=>{
       try {
-        consultarGrupo(false)
+        setConsultar(false)
         const formData=new FormData();
         formData.append('idGrupo',grupo.idGrupo);
         formData.append('nombreGrupo',nombreGrupo);
 
         await Api.post("/grupoEdit",formData);
-        consultarGrupo(true);
+        setConsultar(true);
         handleClose();
         mostrarNotificacion();
       } catch (error) {
@@ -39,12 +42,12 @@ export const GrupoModal = ({handleClose,grupo,consultarGrupo,mostrarNotificacion
 
     const SubmitNuevo=async({nombreGrupo})=>{
       try {
-        consultarGrupo(false)
+        setConsultar(false)
         const formData=new FormData();
         formData.append('nombreGrupo',nombreGrupo);
 
         await Api.post("/grupo",formData);
-        consultarGrupo(true);
+        setConsultar(true);
         handleClose();
         mostrarNotificacion()
       } catch (error) {

@@ -65,6 +65,27 @@ class UbicacionesController{
         }
     }
 
+    public static function ubicacionFiltro(Router $router){
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        $token=str_replace("token=","",$query);
+
+        $ubicacion=new Ubicacion($_POST);
+        $ubicacion::VerificarToken($token);
+
+        $errores=$ubicacion::getErrores();
+
+        if(empty($errores)){
+            $ubicaciones=$ubicacion->ubicacionFiltro();
+            $router->render('ubicaciones/ubicaciones',[
+                'ubicaciones'=>$ubicaciones
+            ]);
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
+    }
+
     public static function actualizarUbicacion(Router $router){
         $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
         $token=str_replace("token=","",$query);

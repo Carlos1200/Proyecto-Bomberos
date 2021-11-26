@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react'
+import React,{useContext, useEffect, useState} from 'react'
 import styled from 'styled-components'
 import Select from 'react-select'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,6 +11,7 @@ import { UseDatos } from '../../hooks/UseDatos';
 import Api from '../../Api/Api';
 import { ListadoEmpleados } from '../ListadoEmpleados';
 import { UseEmpleados } from '../../hooks/UseEmpleados';
+import { EmpleadosContext } from '../../context/empleados/EmpleadosContext';
 
 const schema=yup.object({
   nombres:yup.string().required("Los nombres son obligatorios"),
@@ -43,7 +44,7 @@ const schema=yup.object({
   }),
 })
 
-export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
+export const NuevoEmpleadoModal = ({handleClose}) => {
 
     const [datosUbicacion,cargandoUbicacion] = UseDatos('ubicacion');
     const [datosPlaza,cargandoPlaza] = UseDatos('plaza');
@@ -54,6 +55,7 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
     
     const {crearString,nombresCol,apellidosCol,grupoCol,pensionCol,plazaCol,ubicacionCol,salarioCol,fechaCol} = UseEmpleados();
 
+    const {setConsultar}=useContext(EmpleadosContext);
 
   useEffect(()=>{
     if(!cargandoUbicacion&&!cargandoPlaza&&!cargandoPension&&!cargandoGrupo){
@@ -92,7 +94,7 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
     }
 
     const insertarEmpleados=async()=>{
-      consultarEmpleados(false);
+      setConsultar(false);
       const formData=new FormData();
       formData.append('nombres',nombresCol);
       formData.append('apellidos',apellidosCol)
@@ -105,7 +107,7 @@ export const NuevoEmpleadoModal = ({handleClose,consultarEmpleados}) => {
 
       try {
       await Api.post("/empleado",formData);
-      consultarEmpleados(true);
+      setConsultar(true);
       handleClose();
       } catch (error) {
         console.log(error.response.data);

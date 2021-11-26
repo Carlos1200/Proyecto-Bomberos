@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose,faSave,} from '@fortawesome/free-solid-svg-icons';
@@ -7,13 +7,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup'
 import { Modal } from '../Modal'
 import Api from '../../Api/Api';
+import { PlazasContext } from '../../context/plazas/PlazasContext';
 
 const schema=yup.object({
     nombrePlaza:yup.string().required("El nombre de la plaza no debe ir vacía"),
 });
 
-export const PlazaModal = ({handleClose,plaza,consultarPlaza,mostrarNotificacion}) => {
+export const PlazaModal = ({handleClose,plaza,mostrarNotificacion}) => {
 
+  const {setConsultar}=useContext(PlazasContext);
 
     const { register, handleSubmit,formState: { errors } } = useForm({
       resolver:yupResolver(schema),
@@ -23,13 +25,13 @@ export const PlazaModal = ({handleClose,plaza,consultarPlaza,mostrarNotificacion
     });
     const SubmitEditar=async({nombrePlaza})=>{
       try {
-        consultarPlaza(false);
+        setConsultar(false);
         const formData=new FormData();
         formData.append('idPlaza',plaza.idPlaza);
         formData.append('nombrePlaza',nombrePlaza);
 
         await Api.post("/plazaEdit",formData);
-        consultarPlaza(true);
+        setConsultar(true);
         handleClose();
         mostrarNotificacion()
       } catch (error) {
@@ -39,12 +41,12 @@ export const PlazaModal = ({handleClose,plaza,consultarPlaza,mostrarNotificacion
 
     const SubmitNuevo=async({nombrePlaza})=>{
       try {
-        consultarPlaza(false);
+        setConsultar(false);
         const formData=new FormData();
         formData.append('nombrePlaza',nombrePlaza);
 
         await Api.post("/plaza",formData);
-        consultarPlaza(true);
+        setConsultar(true);
         handleClose();
         mostrarNotificacion()
       } catch (error) {

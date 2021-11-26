@@ -22,6 +22,7 @@ class ComposerStaticInitc24e21d655c47ee549a8b6092a1aff92
         'P' => 
         array (
             'PhpOption\\' => 10,
+            'PDF\\' => 4,
         ),
         'M' => 
         array (
@@ -58,6 +59,10 @@ class ComposerStaticInitc24e21d655c47ee549a8b6092a1aff92
         'PhpOption\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
+        ),
+        'PDF\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tfpdf',
         ),
         'Model\\' => 
         array (

@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from "react";
+import React,{useContext, useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
@@ -7,23 +7,17 @@ import {UbicacionModal} from '../modal/UbicacionModal'
 import { Eliminar } from "../modal/Eliminar";
 import { UseDatos } from "../../hooks/UseDatos";
 import Api from "../../Api/Api";
+import { UbicacionesContext } from "../../context/ubicaciones/UbicacionesContext";
 
 
-export const TablaUbicacion = ({consultar,mostrarNotificacion}) => {
+export const TablaUbicacion = ({mostrarNotificacion}) => {
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
   const [ubicacionBorrar, setUbicacionBorrar] = useState(null);
   const [ubicacion, setUbicacion] = useState();
+  const {ubicaciones,setConsultar,cargando}=useContext(UbicacionesContext);
 
-  const [datos,cargando,setConsultarUsarios] = UseDatos('ubicacion');
-
-  useEffect(()=>{
-    if(consultar){
-      setConsultarUsarios(consultar);
-    }
-    // eslint-disable-next-line
-  },[consultar])
   
   const eliminarUbicacion=async()=>{
     try {
@@ -31,7 +25,7 @@ export const TablaUbicacion = ({consultar,mostrarNotificacion}) => {
       formData.append("idUbicacion",ubicacionBorrar);
       const resp=await Api.post('/ubicacionDelete',formData);
       console.log(resp);
-      setConsultarUsarios(true);
+      setConsultar(true);
       setVisibleBorrar(false);
       mostrarNotificacion()
     } catch (error) {
@@ -52,7 +46,7 @@ export const TablaUbicacion = ({consultar,mostrarNotificacion}) => {
           </ColumTitleBox>
         </HeadTop>
         <Body>
-            {datos.map((ubicacion,index)=>(
+            {ubicaciones.map((ubicacion,index)=>(
               <ColumInputBox key={index}>
                 <ColumInput>{ubicacion.nombreUbicacion}</ColumInput>
                 <ColumInput>
@@ -87,7 +81,7 @@ export const TablaUbicacion = ({consultar,mostrarNotificacion}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<UbicacionModal handleClose={()=>setVisible(false)} ubicacion={ubicacion} consultarUbicacion={setConsultarUsarios} mostrarNotificacion={mostrarNotificacion}/>}
+            {visible&&<UbicacionModal handleClose={()=>setVisible(false)} ubicacion={ubicacion} mostrarNotificacion={mostrarNotificacion}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}

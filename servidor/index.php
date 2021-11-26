@@ -12,9 +12,11 @@
     use Controller\GrupoController;
     use Controller\EmpleadoController;
     use Controller\TrasladoController;
+    use Controller\PdfController;
 
     //!Usuarios
     $router->get('/api/usuarios',[UsuarioController::class,'obtenerUsuarios']);
+    $router->post('/api/usuariosFiltro',[UsuarioController::class,'obtenerUsuarioFiltrado']);
     $router->post('/api/usuarios',[UsuarioController::class,'nuevoUsuario']);
     $router->post('/api/usuariosEdit',[UsuarioController::class,'actualizarUsuario']);
     $router->post('/api/usuariosDelete',[UsuarioController::class,'eliminarUsuario']);
@@ -27,11 +29,13 @@
     //!Ubicaciones
     $router->post('/api/ubicacion',[UbicacionesController::class,'nuevaUbicacion']);
     $router->get('/api/ubicacion',[UbicacionesController::class,'obtenerUbicacion']);
+    $router->post('/api/ubicacionFiltro',[UbicacionesController::class,'ubicacionFiltro']);
     $router->post('/api/ubicacionEdit',[UbicacionesController::class,'actualizarUbicacion']);
     $router->post('/api/ubicacionDelete',[UbicacionesController::class,'eliminarUbicacion']);
 
     //!Plazas
     $router->post('/api/plaza',[PlazaController::class,'nuevaPlaza']);
+    $router->post('/api/plazaFiltro',[PlazaController::class,'plazaFiltro']);
     $router->get('/api/plaza',[PlazaController::class,'obtenerPlazas']);
     $router->post('/api/plazaEdit',[PlazaController::class,'actualizarPlaza']);
     $router->post('/api/plazaDelete',[PlazaController::class,'eliminarPlaza']);
@@ -42,12 +46,14 @@
 
     //!Grupo
     $router->post('/api/grupo',[GrupoController::class,'nuevoGrupo']);
+    $router->post('/api/grupoFiltro',[GrupoController::class,'grupoFiltro']);
     $router->get('/api/grupo',[GrupoController::class,'obtenerGrupos']);
     $router->post('/api/grupoEdit',[GrupoController::class,'actualizarGrupo']);
     $router->post('/api/grupoDelete',[GrupoController::class,'eliminarGrupo']);
 
     //!Empleados
     $router->get('/api/empleado',[EmpleadoController::class,'obtenerEmpleados']);
+    $router->post('/api/empleadosFiltrados',[EmpleadoController::class,'empleadosFiltrados']);
     $router->post('/api/empleadoFiltro',[EmpleadoController::class,'obtenerEmpleadosFiltrados']);
     $router->post('/api/empleadoDetalle',[EmpleadoController::class,'obtenerEmpleadosDetalle']);
     $router->post('/api/empleado',[EmpleadoController::class,'insertarUsuarios']);
@@ -57,6 +63,9 @@
 
     //!Traslados
     $router->post('/api/traslado',[TrasladoController::class,'crearTraslado']);
+
+    //!Pdf
+    $router->get('/api/pdf',[PdfController::class,'generarPdf']);
 
     $router->comprobarRutas();
 ?>

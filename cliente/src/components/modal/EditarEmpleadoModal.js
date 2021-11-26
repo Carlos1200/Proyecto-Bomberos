@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Select from "react-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +9,7 @@ import * as yup from "yup";
 import { Modal } from "../Modal";
 import { UseDatos } from "../../hooks/UseDatos";
 import Api from "../../Api/Api";
+import { EmpleadosContext } from "../../context/empleados/EmpleadosContext";
 
 const schema = yup.object({
   nombres: yup.string().required("Los nombres son obligatorios"),
@@ -44,7 +45,6 @@ const schema = yup.object({
 
 export const EditarEmpleadoModal = ({
   handleClose,
-  consultarEmpleados,
   empleadoId,
   notificacion,
   notificacionError
@@ -55,6 +55,8 @@ export const EditarEmpleadoModal = ({
   const [datosGrupo, cargandoGrupo] = UseDatos("grupo");
   const [cargando, setCargando] = useState(true);
   const [detalles, setDetalles] = useState();
+
+  const {setConsultar}=useContext(EmpleadosContext);
   useEffect(() => {
     obtenerDetalles();
     // eslint-disable-next-line
@@ -95,7 +97,6 @@ export const EditarEmpleadoModal = ({
   });
 
   const editarEmpleado = async({nombres,apellidos,salario,ubicacion,plaza,pension,grupo}) => {
-    consultarEmpleados(false);
     const formData=new FormData();
     formData.append('idEmpleado',empleadoId);
     formData.append('nombres',nombres);
@@ -107,9 +108,9 @@ export const EditarEmpleadoModal = ({
     formData.append('idPlaza',plaza.idPlaza)
 
     try {
-      consultarEmpleados(false);
+      setConsultar(false);
       await Api.post("/empleadoEdit",formData);
-      consultarEmpleados(true);
+      setConsultar(true);
       handleClose();
       notificacion();
     } catch (error) {

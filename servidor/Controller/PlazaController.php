@@ -44,6 +44,27 @@ class PlazaController{
         }
     }
 
+    public static function plazaFiltro(Router $router){
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        $token=str_replace("token=","",$query);
+
+        $plaza=new Plaza($_POST);
+        $plaza::VerificarToken($token);
+
+        $errores=$plaza::getErrores();
+
+        if(empty($errores)){
+            $plazas=$plaza->plazaFiltro();
+            $router->render('plazas/plazas',[
+                'plazas'=>$plazas
+            ]);
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
+    }
+
     public static function obtenerPlazas(Router $router){
         $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
         $token=str_replace("token=","",$query);

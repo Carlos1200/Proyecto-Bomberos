@@ -1,16 +1,17 @@
-import React,{useState} from 'react'
+import React,{useContext, useState} from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose} from '@fortawesome/free-solid-svg-icons';
 import { ExcelInput } from '../ExcelInput';
 import { Modal } from '../Modal';
 import Api from '../../Api/Api';
+import { EmpleadosContext } from '../../context/empleados/EmpleadosContext';
 
-export const ArchivoEmpleadoModal = ({handleClose,setConsultar,notificacion}) => {
+export const ArchivoEmpleadoModal = ({handleClose,notificacion}) => {
 
   const [empleado, setEmpleado] = useState(null);
   const [cargando, setCargando] = useState(false);
-
+  const {setConsultar}=useContext(EmpleadosContext);
 
   const submit=async()=>{
     setConsultar(false);

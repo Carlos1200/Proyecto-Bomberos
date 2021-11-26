@@ -14,7 +14,8 @@
         "psr-4": {
             "Model\\":"./Model",
             "MVC\\":"./",
-            "Controller\\":"./Controller"
+            "Controller\\":"./Controller",
+            "PDF\\":"./tfpdf"
         }
     }
 }
