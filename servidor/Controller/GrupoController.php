@@ -66,6 +66,27 @@ class GrupoController{
         }
     }
 
+    public static function grupoFiltro(Router $router){
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        $token=str_replace("token=","",$query);
+
+        $grupo=new Grupo($_POST);
+        $grupo::VerificarToken($token);
+
+        $errores=$grupo::getErrores();
+
+        if(empty($errores)){
+            $grupos=$grupo->grupoFiltro();
+            $router->render('grupo/grupo',[
+                'grupos'=>$grupos
+            ]);
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
+    }
+
     public static function actualizarGrupo(Router $router){
         $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
         $token=str_replace("token=","",$query);

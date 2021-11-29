@@ -1,40 +1,38 @@
-import React,{ useEffect, useState} from "react";
+import React,{ useContext, useEffect, useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
+import {UsuariosContext} from '../../context/usuarios/UsuariosContext';
 import { UsuarioModal } from "../modal/UsuarioModal";
 import { UseDatos } from "../../hooks/UseDatos";
 import { Eliminar } from "../modal/Eliminar";
 import Api from "../../Api/Api";
 
 
-export const TablaUsuario = ({consultar}) => {
+export const TablaUsuario = ({mostrarNotificacion}) => {
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
   const [usuarioBorrar, setUsuarioBorrar] = useState(null);
   const [usuario, setUsuario] = useState();
- 
-  const [datos,cargando,setConsultarUsarios] = UseDatos('usuarios');
 
-  useEffect(()=>{
-    if(consultar){
-      setConsultarUsarios(consultar);
-    }
-    // eslint-disable-next-line
-  },[consultar])
+  const {usuarios,cargando,setConsultar}=useContext(UsuariosContext);
+
+
+
 
     const eliminarUsuario=async()=>{
       try {
         const formData=new FormData();
         formData.append("idUsuario",usuarioBorrar);
         const resp=await Api.post('/usuariosDelete',formData);
-        console.log(resp);
-        setConsultarUsarios(true);
+        setConsultar(true);
         setVisibleBorrar(false);
+        mostrarNotificacion();
       } catch (error) {
         console.log(error.response.data);
+        mostrarNotificacion(true);
       }
     }
 
@@ -53,7 +51,7 @@ export const TablaUsuario = ({consultar}) => {
           </ColumTitleBox>
         </HeadTop>
         <Body>
-            {datos.map((usuario,index)=>(
+            {usuarios.map((usuario,index)=>(
               <ColumInputBox key={index}>
                 <ColumInput>{usuario.NombreUsuario}</ColumInput>
                 <ColumInput>{usuario.tipoUsuario}</ColumInput>
@@ -90,7 +88,7 @@ export const TablaUsuario = ({consultar}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<UsuarioModal handleClose={()=>setVisible(false)} usuario={usuario} consultarUsuarios={setConsultarUsarios}/>}
+            {visible&&<UsuarioModal handleClose={()=>setVisible(false)} usuario={usuario} consultarUsuarios={setConsultar} mostrarNotificacion={mostrarNotificacion}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}
@@ -109,12 +107,8 @@ const Contenedor = styled.div`
 `;
 
 const ContenedorTabla=styled.div`
-  overflow-y: auto;
   width: 100%;
-  height: 60vh;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+ 
 `
 
 const Table = styled.table`
@@ -122,6 +116,7 @@ const Table = styled.table`
   border-spacing: 0 10px;
   width: 100%;
   height: 100%;
+  padding-right: 10px;
 `;
 
 const ColumTitleBox = styled.tr`

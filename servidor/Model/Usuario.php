@@ -10,6 +10,7 @@ class Usuario extends ActiveRecord{
     public $idUsuario;
     public $NombreUsuario;
     public $tipoUsuario;
+    public $nickUsuario;
     public $UbicacionUsuario;
     public $contra;
     public $token;
@@ -19,15 +20,16 @@ class Usuario extends ActiveRecord{
         $this->idUsuario=$args['idUsuario']??null;
         $this->NombreUsuario=$args['NombreUsuario']??'';
         $this->tipoUsuario=$args['tipoUsuario']??'';
+        $this->nickUsuario=$args['nickUsuario']??'';
         $this->UbicacionUsuario=$args['UbicacionUsuario']??'';
         $this->contra=$args['contra']??'';
     }
 
     public function existeUsuario($nuevo=false){
-        $query= "SELECT * FROM ". self::$tabla. " WHERE NombreUsuario = :NombreUsuario";
+        $query= "SELECT * FROM ". self::$tabla. " WHERE nickUsuario = :nickUsuario";
 
         $consulta=self::$db->prepare($query);
-        $consulta->bindParam(':NombreUsuario',$this->NombreUsuario,PDO::PARAM_STR);
+        $consulta->bindParam(':nickUsuario',$this->nickUsuario,PDO::PARAM_STR);
         $consulta->execute();
         $resultado=$consulta->fetchAll(PDO::FETCH_ASSOC);
         if(!$resultado){
@@ -43,10 +45,22 @@ class Usuario extends ActiveRecord{
                 $this->idUsuario=$resultado[0]['idUsuario'];
                 $this->NombreUsuario=$resultado[0]['NombreUsuario'];
                 $this->tipoUsuario=$resultado[0]['tipoUsuario'];
+                $this->nickUsuario=$resultado[0]['nickUsuario'];
                 $this->UbicacionUsuario=$resultado[0]['UbicacionUsuario'];
             }
         }
         
+    }
+
+    public function ObtenerUsuariosFiltrados(){ 
+        $query="EXEC busquedaUsuarios :nombreUsuario";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':nombreUsuario',$this->NombreUsuario,PDO::PARAM_STR);
+        $consulta->execute();
+
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+
+        return $datos;
     }
 
 
@@ -68,10 +82,10 @@ class Usuario extends ActiveRecord{
     }
 
     public function ComprobarContra(){
-        $query= "SELECT contra FROM ". self::$tabla. " WHERE NombreUsuario = :NombreUsuario";
+        $query= "SELECT contra FROM ". self::$tabla. " WHERE nickUsuario = :nickUsuario";
 
         $consulta=self::$db->prepare($query);
-        $consulta->bindParam(':NombreUsuario',$this->NombreUsuario,PDO::PARAM_STR);
+        $consulta->bindParam(':nickUsuario',$this->nickUsuario,PDO::PARAM_STR);
         $consulta->execute();
         $resultado=$consulta->fetchAll(PDO::FETCH_ASSOC);
 
@@ -85,10 +99,11 @@ class Usuario extends ActiveRecord{
     }
     
     public function crearUsuario(){
-        $query="EXEC insertarUsuarios :NombreUsuario, :tipoUsuario, :contra, :UbicacionUsuario";
+        $query="EXEC insertarUsuarios :NombreUsuario, :tipoUsuario, :nickUsuario, :contra, :UbicacionUsuario";
         $consulta=self::$db->prepare($query);
         $consulta->bindParam(':NombreUsuario',$this->NombreUsuario,PDO::PARAM_STR);
         $consulta->bindParam(':tipoUsuario',$this->tipoUsuario,PDO::PARAM_STR);
+        $consulta->bindParam(':nickUsuario',$this->nickUsuario,PDO::PARAM_STR);
         $consulta->bindParam(':contra',$this->contra,PDO::PARAM_STR);
         $consulta->bindParam(':UbicacionUsuario',$this->UbicacionUsuario,PDO::PARAM_STR);
         $consulta->execute();
@@ -100,11 +115,12 @@ class Usuario extends ActiveRecord{
     }
 
     public function actualizarUsuario(){
-        $query="EXEC actualizarUsuarios :idUsuario, :NombreUsuario, :tipoUsuario, :contra, :UbicacionUsuario";
+        $query="EXEC actualizarUsuarios :idUsuario, :NombreUsuario, :tipoUsuario, :nickUsuario, :contra, :UbicacionUsuario";
         $consulta=self::$db->prepare($query);
         $consulta->bindParam(':idUsuario',$this->idUsuario,PDO::PARAM_INT);
         $consulta->bindParam(':NombreUsuario',$this->NombreUsuario,PDO::PARAM_STR);
         $consulta->bindParam(':tipoUsuario',$this->tipoUsuario,PDO::PARAM_STR);
+        $consulta->bindParam(':nickUsuario',$this->nickUsuario,PDO::PARAM_STR);
         $consulta->bindParam(':contra',$this->contra,PDO::PARAM_STR);
         $consulta->bindParam(':UbicacionUsuario',$this->UbicacionUsuario,PDO::PARAM_STR);
         $consulta->execute();
@@ -118,7 +134,7 @@ class Usuario extends ActiveRecord{
 
     public function validar()
     {
-        if(!$this->NombreUsuario){
+        if(!$this->nickUsuario){
             self::$errores[]="El usuario es obligatorio";
         }
         if(!$this->contra){

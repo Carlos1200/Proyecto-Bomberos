@@ -29,6 +29,27 @@ class UsuarioController{
 
     }
 
+    public static function obtenerUsuarioFiltrado(Router $router){
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        $token=str_replace("token=","",$query);
+
+        $usuario=new Usuario($_POST);
+        $usuario::VerificarToken($token);
+
+        $errores=$usuario::getErrores();
+
+        if(empty($errores)){
+            $usuarios=$usuario->ObtenerUsuariosFiltrados();
+            $router->render('usuarios/usuarios',[
+                'usuarios'=>$usuarios
+            ]);
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
+    }
+
     public static function nuevoUsuario(Router $router){
         $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
         $token=str_replace("token=","",$query);

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose,faSave,} from '@fortawesome/free-solid-svg-icons';
@@ -7,14 +7,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup'
 import { Modal } from '../Modal'
 import Api from '../../Api/Api';
+import { UbicacionesContext } from '../../context/ubicaciones/UbicacionesContext';
 
 const schema=yup.object({
   ubicacionNombre:yup.string().required("La ubicación no debe ir vacía"),
 });
 
-export const UbicacionModal = ({handleClose,ubicacion,consultarUbicacion}) => {
+export const UbicacionModal = ({handleClose,ubicacion,mostrarNotificacion}) => {
 
-
+  
+    const {setConsultar}=useContext(UbicacionesContext);
 
     const { register, handleSubmit,formState: { errors } } = useForm({
       resolver:yupResolver(schema),
@@ -24,31 +26,33 @@ export const UbicacionModal = ({handleClose,ubicacion,consultarUbicacion}) => {
     });
     const SubmitEditar=async({ubicacionNombre})=>{
       try {
-        consultarUbicacion(false)
+        setConsultar(false)
         const formData=new FormData();
         formData.append('idUbicacion',ubicacion.idUbicacion);
         formData.append('nombreUbicacion',ubicacionNombre);
 
         await Api.post("/ubicacionEdit",formData);
-        consultarUbicacion(true);
+        setConsultar(true);
         handleClose();
-
+        mostrarNotificacion();
       } catch (error) {
         console.log(error.response.data);
+        mostrarNotificacion(true)
       }
     }
 
     const SubmitNuevo=async({ubicacionNombre})=>{
       try {
-        consultarUbicacion(false)
+        setConsultar(false)
         const formData=new FormData();
         formData.append('nombreUbicacion',ubicacionNombre);
 
         await Api.post("/ubicacion",formData);
-        consultarUbicacion(true);
+        setConsultar(true);
         handleClose();
+        mostrarNotificacion()
       } catch (error) {
-        console.log(error.response.data);
+        mostrarNotificacion(true)
       }
     }
 

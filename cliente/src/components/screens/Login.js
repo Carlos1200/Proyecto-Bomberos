@@ -26,19 +26,17 @@ export const Login = () => {
   });
   
   const onSubmit=async(datos)=>{
+    console.log(datos);
     const {usuario,contra}=datos;
 
     const formData=new FormData();
-    formData.append('NombreUsuario',usuario);
+    formData.append('nickUsuario',usuario);
     formData.append('contra',contra);
 
     try {
       const {data}=await Api.post(`/login`,formData);
-      console.log(data);
       const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=data;
-
       inicioSesion(idUsuario,NombreUsuario,tipoUsuario,UbicacionUsuario,login);
-
       if(data.login){
         history.push("/usuarios");
       }

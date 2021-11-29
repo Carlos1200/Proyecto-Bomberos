@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useContext, useState} from 'react'
 import styled from 'styled-components'
 import Select from 'react-select'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,15 +9,17 @@ import * as yup from 'yup'
 import { Modal } from '../Modal'
 import { UseDatos } from '../../hooks/UseDatos';
 import Api from '../../Api/Api';
+import { UsuariosContext } from '../../context/usuarios/UsuariosContext';
 
 
 
-export const UsuarioModal = ({handleClose,usuario,consultarUsuarios}) => {
-
+export const UsuarioModal = ({handleClose,usuario,mostrarNotificacion}) => {
     const [datos,cargando] = UseDatos('ubicacion');
     const [checked, setChecked] = useState(!usuario?true:false);
+    const {setConsultar}=useContext(UsuariosContext);
     const schema=yup.object({
       nombre:yup.string().required("El usuario no debe ir vacío"),
+      nick:yup.string().matches(RegExp('^(?=[a-zA-Z0-9._]{6,20}$)(?!.*[_.]{2})[^_.].*[^_.]$'),{message:"Nombre de usuarios con formato incorrecto"}).required("El usuario no debe ir vacío"),
       password:checked?yup.string().min(6,"Ingrese como mínimo 6 carácteres").required("La contraseña es obligatoria"):null,
       ubicacion:yup.object({
         idUbicacion:yup.string().required("La ubicación no debe ir vacía"),
@@ -33,54 +35,61 @@ export const UsuarioModal = ({handleClose,usuario,consultarUsuarios}) => {
       resolver:yupResolver(schema),
       defaultValues:{
         nombre:usuario?usuario.NombreUsuario:'',
+        nick:usuario?usuario.nickUsuario:'',
         password:''
       }
     });
-    const SubmitEdit=async({nombre,ubicacion,tipo})=>{
+    const SubmitEdit=async({nombre,ubicacion,nick,tipo})=>{
       try {
-        consultarUsuarios(false);
+        setConsultar(false);
         const formData=new FormData();
         formData.append('idUsuario',usuario.idUsuario);
         formData.append('NombreUsuario',nombre);
         formData.append('tipoUsuario',tipo.value);
+        formData.append('nickUsuario',nick);
         formData.append('UbicacionUsuario',ubicacion.nombreUbicacion);
 
         await Api.post("/usuariosEdit",formData);
-        consultarUsuarios(true);
+        setConsultar(true);
         handleClose();
+        mostrarNotificacion();
 
       } catch (error) {
         console.log({error});
+        mostrarNotificacion(true);
       }
     }
-    const SubmitNuevo=async({nombre,ubicacion,tipo,password})=>{
+    const SubmitNuevo=async({nombre,ubicacion,tipo,nick,password})=>{
       try {
-        consultarUsuarios(false);
+        setConsultar(false);
         const formData=new FormData();
         formData.append('NombreUsuario',nombre);
         formData.append('tipoUsuario',tipo.value);
+        formData.append('nickUsuario',nick);
         formData.append('UbicacionUsuario',ubicacion.nombreUbicacion);
         formData.append('contra',password);
 
         await Api.post("/usuarios",formData);
-        consultarUsuarios(true);
+        setConsultar(true);
         handleClose();
-
+        mostrarNotificacion();
       } catch (error) {
         console.log({error});
+        mostrarNotificacion(true);
       }
     }
 
     return (
       <Modal handleClose={handleClose}>
         <Contenedor>
-          <div style={{width:'100%',display:'flex',justifyContent:'flex-end',margin:"-1.3rem 0"}}>
+          <div style={{width:'100%',display:'flex',justifyContent:'flex-end',margin:"-2rem 0"}}>
           <FontAwesomeIcon
               icon={faWindowClose}
               style={{
                 color: "red",
                 fontSize: "2.5rem",
-                cursor: "pointer"
+                cursor: "pointer",
+                marginTop:'2rem'
               }}
               onClick={handleClose}
             />
@@ -89,10 +98,13 @@ export const UsuarioModal = ({handleClose,usuario,consultarUsuarios}) => {
             <Titulo>{usuario?"Editar Usuario":"Nuevo Usuario"}</Titulo>
           </Header>
         {!cargando&&(
-            <>
-                <Label>Nombre Usuario</Label>
+            <ContenedorForm>
+                <Label>Nombre Jefe</Label>
                 <Textbox  {...register("nombre")} />
                 {errors.nombre&& <TextError>{errors.nombre.message}</TextError>}
+                <Label>Nombre Usuario</Label>
+                <Textbox  {...register("nick")} />
+                {errors.nick&& <TextError>{errors.nick.message}</TextError>}
                 <ContenedorContra>
                 <Label>Contraseña</Label> 
                 {usuario&&<Check type="checkbox" onChange={()=>setChecked(!checked)}/>}
@@ -144,7 +156,7 @@ export const UsuarioModal = ({handleClose,usuario,consultarUsuarios}) => {
                     <Label>Cancelar</Label>
                   </ContenedorBoton>
                 </ContenedorBotones>
-            </>
+            </ContenedorForm>
         )}
           
         </Contenedor>
@@ -156,6 +168,25 @@ const Contenedor=styled.div`
     /* background-color: red; */
     width: 100%;
     height: 100%;
+`
+
+const ContenedorForm=styled.div`
+overflow-y: auto;
+max-height: 78vh;
+  &::-webkit-scrollbar {
+    width: 12px;
+}
+
+  &::-webkit-scrollbar-track {
+  background: #A0A0A0;        /* color of the tracking area */
+  border-radius: 2rem;
+}
+
+  &::-webkit-scrollbar-thumb {
+  background-color: #343F56;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid #A0A0A0;  /* creates padding around scroll thumb */
+}
 `
 
 const Titulo=styled.h2`
@@ -189,7 +220,6 @@ const Check=styled.input`
   -ms-transform: scale(2);
   -webkit-transform: scale(2);
   padding: 10px;
-  margin-top: 10px;
 `
 
 const ContenedorContra=styled.div`

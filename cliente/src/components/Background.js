@@ -1,12 +1,12 @@
 import React,{useContext,useState} from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFire,faHardHat,faFileExcel} from '@fortawesome/free-solid-svg-icons';
+import { faFire,faHardHat,faFileExcel,faPlus} from '@fortawesome/free-solid-svg-icons';
 import { AnimatePresence } from "framer-motion";
 import {AuthContext} from '../context/Auth/AuthContext';
 import { ArchivoEmpleadoModal } from './modal/ArchivoEmpleadoModal';
 
-export const Background = ({children,titulo,setConsultar}) => {
+export const Background = ({children,titulo,insertar,notificacion}) => {
 
     const {NombreUsuario,tipoUsuario} = useContext(AuthContext);
     
@@ -17,14 +17,23 @@ export const Background = ({children,titulo,setConsultar}) => {
         <Box>
           <Top>
             <TitleForm>{titulo}</TitleForm>
+            {insertar&&(
+              <Btn type="button" onClick={insertar}>
+              <Text>Agregar</Text>
+              <FontAwesomeIcon
+                icon={faPlus}
+                style={{ fontSize: "23px", color: "1F6E43" }}
+              /> 
+            </Btn>
+            )}
             {titulo==="Administración de Empleados"?(
-              <ExcelBtn type="button" onClick={()=>setVisible(true)} >
-                <ExcelText>Importar Excel</ExcelText>
+              <Btn type="button" onClick={()=>setVisible(true)} >
+                <Text>Importar Excel</Text>
                 <FontAwesomeIcon
                   icon={faFileExcel}
                   style={{ fontSize: "23px", color: "1F6E43" }}
                 /> 
-              </ExcelBtn>
+              </Btn>
             ):null}
             <ActualUser>
               <FontAwesomeIcon
@@ -40,7 +49,7 @@ export const Background = ({children,titulo,setConsultar}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<ArchivoEmpleadoModal handleClose={()=>setVisible(false)} setConsultar={setConsultar}/>}
+            {visible&&<ArchivoEmpleadoModal handleClose={()=>setVisible(false)} notificacion={notificacion}/>}
         </AnimatePresence>
       </>
     )
@@ -90,7 +99,7 @@ const UserTitle = styled.div`
     margin-left: 20px;
 `
 
-const ExcelBtn=styled.button`
+const Btn=styled.button`
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -105,7 +114,7 @@ const ExcelBtn=styled.button`
     }
 `
 
-const ExcelText=styled.p`
+const Text=styled.p`
   color: #343F56;
   margin-right: .7rem;
 `

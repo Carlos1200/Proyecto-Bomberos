@@ -12,7 +12,12 @@ import RutaPrivada from './components/RutaPrivada';
 import { Grupos } from './components/screens/Grupos';
 import { Traslados } from './components/screens/Traslados';
 import { AuthProvider } from './context/Auth/AuthContext';
-import { EmpleadoProvider } from './context/Empleado/EmpleadoContext';
+import {UsuariosProvider} from './context/usuarios/UsuariosContext';
+import { AdminTraslados } from './components/screens/AdminTraslados';
+import { EmpleadosProvider } from './context/empleados/EmpleadosContext';
+import { UbicacionesProvider } from './context/ubicaciones/UbicacionesContext';
+import { PlazasProvider } from './context/plazas/PlazasContext';
+import { GrupoProvider } from './context/grupos/GrupoContext';
 
 import '../src/index.css';
 
@@ -30,6 +35,7 @@ const App = () => {
           <RutaPrivada exact path='/ubicaciones' component={Ubicaciones} />
           <RutaPrivada exact path='/grupos' component={Grupos} />
           <RutaPrivada exact path='/plazas' component={Plazas} />
+          <RutaPrivada exact path='/admin-traslados' component={AdminTraslados} />
           <RutaPrivada exact path='/traslados' component={Traslados} />
           <RutaPrivada exact path='/generar-reporte' component={GenerarReporte} />
         </Switch>
@@ -41,9 +47,17 @@ const App = () => {
 const AppState=({children})=>{
   return(
     <AuthProvider>
-      <EmpleadoProvider>
-        {children}
-      </EmpleadoProvider>
+      <UsuariosProvider>
+        <EmpleadosProvider>
+          <UbicacionesProvider>
+            <PlazasProvider>
+              <GrupoProvider>
+                {children}
+              </GrupoProvider>
+            </PlazasProvider>
+          </UbicacionesProvider>
+        </EmpleadosProvider>
+      </UsuariosProvider>
     </AuthProvider>
 
   )

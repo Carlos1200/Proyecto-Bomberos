@@ -85,6 +85,24 @@ class Empleado extends ActiveRecord{
         return $datos;
     }
 
+    public function empleadosFiltrados(){
+        $query="EXEC busquedaEmpleados :nombres";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':nombres',$this->nombres,PDO::PARAM_STR);
+        $consulta->execute();
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $datos;
+    }
+
+    public function ObtenerEmpleadosDetalles(){
+        $query="EXEC leerEmpleadoJefe :idEmpleado";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':idEmpleado',$this->idEmpleado,PDO::PARAM_STR);
+        $consulta->execute();
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $datos;
+    }
+
     public function editarEmpleado(){
         $query="EXEC actualizarEmpleado :idEmpleado, :nombres, :apellidos, :salarioNominal, :idGrupo, :idPension, :idUbicacion, :idPlaza";
         $consulta=self::$db->prepare($query);

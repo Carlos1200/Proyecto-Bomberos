@@ -55,6 +55,17 @@ class Plaza extends ActiveRecord{
         return self::$errores;
     }
 
+    public function plazaFiltro(){ 
+        $query="EXEC busquedaPlazas :nombrePlaza";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':nombrePlaza',$this->nombrePlaza,PDO::PARAM_STR);
+        $consulta->execute();
+
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+
+        return $datos;
+    }
+
     public function editarPlaza(){
         $query="EXEC actualizarPlaza :idPlaza, :nombrePlaza";
         $consulta=self::$db->prepare($query);

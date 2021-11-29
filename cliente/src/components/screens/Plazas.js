@@ -1,59 +1,59 @@
-import React,{useState} from 'react'
+import React,{useContext, useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {  faSearch,faPlus } from '@fortawesome/free-solid-svg-icons';
-import { motion,AnimatePresence } from 'framer-motion';
+import toast, { Toaster } from 'react-hot-toast';
+import {  faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { AnimatePresence } from 'framer-motion';
 import { Menu } from './../Menu';
 import {Background} from '../Background';
 import { TablaPlaza } from '../tablas/TablaPlaza';
 import { PlazaModal } from '../modal/PlazaModal';
+import { PlazasContext } from '../../context/plazas/PlazasContext';
 
 
 
 export const Plazas = () => {
   const [visible, setVisible] = useState(false);
-  const [consultar, setConsultar] = useState(false);
+  const [inputBuscador, setInputBuscador] = useState('')
+  const {buscador,setConsultar}=useContext(PlazasContext);
+
+  const mostrarNotificacion=(error=false)=>{
+    if(error){
+      toast.error("Ocurrió un error");
+    }else{
+      toast.success('Operación realizada correctamente');
+    }
+  }
+
     return (
       <Menu>
-        <Background titulo="Administración de Plazas">
+        <Background titulo="Administración de Plazas" insertar={()=>setVisible(true)}>
+          <Toaster position="top-right"/>
           <ReportsBox>
             <FilterBox>
-              <FontAwesomeIcon
-                icon={faSearch}
-                style={{ fontSize: "26px", color: "#000000" }}
+            <FontAwesomeIcon
+                onClick={()=>{
+                  setConsultar(true);
+                  setInputBuscador('');
+                }}
+                icon={faSyncAlt}
+                style={{ fontSize: "26px", color: "#000000",cursor:'pointer' }}
               />
-              <FilterTextBox>¿Desea un archivo en específico?</FilterTextBox>
-              <BtnFilterSearch>Buscar</BtnFilterSearch>
+              <FilterTextBox placeholder="¿Desea un archivo en específico?" value={inputBuscador} onChange={(e)=>setInputBuscador(e.target.value)}/>
+              <BtnFilterSearch onClick={()=>{
+                buscador(inputBuscador);
+              }}>Buscar</BtnFilterSearch>
             </FilterBox>
-            <TablaPlaza consultar={consultar}/>
-            <motion.button
-            onClick={()=>{
-              setVisible(true);
-            }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              style={{
-                borderRadius:'100%',
-                backgroundColor:'#67BB6F',
-                padding: '20px',
-                cursor: 'pointer',
-                position: 'absolute',
-                bottom: 20,
-                right: 15
-              }}
-            >
-              <FontAwesomeIcon
-                icon={faPlus}
-                style={{ fontSize: "30px", color: "#000000" }}
-              />
-            </motion.button>
+            <ContenedorTabla>
+            <TablaPlaza mostrarNotificacion={mostrarNotificacion}/>
+            </ContenedorTabla>
           </ReportsBox>
         </Background>
         <AnimatePresence
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<PlazaModal handleClose={()=>setVisible(false)} consultarPlaza={setConsultar} />}
+            {visible&&<PlazaModal handleClose={()=>setVisible(false)} mostrarNotificacion={mostrarNotificacion}/>}
         </AnimatePresence>
       </Menu>
     );
@@ -84,19 +84,27 @@ const FilterBox = styled.div`
     margin-top: 20px;
 `
 
-const FilterTextBox = styled.div`
+const FilterTextBox = styled.input`
     flex: 1;
-    padding-top: 10px;
-    padding-bottom: 5px;
+    appearance: none;
+    border: 0;
+    padding: 10px 20px 5px 20px;
     margin-left: 50px;
     margin-right: 50px;
-    text-align: center;
+    /* text-align: center; */
     font-size: 18px;
     border-bottom: 1px solid #000;
+    &:focus-visible{
+      outline: 0;
+    }
+    &::-webkit-input-placeholder {
+      text-align: center;
+    }
 `
 
-const BtnFilterSearch = styled.div`
+const BtnFilterSearch = styled.button`
     text-align: center;
+    border: 0;
     background-color: #E8E3E3;
     padding-top: 10px;
     padding-bottom: 12px;
@@ -104,4 +112,25 @@ const BtnFilterSearch = styled.div`
     padding-left: 20px;
     font-size: 18px;
     border-radius: 20px;
+    &:hover{
+      background-color: #a3a2a2;
+    }
+`
+const ContenedorTabla=styled.div`
+overflow-y: auto;
+height: 60vh;
+  &::-webkit-scrollbar {
+  width: 12px;               /* width of the entire scrollbar */
+}
+
+  &::-webkit-scrollbar-track {
+  background: #e2e2e2;        /* color of the tracking area */
+  border-radius: 2rem;
+}
+
+  &::-webkit-scrollbar-thumb {
+  background-color: #343F56;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid #e2e2e2;  /* creates padding around scroll thumb */
+}
 `

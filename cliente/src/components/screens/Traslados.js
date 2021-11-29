@@ -1,22 +1,24 @@
 import React, { useContext,useEffect,useState } from 'react'
 import styled from "styled-components";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import toast, { Toaster } from 'react-hot-toast';
 import Select from 'react-select'
 import { Menu } from './../Menu';
 import {Background} from '../Background';
 import { AuthContext } from '../../context/Auth/AuthContext';
 import Api from '../../Api/Api';
-import { EmpleadosSeleccion } from '../EmpleadosSeleccion';
+import { ListadoEmpleados } from '../ListadoEmpleados';
+import { AnimatePresence } from 'framer-motion';
+import { TrasladosModal } from '../modal/TrasladosModal';
 
 
 
 export const Traslados = () => {
   const {NombreUsuario,UbicacionUsuario,tipoUsuario}=useContext(AuthContext);
-  const [buscador, setBuscador] = useState('');
   const [cargando, setCargando] = useState(true);
   const [empleados, setEmpleados] = useState([]);
   const [empleadosSeleccionados, setEmpleadosSeleccionados] = useState([]);
-  console.log(empleadosSeleccionados);
+  const [visible, setVisible] = useState(false);
+
 
   const obtenerEmpleados=async()=>{
     try {
@@ -40,9 +42,35 @@ export const Traslados = () => {
     obtenerEmpleados();
   },[])
 
+  const eliminarEmpleado=(id)=>{
+    const empleadoEliminado=empleadosSeleccionados.find(empleado=>empleado.idEmpleado===id);
+    setEmpleados([...empleados,empleadoEliminado]);
+    const seleccionar=empleadosSeleccionados.filter(empleado=>empleado.idEmpleado!==id);
+
+    setEmpleadosSeleccionados(seleccionar);
+  }
+
+  const limpiarEmpleados=()=>{
+
+    setEmpleados([...empleados,...empleadosSeleccionados]);
+
+    setEmpleadosSeleccionados([]);
+    
+  }
+
+  const mostrarNotificacion=(error=false)=>{
+    if(error){
+      toast.error("Ocurrió un error");
+    }else{
+      toast.success('Operación realizada correctamente');
+    }
+  }
+
     return (
+      <>
       <Menu>
-        <Background titulo="Traslados">
+        <Background titulo="Administrador de Traslados">
+          <Toaster position="top-right"/>
           <ReportsBox>
             
             <Title>Selección de Empleados a Trasladar</Title>
@@ -53,15 +81,14 @@ export const Traslados = () => {
               </Jefe>
             </div>
             {!cargando?(
-              <Contenedor>
+              <div>
               <div>
                 <FilterBox>
-                  <p style={{margin:0, fontSize:'1.2rem',fontWeight:'bold'}}>Buscador</p>
               <FilterTextBox>
 
                 <Select
                   options={empleados}
-                  getOptionLabel={(empleado)=>empleado.nombres}
+                  getOptionLabel={(empleado)=>`${empleado.nombres} ${empleado.apellidos}`}
                   getOptionValue={(empleado)=>empleado.idEmpleado}
                   placeholder="Selecciona un empleado"
                   onChange={(value)=>{
@@ -74,16 +101,24 @@ export const Traslados = () => {
               </FilterTextBox>
               </FilterBox>
               <ContenedorEnvio >
-                {empleadosSeleccionados.map(empleado=>(
-                  <EmpleadosSeleccion key={empleado.idEmpleado} empleado={empleado}/>
-                ))}
-                </ContenedorEnvio>
+                <ListadoEmpleados Empleados={empleadosSeleccionados} eliminaListado={eliminarEmpleado}/>
+              </ContenedorEnvio>
+                <Boton onClick={()=>setVisible(true)} disabled={empleadosSeleccionados.length>0?false:true}>
+                  Agregar
+                </Boton>
               </div>
-            </Contenedor>
+            </div>
             ):null}
           </ReportsBox>
         </Background>
       </Menu>
+      <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {visible&&<TrasladosModal handleClose={()=>setVisible(false)} empleados={empleadosSeleccionados} mostrarNotificacion={mostrarNotificacion} limpiarEmpleados={limpiarEmpleados}/>}
+      </AnimatePresence>
+      </>
     );
 }
 
@@ -137,11 +172,41 @@ const JefeNombre=styled.p`
   font-weight: bold;
 `
 const Contenedor=styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* display: grid;
+  grid-template-columns: repeat(2, 1fr); */
 `
 
 const ContenedorEnvio=styled.div`
   overflow-y: auto;
-  max-height: 10rem;
+  height: 35vh;
+  margin-top: 1rem;
+
+  &::-webkit-scrollbar {
+  width: 12px;               /* width of the entire scrollbar */
+}
+
+  &::-webkit-scrollbar-track {
+  background: #e2e2e2;        /* color of the tracking area */
+  border-radius: 2rem;
+}
+
+  &::-webkit-scrollbar-thumb {
+  background-color: #343F56;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid #e2e2e2;  /* creates padding around scroll thumb */
+}
+`
+
+const Boton=styled.button`
+  padding: 1rem 3rem;
+  border-radius: 2rem;
+  margin-top: .5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: 0;
+  background-color: #FFE459;
+  transition: background-color .3s ease-in-out;
+  &:hover{
+    background-color: #E8C410;
+  }
 `
