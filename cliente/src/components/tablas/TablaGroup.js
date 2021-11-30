@@ -1,10 +1,9 @@
-import React,{useContext, useEffect,useState} from "react";
+import React,{useContext,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import { Eliminar } from "../modal/Eliminar";
-import { UseDatos } from "../../hooks/UseDatos";
 import Api from "../../Api/Api";
 import { GrupoModal } from "../modal/GrupoModal";
 import { GrupoContext } from "../../context/grupos/GrupoContext";

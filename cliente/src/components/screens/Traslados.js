@@ -40,6 +40,7 @@ export const Traslados = () => {
 
   useEffect(()=>{
     obtenerEmpleados();
+    // eslint-disable-next-line
   },[])
 
   const eliminarEmpleado=(id)=>{
@@ -171,10 +172,10 @@ const JefeNombre=styled.p`
   color: #666666;
   font-weight: bold;
 `
-const Contenedor=styled.div`
-  /* display: grid;
-  grid-template-columns: repeat(2, 1fr); */
-`
+// const Contenedor=styled.div`
+//   /* display: grid;
+//   grid-template-columns: repeat(2, 1fr); */
+// `
 
 const ContenedorEnvio=styled.div`
   overflow-y: auto;

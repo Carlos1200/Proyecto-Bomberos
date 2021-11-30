@@ -1,10 +1,9 @@
-import React,{useContext, useEffect,useState} from "react";
+import React,{useContext,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
 import Api from '../../Api/Api';
-import { UseDatos } from "../../hooks/UseDatos";
 import { PlazaModal } from "../modal/PlazaModal";
 import { Eliminar } from "../modal/Eliminar";
 import { PlazasContext } from "../../context/plazas/PlazasContext";

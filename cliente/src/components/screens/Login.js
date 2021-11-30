@@ -26,7 +26,6 @@ export const Login = () => {
   });
   
   const onSubmit=async(datos)=>{
-    console.log(datos);
     const {usuario,contra}=datos;
 
     const formData=new FormData();

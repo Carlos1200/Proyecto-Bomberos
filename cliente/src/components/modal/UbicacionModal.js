@@ -36,8 +36,11 @@ export const UbicacionModal = ({handleClose,ubicacion,mostrarNotificacion}) => {
         handleClose();
         mostrarNotificacion();
       } catch (error) {
-        console.log(error.response.data);
-        mostrarNotificacion(true)
+        if(!error.response){
+          mostrarNotificacion(true,"Error en el servidor")
+        }else{
+          mostrarNotificacion(true,error.response.data[0]);
+        }
       }
     }
 
@@ -52,7 +55,11 @@ export const UbicacionModal = ({handleClose,ubicacion,mostrarNotificacion}) => {
         handleClose();
         mostrarNotificacion()
       } catch (error) {
-        mostrarNotificacion(true)
+        if(!error.response){
+          mostrarNotificacion(true,"Error en el servidor")
+        }else{
+          mostrarNotificacion(true,error.response.data[0]);
+        }
       }
     }
 

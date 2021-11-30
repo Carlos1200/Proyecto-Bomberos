@@ -55,8 +55,11 @@ export const UsuarioModal = ({handleClose,usuario,mostrarNotificacion}) => {
         mostrarNotificacion();
 
       } catch (error) {
-        console.log({error});
-        mostrarNotificacion(true);
+        if(!error.response){
+          mostrarNotificacion(true,"Error en el servidor")
+        }else{
+          mostrarNotificacion(true,error.response.data[0]);
+        }
       }
     }
     const SubmitNuevo=async({nombre,ubicacion,tipo,nick,password})=>{
@@ -74,8 +77,11 @@ export const UsuarioModal = ({handleClose,usuario,mostrarNotificacion}) => {
         handleClose();
         mostrarNotificacion();
       } catch (error) {
-        console.log({error});
-        mostrarNotificacion(true);
+        if(!error.response){
+          mostrarNotificacion(true,"Error en el servidor")
+        }else{
+          mostrarNotificacion(true,error.response.data[0]);
+        }
       }
     }
 

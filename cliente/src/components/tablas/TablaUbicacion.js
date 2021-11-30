@@ -5,7 +5,6 @@ import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import {UbicacionModal} from '../modal/UbicacionModal'
 import { Eliminar } from "../modal/Eliminar";
-import { UseDatos } from "../../hooks/UseDatos";
 import Api from "../../Api/Api";
 import { UbicacionesContext } from "../../context/ubicaciones/UbicacionesContext";
 

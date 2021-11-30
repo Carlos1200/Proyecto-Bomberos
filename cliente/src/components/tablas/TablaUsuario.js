@@ -1,11 +1,10 @@
-import React,{ useContext, useEffect, useState} from "react";
+import React,{ useContext, useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import {UsuariosContext} from '../../context/usuarios/UsuariosContext';
 import { UsuarioModal } from "../modal/UsuarioModal";
-import { UseDatos } from "../../hooks/UseDatos";
 import { Eliminar } from "../modal/Eliminar";
 import Api from "../../Api/Api";
 
@@ -26,7 +25,7 @@ export const TablaUsuario = ({mostrarNotificacion}) => {
       try {
         const formData=new FormData();
         formData.append("idUsuario",usuarioBorrar);
-        const resp=await Api.post('/usuariosDelete',formData);
+        await Api.post('/usuariosDelete',formData);
         setConsultar(true);
         setVisibleBorrar(false);
         mostrarNotificacion();

@@ -46,6 +46,7 @@ export const EmpleadosSeleccion = ({ empleado, ubicaciones, plazas,grupos,posici
 
     useEffect(()=>{
         obtenerDetalles();
+        // eslint-disable-next-line
     },[])
 
   return (

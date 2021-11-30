@@ -35,7 +35,11 @@ export const PlazaModal = ({handleClose,plaza,mostrarNotificacion}) => {
         handleClose();
         mostrarNotificacion()
       } catch (error) {
-        mostrarNotificacion(true)
+        if(!error.response){
+          mostrarNotificacion(true,"Error en el servidor")
+        }else{
+          mostrarNotificacion(true,error.response.data[0]);
+        }
       }
     }
 
@@ -50,7 +54,11 @@ export const PlazaModal = ({handleClose,plaza,mostrarNotificacion}) => {
         handleClose();
         mostrarNotificacion()
       } catch (error) {
-        mostrarNotificacion(true)
+        if(!error.response){
+          mostrarNotificacion(true,"Error en el servidor")
+        }else{
+          mostrarNotificacion(true,error.response.data[0]);
+        }
       }
     }
 

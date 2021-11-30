@@ -114,8 +114,11 @@ export const EditarEmpleadoModal = ({
       handleClose();
       notificacion();
     } catch (error) {
-      console.log(error.response.data);
-      notificacionError(error.response.data[0]||"Ocurrió un error");
+      if(!error.response){
+        notificacionError("Error en el servidor")
+      }else{
+        notificacionError(error.response.data[0]);
+      }
     }
 
   };

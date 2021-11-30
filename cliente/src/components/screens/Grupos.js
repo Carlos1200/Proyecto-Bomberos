@@ -18,9 +18,9 @@ export const Grupos = () => {
   const [inputBuscador, setInputBuscador] = useState('')
   const {buscador,setConsultar}=useContext(GrupoContext);
 
-  const mostrarNotificacion=(error=false)=>{
+  const mostrarNotificacion=(error=false,msg)=>{
     if(error){
-      toast.error("Ocurrió un error");
+      toast.error(msg);
     }else{
       toast.success('Operación realizada correctamente');
     }
