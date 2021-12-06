@@ -23,7 +23,7 @@ import { AnimatePresence } from "framer-motion";
 
 export const Sidebar = () => {
 
-  const {cerrarSesion}=useContext(AuthContext);
+  const {cerrarSesion,tipoUsuario}=useContext(AuthContext);
   const [visible, setVisible] = useState(false);
 
   const cerrar=async()=>{
@@ -48,11 +48,13 @@ export const Sidebar = () => {
         </p>
       </ContenedorImagen>
       <ContenedorButones>
-        <Btn
-          titulo='Administrador Usuarios'
-          icono={faUserTie}
-          redirect='usuarios'
-        />
+        {tipoUsuario==="Administrador"&&(
+            <Btn
+              titulo='Administrador Usuarios'
+              icono={faUserTie}
+              redirect='usuarios'
+            />
+          )}
         <Btn
           titulo='Administrador Reportes'
           icono={faFileAlt}
@@ -63,28 +65,32 @@ export const Sidebar = () => {
           icono={faUser}
           redirect='empleados'
         />
-        <Btn
-          titulo='Administrador de Ubicaciones'
-          icono={faMapMarkerAlt}
-          size={true}
-          redirect='ubicaciones'
-        />
-        <Btn
-          titulo='Administrador de Grupos'
-          icono={faObjectGroup}
-          size={true}
-          redirect='grupos'
-        />
-        <Btn
-          titulo='Administrador de Plazas'
-          icono={faWarehouse}
-          redirect='plazas'
-        />
-        <Btn
+        {tipoUsuario==="Administrador"&&(
+          <>
+            <Btn
+              titulo='Administrador de Ubicaciones'
+              icono={faMapMarkerAlt}
+              size={true}
+              redirect='ubicaciones'
+            />
+            <Btn
+              titulo='Administrador de Grupos'
+              icono={faObjectGroup}
+              size={true}
+              redirect='grupos'
+            />
+            <Btn
+              titulo='Administrador de Plazas'
+              icono={faWarehouse}
+              redirect='plazas'
+            />
+          </>
+        )}
+        {/* <Btn
           titulo='Administrador de Traslados'
           icono={faRandom}
           redirect='admin-traslados'
-        />
+        /> */}
         <Btn
           titulo='Traslados'
           icono={faExchangeAlt}

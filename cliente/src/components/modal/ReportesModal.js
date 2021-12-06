@@ -1,34 +1,27 @@
-import React, { useEffect,useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWindowClose,faSignInAlt } from "@fortawesome/free-solid-svg-icons";
+import { faWindowClose, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "../Modal";
 import { MinutosSeleccion } from "../MinutosSeleccion";
-import { UseDatos } from "../../hooks/UseDatos";
+import { AnimatePresence } from "framer-motion";
+import { AutorizacionModal } from "./AutorizacionModal";
 import { UseReportes } from "../../hooks/UseReportes";
 
-export const ReportesModal = ({handleClose, empleados}) => {
-    const [datosUbicacion, cargandoUbicacion] = UseDatos("ubicacion");
-    const [datosPlaza, cargandoPlaza] = UseDatos("plaza");
-    const [cargando, setCargando] = useState(true);
-    const minutosFormulario = useRef([]);
-    const [cantidad, setCantidad] = useState(0);
-
-    const {PrepararDatos}=UseReportes();
-
-    useEffect(() => {
-        setCantidad(empleados.length-1);
-    },[empleados])
-
-    useEffect(() => {
-        if (!cargandoUbicacion && !cargandoPlaza) {
-            setCargando(false);
-        }
-    }, [cargandoUbicacion, cargandoPlaza]);
-    return (
-        <Modal handleClose={handleClose} grande={true}>
-            <Contenedor>
-            <div
+export const ReportesModal = ({ handleClose, empleados }) => {
+  const minutosFormulario = useRef([]);
+  const [cantidad, setCantidad] = useState(0);
+  const [errores, setErrores] = useState([true]);
+  const [autorizacionModal, setAutorizacionModal] = useState(false);
+  const { GenerarReporte } = UseReportes();
+  useEffect(() => {
+    setCantidad(empleados.length - 1);
+  }, [empleados]);
+  return (
+    <>
+    <Modal handleClose={handleClose}>
+      <Contenedor>
+        <div
           style={{
             width: "100%",
             display: "flex",
@@ -46,36 +39,46 @@ export const ReportesModal = ({handleClose, empleados}) => {
           />
         </div>
         <Titulo>Ingreso de Minutos por empleado</Titulo>
-        {!cargando ? (
-            <>
-          <ContenedorMinutos>
-            {empleados.map((empleado,index) => (
-              <MinutosSeleccion
-                key={empleado.idEmpleado}
-                posicion={index}
-                empleado={empleado}
-                ubicaciones={datosUbicacion}
-                plazas={datosPlaza}
-                minutosFormulario={minutosFormulario}
-                ultimo={cantidad}
+            <ContenedorMinutos>
+              {empleados.map((empleado, index) => (
+                <MinutosSeleccion
+                  key={empleado.idEmpleado}
+                  posicion={index}
+                  empleado={empleado}
+                  minutosFormulario={minutosFormulario}
+                  ultimo={cantidad}
+                  setErrores={setErrores}
+                  erroresArray={errores}
+                />
+              ))}
+            </ContenedorMinutos>
+            <Btn
+              type='button'
+              disabled={errores.includes(true)}
+              onClick={() => {
+                setAutorizacionModal(true);
+              }}>
+              <Text>Agregar</Text>
+              <FontAwesomeIcon
+                icon={faSignInAlt}
+                style={{ fontSize: "23px", color: "#fff" }}
               />
-            ))}
-          </ContenedorMinutos>
-          <Btn type="button" onClick={()=>{
-            PrepararDatos(minutosFormulario.current)
-            handleClose();  
-          }}>
-          <Text>Agregar</Text>
-          <FontAwesomeIcon
-            icon={faSignInAlt}
-            style={{ fontSize: "23px", color: "#fff" }}
-          />
-        </Btn>
-        </>
-        ) : null}
-            </Contenedor>
-        </Modal>
-    );
+            </Btn>
+      </Contenedor>
+    </Modal>
+        <AnimatePresence
+            initial={false}
+            exitBeforeEnter={true}
+            onExitComplete={() => null}>
+            {autorizacionModal&&<AutorizacionModal handleClose={()=>setAutorizacionModal(false)} enviarDatos={()=>{
+
+              GenerarReporte(minutosFormulario.current)
+              handleClose();
+              setAutorizacionModal(false);
+            }} />}
+        </AnimatePresence>
+    </>
+  );
 };
 
 const Contenedor = styled.div`
@@ -88,7 +91,7 @@ const Titulo = styled.h2`
   font-weight: bold;
 `;
 
-const ContenedorEmpleados = styled.div`
+const ContenedorMinutos = styled.div`
   overflow-y: auto;
   height: 55vh;
   &::-webkit-scrollbar {
@@ -107,25 +110,24 @@ const ContenedorEmpleados = styled.div`
   }
 `;
 
-const Btn=styled.button`
-    display: flex;
-    margin: 0 auto;
-    justify-content: space-around;
-    align-items: center;
-    background-color: #04B99C;
-    border-radius: 1rem;
-    margin-top: 1rem;
-    padding: 0 1rem;
-    border: 0;
-    transition: background-color .3s ease-in-out;
-    &:hover{
-      background-color: #028671;
+const Btn = styled.button`
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #04b99c;
+  border-radius: 1rem;
+  margin-top: 1rem;
+  padding: 0 1rem;
+  border: 0;
+  transition: background-color 0.3s ease-in-out;
+  &:hover {
+    background-color: #028671;
+  }
+`;
 
-    }
-`
-
-const Text=styled.p`
+const Text = styled.p`
   color: #fff;
   font-size: 1.5rem;
-  margin-right: .7rem;
-`
+  margin-right: 0.7rem;
+`;

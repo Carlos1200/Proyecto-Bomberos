@@ -1,6 +1,9 @@
-import React, {useState, useRef} from 'react'
+import {useRef} from 'react'
 
 export const UseReportes = () => {
+
+    // idEmpleado, nombres, apellidos, idUbicacion, idGrupo, salario, idPlaza, idTipoPension, minutosDiurnos, minutosNocturnos
+
     //Variables que deben calcularse manualmente
     //Tabla Minutos
     const valorMinuto = useRef('');
@@ -31,293 +34,307 @@ export const UseReportes = () => {
     //Tabla detalles
     const TOTAL = useRef('');
 
-    const GenerarReporte = (idEmpleado, nombres, apellidos, idUbicacion, idGrupo, salario, idPlaza, idTipoPension, minutosDiurnosNormales, minutosNocturnosNormales) =>{
+    console.log(TOTAL.current);
 
-        //Valor por Minuto
-        if(!valorMinuto.current){
-            valorMinuto.current = (((salario/30)/8)/60).toString();
-        } else {
-            const string = `${valorMinuto.current},${(((salario/30)/8)/60)}`;
-            valorMinuto.current=string;
-        }
-
-        //Declarando a 0 los minutos autorizados
-        if(!minutosDiurnosAutorizados.current){
-            minutosDiurnosAutorizados.current = '0';
-        } else {
-            const string = `${minutosDiurnosAutorizados.current},${0}`;
-            minutosDiurnosAutorizados.current=string;
-        }
-        if(!minutosNocturnosAutorizados.current){
-            minutosNocturnosAutorizados.current = '0';
-        } else {
-            const string = `${minutosNocturnosAutorizados.current},${0}`;
-            minutosNocturnosAutorizados.current=string;
-        }
+    const GenerarReporte = (empleadosArray) =>{
         
-        //Total Extra Diurno
-        if(!totalExtraDiurno.current){
-            totalExtraDiurno.current = (minutosDiurnosNormales*valorMinuto).toString();
-        } else {
-            const string = `${totalExtraDiurno},${minutosDiurnosNormales*valorMinuto}`;
-            totalExtraDiurno.current = string;
-        }
+        empleadosArray.forEach(empleado=>{
+            
+            //! Realizar Calculos
+            const valorxMinuto=(((empleado.salario/30)/8)/60);
+            const TotalDiurno=empleado.minutosDiurnos*valorxMinuto;
+            const TotalNocturno=(empleado.minutosNocturnos*valorxMinuto)*1.5;
+            const TotalExtras=Math.round((TotalDiurno+TotalNocturno)*100)/100;
+            const sueldoHorasExtras=empleado.salario + TotalExtras;
+            let ISSS_descuento;
 
-        //Total Extra Nocturno
-        if(!totalExtraNocturno.current){
-            totalExtraNocturno.current = ((minutosNocturnosNormales*valorMinuto)*1.5).toString();
-        } else {
-            const string = `${totalExtraNocturno},${(minutosNocturnosNormales*valorMinuto)*1.5}`;
-            totalExtraNocturno.current = string;
-        }
-
-        //Total Horas Extras
-        if(!totalHorasExtras.current){
-            totalHorasExtras.current = (Math.round((totalExtraDiurno+totalExtraNocturno)*100)/100).toString();
-        } else {
-            const string = `${totalHorasExtras},${Math.round((totalExtraDiurno+totalExtraNocturno)*100)/100}`;
-            totalHorasExtras.current = string;
-        }
-
-        //Sueldo mas Horas Extras
-        if(!sueldoMasHorasExtras.current){
-            sueldoMasHorasExtras.current = (salario + totalHorasExtras).toString();
-        } else {
-            const string = `${sueldoMasHorasExtras},${salario + totalHorasExtras}`;
-            sueldoMasHorasExtras.current = string;
-        }
-
-        //ISSS descuento
-        if(!ISSSdescuento.current){
-            if(idTipoPension = 4){
-                ISSSdescuento.current = '0';
-            } else if((totalHorasExtras + salario) >= 1000){
-                ISSSdescuento.current = (30 - (salario*0.03)).toString();
+            if(empleado.idTipoPension = 4){
+                ISSS_descuento = 0;
+            } else if((TotalExtras + empleado.salario) >= 1000){
+                ISSS_descuento = (30 - (empleado.salario*0.03));
             } else {
-                ISSSdescuento.current = (totalHorasExtras*0.03).toString();
+                ISSS_descuento = (TotalExtras*0.03);
             }
-        } else {
-            if(idTipoPension = 4){
-                const string = `${ISSSdescuento.current},${0}`
-                ISSSdescuento.current = string;
-            }
-            else if((totalHorasExtras + salario) >= 1000){
-                const string = `${ISSSdescuento.current},${30 - (salario*0.03)}`
-                ISSSdescuento.current = string;
+
+            let IPSFA_descuento;
+
+            if(empleado.idTipoPension = 1){
+                IPSFA_descuento = (TotalExtras*0.065);
             } else {
-                const string = `${ISSSdescuento.current},${totalHorasExtras*0.03}`;
-                ISSSdescuento.current = string;
+                IPSFA_descuento = 0;
             }
-        }
-        
-        //IPSFA descuento
-        if(!IPSFAdescuento.current){
-            if(idTipoPension = 1){
-                IPSFAdescuento.current = (totalHorasExtras*0.065).toString();
+
+            let AFPCRECER_descuento;
+
+            if(empleado.idTipoPension = 2){
+                AFPCRECER_descuento = (TotalExtras*0.0725);
             } else {
-                IPSFAdescuento.current = '0';
+                AFPCRECER_descuento = 0;
             }
-        } else {
-            if(idTipoPension = 1){
-                const string = `${IPSFAdescuento.current},${totalHorasExtras*0.065}`;
+
+            let AFPCONFIA_descuento;
+
+            if(empleado.idTipoPension = 3){
+                AFPCONFIA_descuento = (TotalExtras*0.0725);
+            } else {
+                AFPCONFIA_descuento = 0;
+            }
+
+            const sueldo_ISSS = ((empleado.salario+TotalExtras)-((empleado.salario*0.105)+ISSS_descuento+IPSFA_descuento+AFPCRECER_descuento+AFPCONFIA_descuento));
+
+            let retencion_Renta;
+
+            if(sueldo_ISSS <= 472) {
+                retencion_Renta = 0;
+            } else if(sueldo_ISSS >= 472.01 && sueldo_ISSS <= 895.24) {
+                retencion_Renta = (((sueldo_ISSS - 472)*0.1)+17.67);
+            } else if(sueldo_ISSS >= 895.25 && sueldo_ISSS <= 2038.1) {
+                retencion_Renta = (((sueldo_ISSS - 895.24)*0.2)+60);
+            } else if(sueldo_ISSS >= 2031.11) {
+                retencion_Renta = (((sueldo_ISSS - 2031.11)*0.3)+288.57)
+            }
+
+            const total_Descuentos = (ISSS_descuento + IPSFA_descuento + AFPCRECER_descuento + AFPCONFIA_descuento + retencion_Renta)
+
+            const Salario_liquido=Math.round((TotalExtras-total_Descuentos)*100)/100;
+
+            let ISSS_aporte;
+
+            if(empleado.idTipoPension = 4){
+                ISSS_aporte = 0;
+            } else if ((TotalExtras + empleado.salario) >= 1000){
+                ISSS_aporte = (75 - (empleado.salario*0.075));
+            } else {
+                ISSS_aporte = (TotalExtras*0.075);
+            }
+
+            let IPSFA_aporte;
+
+            if(empleado.idTipoPension = 1){
+                IPSFA_aporte = (TotalExtras*0.075);
+            } else {
+                IPSFA_aporte = 0;
+            }
+
+            let AFPCRECER_aporte;
+
+            if(empleado.idTipoPension = 2){
+                AFPCRECER_aporte = (TotalExtras*0.775);
+            } else {
+                AFPCRECER_aporte = 0;
+            }
+
+            let AFPCONFIA_aporte;
+
+            if(empleado.idTipoPension = 3){
+                AFPCONFIA_aporte = (TotalExtras*0.0775);
+            } else {
+                AFPCONFIA_aporte = 0;
+            }
+
+            const total_aportaciones = (ISSS_aporte + IPSFA_aporte + AFPCRECER_aporte + AFPCONFIA_aporte);
+
+            const minutos_Diurnos_Totales = (empleado.minutosDiurnos + 0);
+            const minutos_Nocturnos_Totales = (empleado.minutosNocturnos + 0);
+
+
+
+
+
+            //! Crear los strings
+            //Valor por Minuto
+
+            if(!valorMinuto.current){
+                valorMinuto.current = valorxMinuto.toString();
+            } else {
+                const string = `${valorMinuto.current},${valorxMinuto}`;
+                valorMinuto.current=string;
+            }
+    
+            //Declarando a 0 los minutos autorizados
+            if(!minutosDiurnosAutorizados.current){
+                minutosDiurnosAutorizados.current = '0';
+            } else {
+                const string = `${minutosDiurnosAutorizados.current},${0}`;
+                minutosDiurnosAutorizados.current=string;
+            }
+            if(!minutosNocturnosAutorizados.current){
+                minutosNocturnosAutorizados.current = '0';
+            } else {
+                const string = `${minutosNocturnosAutorizados.current},${0}`;
+                minutosNocturnosAutorizados.current=string;
+            }
+            
+            //Total Extra Diurno
+            if(!totalExtraDiurno.current){
+                totalExtraDiurno.current = (TotalDiurno).toString();
+            } else {
+                const string = `${totalExtraDiurno.current},${TotalDiurno}`;
+                totalExtraDiurno.current = string;
+            }
+    
+            //Total Extra Nocturno
+            if(!totalExtraNocturno.current){
+                totalExtraNocturno.current = (TotalNocturno).toString();
+            } else {
+                const string = `${totalExtraNocturno.current},${TotalNocturno}`;
+                totalExtraNocturno.current = string;
+            }
+    
+            //Total Horas Extras 
+
+            if(!totalHorasExtras.current){
+                totalHorasExtras.current = TotalExtras.toString();
+            } else {
+                const string = `${totalHorasExtras},${TotalExtras}`;
+                totalHorasExtras.current = string;
+            }
+    
+            //Sueldo mas Horas Extras
+            if(!sueldoMasHorasExtras.current){
+                sueldoMasHorasExtras.current = sueldoHorasExtras.toString();
+            } else {
+                const string = `${sueldoMasHorasExtras},${sueldoHorasExtras}`;
+                sueldoMasHorasExtras.current = string;
+            }
+    
+            //ISSS descuento
+            if(!ISSSdescuento.current){
+                    ISSSdescuento.current = ISSS_descuento.toString();
+            } else {
+                    const string = `${ISSSdescuento.current},${ISSS_descuento}`
+                    ISSSdescuento.current = string;
+            }
+            
+            //IPSFA descuento
+            if(!IPSFAdescuento.current){
+                IPSFAdescuento.current = IPSFA_descuento.toString();
+            } else {
+                const string = `${IPSFAdescuento.current},${IPSFA_descuento}`;
                 IPSFAdescuento.current = string;
+            }
+    
+            //AFPCRECER descuento
+            if(!AFPCRECERdescuento.current){
+                    AFPCRECERdescuento.current = AFPCRECER_descuento.toString();
             } else {
-                const string = `${IPSFAdescuento.current},${0}`;
-                IPSFAdescuento.current = string;
+                    const string = `${AFPCRECERdescuento.current},${AFPCRECER_descuento}`;
+                    AFPCRECERdescuento.current = string;
             }
-        }
-
-        //AFPCRECER descuento
-        if(!AFPCRECERdescuento.current){
-            if(idTipoPension = 2){
-                AFPCRECERdescuento.current = (totalHorasExtras*0.0725).toString();
+    
+            //AFPCONFIA descuento
+            if(!AFPCONFIAdescuento.current){
+                    AFPCONFIAdescuento.current = AFPCONFIA_descuento.toString();
             } else {
-                AFPCRECERdescuento.current = '0';
+                    const string = `${AFPCONFIAdescuento.current},${AFPCONFIA_descuento}`;
+                    AFPCONFIAdescuento.current = string;
             }
-        } else {
-            if(idTipoPension = 2){
-                const string = `${AFPCRECERdescuento.current},${totalHorasExtras*0.0775}`;
-                AFPCRECERdescuento.current = string;
+    
+            //Sueldo para ISSS
+            if(!sueldoParaISSS.current){
+                sueldoParaISSS.current = sueldo_ISSS.toString();
             } else {
-                const string = `${AFPCRECERdescuento.current},${0}`;
-                AFPCRECERdescuento.current = string;
+                const string = `${sueldoParaISSS.current},${sueldo_ISSS}`;
+                sueldoParaISSS.current = string;
             }
-        }
-
-        //AFPCONFIA descuento
-        if(!AFPCONFIAdescuento.current){
-            if(idTipoPension = 3){
-                AFPCONFIAdescuento.current = (totalHorasExtras*0.0725).toString();
+    
+            //Retencion de Renta
+            if(!retencionRenta.current){
+                retencionRenta.current = retencion_Renta.toString();
             } else {
-                AFPCONFIAdescuento.current = '0';
-            }
-        } else {
-            if(idTipoPension = 3){
-                const string = `${AFPCONFIAdescuento.current},${totalHorasExtras*0.0725}`;
-                AFPCONFIAdescuento.current = string;
-            } else {
-                const string = `${AFPCONFIAdescuento.current},${0}`;
-                AFPCONFIAdescuento.current = string;
-            }
-        }
-
-        //Sueldo para ISSS
-        if(!sueldoParaISSS.current){
-            sueldoParaISSS.current = ((salario+totalHorasExtras)-((salario*0.105)+ISSSdescuento+IPSFAdescuento+AFPCRECERdescuento+AFPCONFIAdescuento)).toString();
-        } else {
-            const string = `${sueldoParaISSS.current},${(salario+totalHorasExtras)-((salario*0.105)+ISSSdescuento+IPSFAdescuento+AFPCRECERdescuento+AFPCONFIAdescuento)}`;
-            sueldoParaISSS.current = string;
-        }
-
-        //Retencion de Renta
-        if(!retencionRenta.current){
-            if(sueldoParaISSS <= 472) {
-                retencionRenta.current = '0';
-            } else if(sueldoParaISSS >= 472.01 && sueldoParaISSS <= 895.24) {
-                retencionRenta.current = (((sueldoParaISSS - 472)*0.1)+17.67).toString();
-            } else if(sueldoParaISSS >= 895.25 && sueldoParaISSS <= 2038.1) {
-                retencionRenta.current = (((sueldoParaISSS - 895.24)*0.2)+60).toString();
-            } else if(sueldoParaISSS >= 2031.11) {
-                retencionRenta.current = (((sueldoParaISSS - 2031.11)*0.3)+288.57)
-            }
-        } else {
-            if(sueldoParaISSS <= 472) {
-                const string = `${retencionRenta.current},${0}`;
-                retencionRenta.current = string;
-            } else if(sueldoParaISSS >= 472.01 && sueldoParaISSS <= 895.24) {
-                const string = `${retencionRenta.current},${((sueldoParaISSS - 472)*0.1)+17.67}`;
-                retencionRenta.current = string;
-            } else if(sueldoParaISSS >= 895.25 && sueldoParaISSS <= 2038.1) {
-                const string = `${retencionRenta.current},${((sueldoParaISSS - 895.24)*0.2)+60}`;
-                retencionRenta.current = string;
-            } else if(sueldoParaISSS >= 2031.11) {
-                const string = `${retencionRenta.current},${((sueldoParaISSS - 2031.11)*0.3)+288.57}`;
+                const string = `${retencionRenta.current},${retencion_Renta}`;
                 retencionRenta.current = string;
             }
-        }
-
-        //Total Descuentos
-        if(!totalDescuentos.current){
-            totalDescuentos.current = (ISSSdescuento + IPSFAdescuento + AFPCRECERdescuento + AFPCONFIAdescuento + retencionRenta).toString();
-        } else {
-            const string = `${totalDescuentos.current},${ISSSdescuento + IPSFAdescuento + AFPCRECERdescuento + AFPCONFIAdescuento + retencionRenta}`;
-            totalDescuentos.current = string;
-        }
-
-        //Liquido
-        if(!liquido.current){
-            liquido.current = (Math.round((totalHorasExtras-totalDescuentos)*100)/100).toString();
-        }  else {
-            const string = `${liquido.current},${Math.round((totalHorasExtras-totalDescuentos)*100)/100}`;
-            liquido.current = string;
-        }
-
-        //ISSS aporte
-        if(!ISSSaporte.current){
-            if(idTipoPension = 4){
-                ISSSaporte.current = '0';
-            } else if ((totalHorasExtras + salario) >= 1000){
-                ISSSaporte.current = (75 - (salario*0.075)).toString();
+    
+            //Total Descuentos
+            if(!totalDescuentos.current){
+                totalDescuentos.current = total_Descuentos.toString();
             } else {
-                ISSSaporte.current = (totalHorasExtras*0.075).toString();
+                const string = `${totalDescuentos.current},${total_Descuentos}`;
+                totalDescuentos.current = string;
             }
-        } else {
-            if(idTipoPension = 4){
-                const string = `${ISSSaporte.current},${0}`;
-                ISSSaporte.current = string;
-            } else if ((totalHorasExtras + salario) >= 1000){
-                const string = `${ISSSaporte.current},${75 - (salario*0.075)}`;
-                ISSSaporte.current = string;
+    
+            //Liquido
+            if(!liquido.current){
+                liquido.current = (Salario_liquido).toString();
+            }  else {
+                const string = `${liquido.current},${Salario_liquido}`;
+                liquido.current = string;
+            }
+    
+            //ISSS aporte
+            if(!ISSSaporte.current){
+                ISSSaporte.current = ISSS_aporte.toString();
             } else {
-                const string = `${ISSSaporte.current},${totalHorasExtras*0.075}`;
+                const string = `${ISSSaporte.current},${ISSS_aporte}`;
                 ISSSaporte.current = string;
             }
-        }
-
-        //IPSFA aporte
-        if(!IPSFAaporte.current){
-            if(idTipoPension = 1){
-                IPSFAaporte.current = (totalHorasExtras*0.075).toString();
+    
+            //IPSFA aporte
+            if(!IPSFAaporte.current){
+                    IPSFAaporte.current = (IPSFA_aporte).toString();
             } else {
-                IPSFAaporte.current = '0';
-            }
-        } else {
-            if(idTipoPension = 1){
-                const string = `${IPSFAaporte.current},${totalHorasExtras*0.075}`;
-                IPSFAaporte.current = string;
-            } else {
-                const string = `${IPSFAaporte.current},${0}`;
+                const string = `${IPSFAaporte.current},${IPSFA_aporte}`;
                 IPSFAaporte.current = string;
             }
-        }
-
-        //AFPCRECER aporte
-        if(!AFPCRECERaporte.current){
-            if(idTipoPension = 2){
-                AFPCRECERaporte.current = (totalHorasExtras*0.775).toString();
+    
+            //AFPCRECER aporte
+            if(!AFPCRECERaporte.current){
+                AFPCRECERaporte.current = (AFPCRECER_aporte).toString();
             } else {
-                AFPCRECERaporte.current = '0';
-            }
-        } else {
-            if(idTipoPension = 2){
-                const string = `${AFPCRECERaporte.current},${totalHorasExtras*0.775}`;
-                AFPCRECERaporte.current = string;
-            } else {
-                const string = `${AFPCRECERaporte.current},${0}`;
+                const string = `${AFPCRECERaporte.current},${AFPCRECER_aporte}`;
                 AFPCRECERaporte.current = string;
             }
-        }
-
-        //AFPCONFIA aporte
-        if(!AFPCONFIAaporte.current){
-            if(idTipoPension = 3){
-                AFPCONFIAaporte.current = (totalHorasExtras*0.0775).toString();
+    
+            //AFPCONFIA aporte
+            if(!AFPCONFIAaporte.current){
+                AFPCONFIAaporte.current = (AFPCONFIA_aporte).toString();
             } else {
-                AFPCONFIAaporte.current = '0';
-            }
-        } else {
-            if(idTipoPension = 3){
-                const string = `${AFPCONFIAaporte.current},${totalHorasExtras*0.0775}`;
+                const string = `${AFPCONFIAaporte.current},${AFPCONFIA_aporte}`;
                 AFPCONFIAaporte.current = string;
             }
-        }
+    
+            //Total Aportaciones
+            if(!totalAportaciones.current){
+                totalAportaciones.current = total_aportaciones.toString();
+            } else {
+                const string = `${totalAportaciones.current},${total_aportaciones}`;
+                totalAportaciones.current = string;
+            }
+    
+            //TOTAL (Total que debe gastar la empresa)
+            if(!TOTAL.current){
+                TOTAL.current = (TotalExtras + total_aportaciones).toString();
+            } else {
+                const string = `${TOTAL.current},${TotalExtras + total_aportaciones}`;
+                TOTAL.current = string;
+            }
+    
+            //Minutos Diurnos Totales
+            if(!minutosDiurnosTotales.current){
+                minutosDiurnosTotales.current = (minutos_Diurnos_Totales).toString();
+            } else {
+                const string = `${minutosDiurnosTotales.current},${minutos_Diurnos_Totales}`;
+                minutosDiurnosTotales.current = string;
+            }
+    
+            //Minutos Nocturnos Totales
+            if(!minutosNocturnosTotales.current){
+                minutosNocturnosTotales.current = (minutos_Nocturnos_Totales).toString();
+            } else {
+                const string = `${minutosNocturnosTotales.current},${minutos_Nocturnos_Totales}`;
+                minutosNocturnosTotales.current = string;
+            }
+            
+        })
 
-        //Total Aportaciones
-        if(!totalAportaciones.current){
-            totalAportaciones.current = (ISSSaporte + IPSFAaporte + AFPCRECERaporte + AFPCONFIAaporte).toString();
-        } else {
-            const string = `${totalAportaciones.current},${ISSSaporte + IPSFAaporte + AFPCRECERaporte + AFPCONFIAaporte}`;
-            totalAportaciones.current = string;
-        }
-
-        //TOTAL (Total que debe gastar la empresa)
-        if(!TOTAL.current){
-            TOTAL.current = (totalHorasExtras + totalAportaciones).toString();
-        } else {
-            const string = `${TOTAL},${totalHorasExtras + totalAportaciones}`;
-            TOTAL.current = string;
-        }
-
-        //Minutos Diurnos Totales
-        if(!minutosDiurnosTotales.current){
-            minutosDiurnosTotales.current = (minutosDiurnosNormales + minutosDiurnosAutorizados).toString();
-        } else {
-            const string = `${minutosDiurnosTotales.current},${minutosDiurnosNormales + minutosDiurnosAutorizados}`;
-            minutosDiurnosTotales.current = string;
-        }
-
-        //Minutos Nocturnos Totales
-        if(!minutosNocturnosTotales.current){
-            minutosNocturnosTotales.current = (minutosNocturnosNormales + minutosNocturnosNormales).toString();
-        } else {
-            const string = `${minutosNocturnosTotales.current},${minutosNocturnosNormales + minutosNocturnosNormales}`;
-            minutosNocturnosTotales.current = string;
-        }
+        //TODO: Agregar los datos de los empleados a la DB
     }
 
 
 
-    return {
 
+    return {
+        GenerarReporte
     }
 }
