@@ -1,11 +1,11 @@
 import {useRef} from 'react'
+import Api from '../Api/Api';
 
 export const UseReportes = () => {
-
-    // idEmpleado, nombres, apellidos, idUbicacion, idGrupo, salario, idPlaza, idTipoPension, minutosDiurnos, minutosNocturnos
-
     //Variables que deben calcularse manualmente
     //Tabla Minutos
+    const minutosDiurnos = useRef('');
+    const minutosNocturnos = useRef('');
     const valorMinuto = useRef('');
     const totalExtraDiurno = useRef('');
     const totalExtraNocturno = useRef('');
@@ -34,21 +34,22 @@ export const UseReportes = () => {
     //Tabla detalles
     const TOTAL = useRef('');
 
-    console.log(TOTAL.current);
 
-    const GenerarReporte = (empleadosArray) =>{
+    const GenerarReporte = (empleadosArray,usuarioJefe,ubicacionEstacion,sumatoriaHorasDiurnasNormales,sumatoriaHorasNocturnasNormales,sumatoriaHorasNormales) =>{
+
+        const longitud= empleadosArray.length;
         
-        empleadosArray.forEach(empleado=>{
-            
+        empleadosArray.forEach((empleado,index)=>{
             //! Realizar Calculos
             const valorxMinuto=(((empleado.salario/30)/8)/60);
             const TotalDiurno=empleado.minutosDiurnos*valorxMinuto;
             const TotalNocturno=(empleado.minutosNocturnos*valorxMinuto)*1.5;
             const TotalExtras=Math.round((TotalDiurno+TotalNocturno)*100)/100;
             const sueldoHorasExtras=empleado.salario + TotalExtras;
+
             let ISSS_descuento;
 
-            if(empleado.idTipoPension = 4){
+            if(Number(empleado.idTipoPension) === 4){
                 ISSS_descuento = 0;
             } else if((TotalExtras + empleado.salario) >= 1000){
                 ISSS_descuento = (30 - (empleado.salario*0.03));
@@ -58,7 +59,7 @@ export const UseReportes = () => {
 
             let IPSFA_descuento;
 
-            if(empleado.idTipoPension = 1){
+            if(Number(empleado.idTipoPension) === 1){
                 IPSFA_descuento = (TotalExtras*0.065);
             } else {
                 IPSFA_descuento = 0;
@@ -66,7 +67,7 @@ export const UseReportes = () => {
 
             let AFPCRECER_descuento;
 
-            if(empleado.idTipoPension = 2){
+            if(Number(empleado.idTipoPension) === 2){
                 AFPCRECER_descuento = (TotalExtras*0.0725);
             } else {
                 AFPCRECER_descuento = 0;
@@ -74,13 +75,16 @@ export const UseReportes = () => {
 
             let AFPCONFIA_descuento;
 
-            if(empleado.idTipoPension = 3){
+            if(Number(empleado.idTipoPension) === 3){
                 AFPCONFIA_descuento = (TotalExtras*0.0725);
             } else {
                 AFPCONFIA_descuento = 0;
             }
 
+            console.table({ISSS_descuento,IPSFA_descuento,AFPCRECER_descuento,AFPCONFIA_descuento,tipo:empleado.idTipoPension});
+
             const sueldo_ISSS = ((empleado.salario+TotalExtras)-((empleado.salario*0.105)+ISSS_descuento+IPSFA_descuento+AFPCRECER_descuento+AFPCONFIA_descuento));
+
 
             let retencion_Renta;
 
@@ -95,12 +99,12 @@ export const UseReportes = () => {
             }
 
             const total_Descuentos = (ISSS_descuento + IPSFA_descuento + AFPCRECER_descuento + AFPCONFIA_descuento + retencion_Renta)
-
             const Salario_liquido=Math.round((TotalExtras-total_Descuentos)*100)/100;
+
 
             let ISSS_aporte;
 
-            if(empleado.idTipoPension = 4){
+            if(Number(empleado.idTipoPension) === 4){
                 ISSS_aporte = 0;
             } else if ((TotalExtras + empleado.salario) >= 1000){
                 ISSS_aporte = (75 - (empleado.salario*0.075));
@@ -110,7 +114,7 @@ export const UseReportes = () => {
 
             let IPSFA_aporte;
 
-            if(empleado.idTipoPension = 1){
+            if(Number(empleado.idTipoPension) === 1){
                 IPSFA_aporte = (TotalExtras*0.075);
             } else {
                 IPSFA_aporte = 0;
@@ -118,7 +122,7 @@ export const UseReportes = () => {
 
             let AFPCRECER_aporte;
 
-            if(empleado.idTipoPension = 2){
+            if(Number(empleado.idTipoPension) === 2){
                 AFPCRECER_aporte = (TotalExtras*0.775);
             } else {
                 AFPCRECER_aporte = 0;
@@ -126,7 +130,7 @@ export const UseReportes = () => {
 
             let AFPCONFIA_aporte;
 
-            if(empleado.idTipoPension = 3){
+            if(Number(empleado.idTipoPension) === 3){
                 AFPCONFIA_aporte = (TotalExtras*0.0775);
             } else {
                 AFPCONFIA_aporte = 0;
@@ -134,14 +138,31 @@ export const UseReportes = () => {
 
             const total_aportaciones = (ISSS_aporte + IPSFA_aporte + AFPCRECER_aporte + AFPCONFIA_aporte);
 
-            const minutos_Diurnos_Totales = (empleado.minutosDiurnos + 0);
-            const minutos_Nocturnos_Totales = (empleado.minutosNocturnos + 0);
+            const minutos_Diurnos_Totales = (Number(empleado.minutosDiurnos) + 0);
+            const minutos_Nocturnos_Totales = (Number(empleado.minutosNocturnos) + 0);
 
 
 
 
 
             //! Crear los strings
+
+            //Minutos Diurnos
+            if(!minutosDiurnos.current){
+                minutosDiurnos.current = empleado.minutosDiurnos;
+            }else{
+                const string = `${minutosDiurnos.current},${empleado.minutosDiurnos}`;
+                minutosDiurnos.current=string;
+            }
+
+            //Minutos Nocturnos
+            if(!minutosNocturnos.current){
+                minutosNocturnos.current = empleado.minutosNocturnos;
+            }else{
+                const string = `${minutosNocturnos.current},${empleado.minutosNocturnos}`;
+                minutosNocturnos.current=string;
+            }
+
             //Valor por Minuto
 
             if(!valorMinuto.current){
@@ -165,6 +186,14 @@ export const UseReportes = () => {
                 minutosNocturnosAutorizados.current=string;
             }
             
+            //Minutos autorizados
+            if(!minutosVerificados.current){
+                minutosVerificados.current = '0';
+            }else{
+                const string = `${minutosVerificados.current},${0}`;
+                minutosVerificados.current=string;
+            }
+            
             //Total Extra Diurno
             if(!totalExtraDiurno.current){
                 totalExtraDiurno.current = (TotalDiurno).toString();
@@ -186,7 +215,7 @@ export const UseReportes = () => {
             if(!totalHorasExtras.current){
                 totalHorasExtras.current = TotalExtras.toString();
             } else {
-                const string = `${totalHorasExtras},${TotalExtras}`;
+                const string = `${totalHorasExtras.current},${TotalExtras}`;
                 totalHorasExtras.current = string;
             }
     
@@ -325,13 +354,54 @@ export const UseReportes = () => {
                 const string = `${minutosNocturnosTotales.current},${minutos_Nocturnos_Totales}`;
                 minutosNocturnosTotales.current = string;
             }
-            
+
+            if(index===longitud-1){
+                enviarReportes(usuarioJefe,ubicacionEstacion,sumatoriaHorasDiurnasNormales,sumatoriaHorasNocturnasNormales,sumatoriaHorasNormales);
+            }
         })
 
         //TODO: Agregar los datos de los empleados a la DB
     }
 
+    const enviarReportes = async(usuarioJefe,ubicacionEstacion,sumatoriaHorasDiurnasNormales,sumatoriaHorasNocturnasNormales,sumatoriaHorasNormales) => {
+        try {
 
+            const formData = new FormData();
+            formData.append('minutosDiurnosNormales', minutosDiurnos.current);
+            formData.append('minutosNocturnosNormales', minutosNocturnos.current);
+            formData.append('valorMinuto', valorMinuto.current);
+            formData.append('totalExtraDiurno', totalExtraDiurno.current);
+            formData.append('totalExtraNocturno', totalExtraNocturno.current);
+            formData.append('totalHorasExtras', totalHorasExtras.current);
+            formData.append('minutosDiurnosAutorizados', minutosDiurnosAutorizados.current);
+            formData.append('minutosNocturnosAutorizados', minutosNocturnosAutorizados.current);
+            formData.append('minutosAutorizados', minutosVerificados.current);
+            formData.append('minutosDiurnosTotales', minutosDiurnosTotales.current);
+            formData.append('minutosNocturnosTotales', minutosNocturnosTotales.current);
+            formData.append('ISSSdescuento', ISSSdescuento.current);
+            formData.append('IPSFAdescuento', IPSFAdescuento.current);
+            formData.append('AFPCRECERdescuento', AFPCRECERdescuento.current);
+            formData.append('AFPCONFIAdescuento', AFPCONFIAdescuento.current);
+            formData.append('retencionRenta', retencionRenta.current);
+            formData.append('totalDescuentos', totalDescuentos.current);
+            formData.append('sueldoparaISSS', sueldoParaISSS.current);
+            formData.append('Liquido', liquido.current);
+            formData.append('ISSSaporte', ISSSaporte.current);
+            formData.append('IPSFAaporte', IPSFAaporte.current);
+            formData.append('AFPCRECERaporte', AFPCRECERaporte.current);
+            formData.append('AFPCONFIAaporte', AFPCONFIAaporte.current);
+            formData.append('totalAportaciones', totalAportaciones.current);
+            formData.append('usuarioJefe', usuarioJefe);
+            formData.append('ubicacionEstacion', ubicacionEstacion);
+            formData.append('sumatoriaHorasDiurnasNormales', sumatoriaHorasDiurnasNormales);
+            formData.append('sumatoriaHorasNocturnasNormales', sumatoriaHorasNocturnasNormales);
+            formData.append('sumatoriaHorasNormales', sumatoriaHorasNormales);
+            const {data}=await Api.post('/reporte',formData);
+            console.log({data});
+        } catch (error) {
+            console.log({error});
+        }
+    }
 
 
     return {

@@ -82,12 +82,14 @@ export const MinutosSeleccion = ({
       formData.append("idEmpleado", empleado.idEmpleado);
 
       const { data } = await Api.post("empleadoDetalle", formData);
+      const resp=await Api.get('/pension');
       setEmpleadoDetalle(data[0]);
       const empleadoCompleto = {
         ...data[0],
         minutosDiurnos: "0",
         minutosNocturnos: "0",
-        salario:Number(data[0].salarioNormal)
+        salario:Number(data[0].salarioNormal),
+        idTipoPension:resp.data.filter(pension=>pension.nombrePension==data[0].nombrePension)[0].idPension,
       };
 
       minutosFormulario.current[posicion] = empleadoCompleto;

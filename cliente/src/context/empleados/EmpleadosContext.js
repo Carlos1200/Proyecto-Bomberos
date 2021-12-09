@@ -14,6 +14,7 @@ export const EmpleadosProvider=({children})=>{
 
     const [state, dispatch] = useReducer(EmpleadosReducer, initialState);
     const [consultar, setConsultar] = useState(false);
+    const [error, setError] = useState(null);
     useEffect(()=>{
         if(consultar){
             consultarDatos();
@@ -34,7 +35,7 @@ export const EmpleadosProvider=({children})=>{
             });
             setConsultar(false);
         } catch (error) {
-            console.log(error.response.data||"Error en el servidor");
+            setError("Error en el servidor");
         }
     }
 
@@ -48,7 +49,7 @@ export const EmpleadosProvider=({children})=>{
                 payload:data
             });
         } catch (error) {
-            console.log(error.response.data||"Error en el servidor");
+            setError("Error en el servidor");
         }
     }
 
@@ -56,6 +57,7 @@ export const EmpleadosProvider=({children})=>{
         <EmpleadosContext.Provider value={{
             empleados:state.empleados,
             cargando:state.cargando,
+            error,
             setConsultar,
             buscador
         }}>

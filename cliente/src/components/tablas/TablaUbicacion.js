@@ -1,4 +1,4 @@
-import React,{useContext, useState} from "react";
+import React,{useContext, useEffect, useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
@@ -15,7 +15,7 @@ export const TablaUbicacion = ({mostrarNotificacion}) => {
   const [visibleBorrar, setVisibleBorrar] = useState(false);
   const [ubicacionBorrar, setUbicacionBorrar] = useState(null);
   const [ubicacion, setUbicacion] = useState();
-  const {ubicaciones,setConsultar,cargando}=useContext(UbicacionesContext);
+  const {ubicaciones,setConsultar,cargando,error}=useContext(UbicacionesContext);
 
   
   const eliminarUbicacion=async()=>{
@@ -31,6 +31,12 @@ export const TablaUbicacion = ({mostrarNotificacion}) => {
       mostrarNotificacion(false);
     }
   }
+
+  useEffect(()=>{
+    if(error){
+      mostrarNotificacion(true)
+    }
+  },[error])
 
   return (
     <Contenedor>

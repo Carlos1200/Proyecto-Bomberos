@@ -12,6 +12,7 @@
     use Controller\GrupoController;
     use Controller\EmpleadoController;
     use Controller\TrasladoController;
+    use Controller\ReportesController;
     use Controller\PdfController;
 
     //!Usuarios
@@ -63,6 +64,9 @@
 
     //!Traslados
     $router->post('/api/traslado',[TrasladoController::class,'crearTraslado']);
+
+    //!Reportes
+    $router->post('/api/reporte',[ReportesController::class,'nuevoReportes']);
 
     //!Pdf
     $router->get('/api/pdf',[PdfController::class,'generarPdf']);

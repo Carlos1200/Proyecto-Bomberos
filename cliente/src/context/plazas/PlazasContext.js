@@ -15,6 +15,7 @@ export const PlazasProvider=({children})=>{
     }
     const [state, dispatch] = useReducer(PlazasReducer, initialState);
     const [consultar, setConsultar] = useState(false);
+    const [error, setError] = useState(null);
     useEffect(()=>{
         if(consultar){
             consultarDatos();
@@ -35,7 +36,7 @@ export const PlazasProvider=({children})=>{
             });
             setConsultar(false);
         } catch (error) {
-            console.log(error.response.data||"Error en el servidor");
+            setError("Error en el servidor");
         }
     }
 
@@ -49,7 +50,7 @@ export const PlazasProvider=({children})=>{
                 payload:data
             });
         } catch (error) {
-            console.log(error.response.data||"Error en el servidor");
+            setError("Error en el servidor");
         }
     }
 
@@ -57,6 +58,7 @@ export const PlazasProvider=({children})=>{
         <PlazasContext.Provider value={{
             plazas:state.plazas,
             cargando:state.cargando,
+            error,
             setConsultar,
             buscador
         }}>

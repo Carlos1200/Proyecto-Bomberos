@@ -16,7 +16,7 @@ export const ArchivoEmpleadoModal = ({handleClose,notificacion}) => {
 
   const exportFile = () => {
 		/* convert state to workbook */
-		const ws = XLSX.utils.aoa_to_sheet([['nombre','apellido','salario','ubicacion','plaza','pension','grupo']['','','','','','','']]);
+		const ws = XLSX.utils.aoa_to_sheet([['nombre','apellido','salario','ubicacion','plaza','pension','grupo']]);
 		const wb = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(wb, ws, "Plantilla");
 		/* generate XLSX file and send to client */

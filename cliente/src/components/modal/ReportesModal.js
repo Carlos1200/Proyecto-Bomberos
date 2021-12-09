@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWindowClose, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
@@ -7,8 +7,12 @@ import { MinutosSeleccion } from "../MinutosSeleccion";
 import { AnimatePresence } from "framer-motion";
 import { AutorizacionModal } from "./AutorizacionModal";
 import { UseReportes } from "../../hooks/UseReportes";
+import {AuthContext} from '../../context/Auth/AuthContext';
 
 export const ReportesModal = ({ handleClose, empleados }) => {
+
+  const {NombreUsuario,UbicacionUsuario}=useContext(AuthContext);
+
   const minutosFormulario = useRef([]);
   const [cantidad, setCantidad] = useState(0);
   const [errores, setErrores] = useState([true]);

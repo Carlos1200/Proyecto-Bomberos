@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
@@ -21,7 +21,7 @@ export const TablaEmpleado = ({ notificacion, notificacionError }) => {
   const [empleado, setEmpleado] = useState();
   const [empleadoDetalle, setEmpleadoDetalle] = useState();
 
-  const { empleados, cargando, setConsultar } = useContext(EmpleadosContext);
+  const { empleados, cargando, setConsultar,error } = useContext(EmpleadosContext);
 
   const eliminarEmpleado = async () => {
     try {
@@ -39,6 +39,12 @@ export const TablaEmpleado = ({ notificacion, notificacionError }) => {
       }
     }
   };
+
+  useEffect(() => {
+    if(error){
+      notificacionError(error);
+    }
+  }, [error])
 
   return (
     <Contenedor>
