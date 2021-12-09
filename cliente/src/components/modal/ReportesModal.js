@@ -76,7 +76,17 @@ export const ReportesModal = ({ handleClose, empleados }) => {
             onExitComplete={() => null}>
             {autorizacionModal&&<AutorizacionModal handleClose={()=>setAutorizacionModal(false)} enviarDatos={()=>{
 
-              GenerarReporte(minutosFormulario.current)
+              const horasDiurnas=minutosFormulario.current.reduce((acumulador,minutos)=>{
+                return acumulador+Number(minutos.minutosDiurnos);
+              },0);
+
+              const horasNocturnas=minutosFormulario.current.reduce((acumulador,minutos)=>{
+                return acumulador+Number(minutos.minutosNocturnos);
+              },0);
+
+              const horasTotales=horasDiurnas+horasNocturnas;
+
+              GenerarReporte(minutosFormulario.current,NombreUsuario,UbicacionUsuario,horasDiurnas,horasNocturnas,horasTotales);
               handleClose();
               setAutorizacionModal(false);
             }} />}

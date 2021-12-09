@@ -81,7 +81,7 @@ class Reportes extends ActiveRecord{
         $this->sumatoriaHorasNormales=$args['sumatoriaHorasNormales']??'';
     }
 
-    public function validar($nuevo=true)
+    public function validar()
     {
         if(!$this->minutosDiurnosNormales){
             self::$errores[]="Los minutos diurnos normales son obligatorios";
