@@ -35,6 +35,7 @@ export const TablaGroup = ({mostrarNotificacion}) => {
     if(error){
       mostrarNotificacion(true)
     }
+    // eslint-disable-next-line
   },[error])
 
   return (

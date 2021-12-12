@@ -266,7 +266,6 @@ class Reportes extends ActiveRecord{
         if(!self::$db->lastInsertId()>0){
             self::$errores[]="No se pudo agregar el reporte";
         }
-        $this->DetallesReportes();
     }
 
     public function DetallesReportes(){
@@ -274,7 +273,7 @@ class Reportes extends ActiveRecord{
         $consulta=self::$db->prepare($query);
         $consulta->bindParam(":sueldoMasHorasExtras",$this->sueldoMasHorasExtras,PDO::PARAM_STR);
         $consulta->bindParam(":totalAportHoras",$this->totalAportHoras,PDO::PARAM_STR);
-        $consulta->bindParam(":idSelectTop",$this->idSelectTop,PDO::PARAM_STR);
+        $consulta->bindParam(":idSelectTop",$this->idSelectTop,PDO::PARAM_INT);
         $consulta->bindParam(":idEmpleados",$this->idEmpleados,PDO::PARAM_STR);
         $consulta->execute();
 

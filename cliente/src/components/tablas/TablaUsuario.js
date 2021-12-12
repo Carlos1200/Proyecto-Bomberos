@@ -38,6 +38,7 @@ export const TablaUsuario = ({mostrarNotificacion}) => {
       if(error){
         mostrarNotificacion(true)
       }
+      // eslint-disable-next-line
     },[error])
 
   return (

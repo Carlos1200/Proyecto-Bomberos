@@ -36,6 +36,7 @@ export const TablaUbicacion = ({mostrarNotificacion}) => {
     if(error){
       mostrarNotificacion(true)
     }
+    // eslint-disable-next-line
   },[error])
 
   return (

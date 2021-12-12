@@ -36,6 +36,7 @@ export const TablaPlaza = ({mostrarNotificacion}) => {
     if(error){
       mostrarNotificacion(true)
     }
+    // eslint-disable-next-line
   },[error])
 
 

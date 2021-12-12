@@ -10,7 +10,7 @@ import {
   faPowerOff,
   faExchangeAlt,
   faObjectGroup,
-  faRandom
+  // faRandom
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Btn } from "./Btn";

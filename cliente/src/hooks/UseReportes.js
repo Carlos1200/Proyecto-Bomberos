@@ -87,14 +87,6 @@ export const UseReportes = () => {
         AFPCONFIA_descuento = 0;
       }
 
-      console.table({
-        ISSS_descuento,
-        IPSFA_descuento,
-        AFPCRECER_descuento,
-        AFPCONFIA_descuento,
-        tipo: empleado.idTipoPension,
-      });
-
       const sueldo_ISSS =
         empleado.salario +
         TotalExtras -

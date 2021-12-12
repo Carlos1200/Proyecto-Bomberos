@@ -16,7 +16,8 @@ class ReportesController{
         $errores=$reporte->validar();
         
         if(empty($errores)){
-            $errores=$reporte->crearAportesDescuentosMinutos();
+            $reporte->crearAportesDescuentosMinutos();
+            $errores=$reporte->DetallesReportes();
             if(empty($errores)){
                 $errores=$reporte->Autorizacion();
                 if(!empty($errores)){

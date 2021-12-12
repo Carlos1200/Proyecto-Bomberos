@@ -45,18 +45,15 @@ export const MinutosSeleccion = ({
     if (!cargando) {
       comprobarValidacion();
     }
-  }, [
-    errors.minDiurno,
-    errors.minNocturno,
-    validacion.validacionDiurno,
-    validacion.validacionNocturno,
-  ]);
+    // eslint-disable-next-line
+  }, [errors.minDiurno,errors.minNocturno,validacion.validacionDiurno,validacion.validacionNocturno]);
 
   useEffect(() => {
     obtenerDetalles();
     const errorCopy=[...erroresArray];
     errorCopy[posicion]=true;
     setErrores(errorCopy);
+    // eslint-disable-next-line
   }, []);
 
   const comprobarValidacion = () => {
@@ -89,7 +86,7 @@ export const MinutosSeleccion = ({
         minutosDiurnos: "0",
         minutosNocturnos: "0",
         salario:Number(data[0].salarioNormal),
-        idTipoPension:resp.data.filter(pension=>pension.nombrePension==data[0].nombrePension)[0].idPension,
+        idTipoPension:resp.data.filter(pension=>pension.nombrePension===data[0].nombrePension)[0].idPension,
       };
 
       minutosFormulario.current[posicion] = empleadoCompleto;
@@ -199,34 +196,13 @@ const ContenedorInfo = styled.div`
   padding: 0 1rem;
 `;
 
-const Justificacion = styled.textarea`
-  resize: none;
-  overflow-y: auto;
-  width: 100%;
-  height: 6rem;
-  &::-webkit-scrollbar {
-    width: 12px; /* width of the entire scrollbar */
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #e2e2e2; /* color of the tracking area */
-    border-radius: 2rem;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #343f56; /* color of the scroll thumb */
-    border-radius: 20px; /* roundness of the scroll thumb */
-    border: 3px solid #e2e2e2; /* creates padding around scroll thumb */
-  }
-`;
-
-const Fecha = styled.input`
-  margin-bottom: 1rem;
-  appearance: none;
-  border: 1px solid #cccccc;
-  border-radius: 0.2rem;
-  padding: 0.5rem 1rem;
-`;
+// const Fecha = styled.input`
+//   margin-bottom: 1rem;
+//   appearance: none;
+//   border: 1px solid #cccccc;
+//   border-radius: 0.2rem;
+//   padding: 0.5rem 1rem;
+// `;
 
 const TextError = styled.p`
   margin-top: -13px;

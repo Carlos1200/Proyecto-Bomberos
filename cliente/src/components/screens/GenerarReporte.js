@@ -39,6 +39,7 @@ export const GenerarReporte = () => {
 
   useEffect(() => {
     obtenerEmpleados();
+    // eslint-disable-next-line
   }, []);
 
   const eliminarEmpleado = (id) => {
@@ -157,12 +158,6 @@ const TextBoxSubtitle = styled.div`
   margin-right: 50px;
   text-align: center;
 `;
-const ContenedorGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto;
-  padding-top: 40px;
-`;
 
 const Jefe = styled.div`
   display: flex;
@@ -175,19 +170,6 @@ const JefeNombre = styled.p`
   color: #666666;
   font-weight: bold;
   margin-left: 1rem;
-`;
-const LeftGrid = styled.div`
-  grid-column: 1;
-`;
-
-const Title = styled.h2`
-  text-align: center;
-  margin-bottom: 0.5rem;
-`;
-
-const JefeEstacion = styled.p`
-  margin-right: 0.5rem;
-  font-size: 1.2rem;
 `;
 
 const FilterBox = styled.div``;

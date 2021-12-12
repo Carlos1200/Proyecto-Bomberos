@@ -44,6 +44,7 @@ export const TablaEmpleado = ({ notificacion, notificacionError }) => {
     if(error){
       notificacionError(error);
     }
+    // eslint-disable-next-line
   }, [error])
 
   return (
