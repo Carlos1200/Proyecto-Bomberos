@@ -1,7 +1,6 @@
 <?php
 namespace Controller;
 
-include_once "cors.php";
 use Model\Pdf;
 
 class PdfController{

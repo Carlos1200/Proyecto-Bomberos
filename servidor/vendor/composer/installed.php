@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '178bf6a1875d86058300a3a37ed781fb9b793024',
+        'reference' => '659b914c506b26f0c7785a09fe6f1e876c4a1c13',
         'name' => 'cdavi/servidor',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '178bf6a1875d86058300a3a37ed781fb9b793024',
+            'reference' => '659b914c506b26f0c7785a09fe6f1e876c4a1c13',
             'dev_requirement' => false,
         ),
         'graham-campbell/result-type' => array(
@@ -29,12 +29,12 @@
             'dev_requirement' => false,
         ),
         'phpoption/phpoption' => array(
-            'pretty_version' => '1.8.0',
-            'version' => '1.8.0.0',
+            'pretty_version' => '1.8.1',
+            'version' => '1.8.1.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpoption/phpoption',
             'aliases' => array(),
-            'reference' => '5455cb38aed4523f99977c4a12ef19da4bfe2a28',
+            'reference' => 'eab7a0df01fe2344d172bff4cd6dbd3f8b84ad15',
             'dev_requirement' => false,
         ),
         'symfony/polyfill-ctype' => array(
