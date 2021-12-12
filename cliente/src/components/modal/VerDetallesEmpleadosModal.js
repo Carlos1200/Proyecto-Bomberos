@@ -19,7 +19,7 @@ export const VerDetallesEmpleadosModal = ({handleClose,empleado,notificacionErro
     try {
       const formData=new FormData();
       formData.append('idEmpleado',empleado.idEmpleado);
-      const {data}=await Api.post('empleadoDetalle',formData);
+      const {data}=await Api.post('/empleados/EmpleadosDetalle.php',formData);
       setEmpleadoDetalle(data[0]);
       setCargando(false);
     } catch (error) {

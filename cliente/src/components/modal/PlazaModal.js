@@ -30,7 +30,7 @@ export const PlazaModal = ({handleClose,plaza,mostrarNotificacion}) => {
         formData.append('idPlaza',plaza.idPlaza);
         formData.append('nombrePlaza',nombrePlaza);
 
-        await Api.post("/plazaEdit",formData);
+        await Api.post("/plazas/EditarPlaza.php",formData);
         setConsultar(true);
         handleClose();
         mostrarNotificacion()
@@ -49,7 +49,7 @@ export const PlazaModal = ({handleClose,plaza,mostrarNotificacion}) => {
         const formData=new FormData();
         formData.append('nombrePlaza',nombrePlaza);
 
-        await Api.post("/plaza",formData);
+        await Api.post("/plazas/CrearPlaza.php",formData);
         setConsultar(true);
         handleClose();
         mostrarNotificacion()

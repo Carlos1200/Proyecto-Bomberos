@@ -23,7 +23,7 @@ export const TablaPlaza = ({mostrarNotificacion}) => {
     try {
       const formData=new FormData();
       formData.append("idPlaza",plazaBorrar);
-      await Api.post('/plazaDelete',formData);
+      await Api.post('/plazas/EliminarPlaza.php',formData);
       setConsultar(true);
       setVisibleBorrar(false);
       mostrarNotificacion()

@@ -78,8 +78,8 @@ export const MinutosSeleccion = ({
       const formData = new FormData();
       formData.append("idEmpleado", empleado.idEmpleado);
 
-      const { data } = await Api.post("empleadoDetalle", formData);
-      const resp=await Api.get('/pension');
+      const { data } = await Api.post("/empleados/EmpleadosDetalle.php", formData);
+      const resp=await Api.get('/pensiones/ObtenerPensiones.php');
       setEmpleadoDetalle(data[0]);
       const empleadoCompleto = {
         ...data[0],

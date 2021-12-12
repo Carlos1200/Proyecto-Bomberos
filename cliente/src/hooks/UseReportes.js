@@ -447,7 +447,7 @@ export const UseReportes = () => {
       formData.append("idSelectTop", longitud);
       formData.append("idEmpleados", IdEmpleado.current);
 
-      const { data } = await Api.post("/reporte", formData);
+      const { data } = await Api.post("/reportes/CrearReporte.php", formData);
       console.log({ data });
     } catch (error) {
       console.log({ error });

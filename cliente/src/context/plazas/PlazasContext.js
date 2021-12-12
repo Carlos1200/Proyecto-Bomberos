@@ -28,7 +28,7 @@ export const PlazasProvider=({children})=>{
 
     const consultarDatos=async()=>{
         try {
-            const {data}=await Api.get(`/plaza`);
+            const {data}=await Api.get(`/plazas/ObtenerPlazas.php`);
 
             dispatch({
                 type:OBTENER_PLAZAS,
@@ -44,7 +44,7 @@ export const PlazasProvider=({children})=>{
         try {
             const formData=new FormData();
             formData.append('nombrePlaza',nombre);
-            const {data}=await Api.post(`/plazaFiltro`,formData);
+            const {data}=await Api.post(`/plazas/PlazasFiltro.php`,formData);
             dispatch({
                 type:OBTENER_PLAZAS,
                 payload:data

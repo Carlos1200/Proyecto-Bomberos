@@ -25,7 +25,7 @@ export const TablaUsuario = ({mostrarNotificacion}) => {
       try {
         const formData=new FormData();
         formData.append("idUsuario",usuarioBorrar);
-        await Api.post('/usuariosDelete',formData);
+        await Api.post('/usuarios/EliminarUsuario.php',formData);
         setConsultar(true);
         setVisibleBorrar(false);
         mostrarNotificacion();

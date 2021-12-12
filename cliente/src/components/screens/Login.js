@@ -33,7 +33,7 @@ export const Login = () => {
     formData.append('contra',contra);
 
     try {
-      const {data}=await Api.post(`/login`,formData);
+      const {data}=await Api.post(`/login/Login.php`,formData);
       const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=data;
       inicioSesion(idUsuario,NombreUsuario,tipoUsuario,UbicacionUsuario,login);
       if(data.login){

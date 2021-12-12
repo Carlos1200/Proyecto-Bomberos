@@ -28,7 +28,7 @@ export const UbicacionesProvider=({children})=>{
 
     const consultarDatos=async()=>{
         try {
-            const {data}=await Api.get(`/ubicacion`);
+            const {data}=await Api.get(`/ubicaciones/ObtenerUbicaciones.php`);
 
             dispatch({
                 type:OBTENER_UBICACIONES,
@@ -44,7 +44,7 @@ export const UbicacionesProvider=({children})=>{
         try {
             const formData=new FormData();
             formData.append('nombreUbicacion',nombre);
-            const {data}=await Api.post(`/ubicacionFiltro`,formData);
+            const {data}=await Api.post(`/ubicaciones/UbicacionesFiltro.php`,formData);
             dispatch({
                 type:OBTENER_UBICACIONES,
                 payload:data

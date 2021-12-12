@@ -24,10 +24,10 @@ export const GenerarReporte = () => {
       if (tipoUsuario !== "Administrador") {
         const formData = new FormData();
         formData.append("nombreUbicacion", UbicacionUsuario);
-        const { data } = await Api.post("empleadoFiltro", formData);
+        const { data } = await Api.post("/empleados/ObtenerEmpleadosFiltrados.php", formData);
         setEmpleados(data);
       } else {
-        const { data } = await Api.get("empleado");
+        const { data } = await Api.get("/empleados/ObtenerEmpleados.php");
         setEmpleados(data);
       }
       setCargando(false);

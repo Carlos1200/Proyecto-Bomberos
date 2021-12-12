@@ -22,7 +22,7 @@ export const TablaUbicacion = ({mostrarNotificacion}) => {
     try {
       const formData=new FormData();
       formData.append("idUbicacion",ubicacionBorrar);
-      const resp=await Api.post('/ubicacionDelete',formData);
+      const resp=await Api.post('/ubicaciones/EliminarUbicacion.php',formData);
       console.log(resp);
       setConsultar(true);
       setVisibleBorrar(false);

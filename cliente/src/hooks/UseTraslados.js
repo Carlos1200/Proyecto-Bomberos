@@ -60,7 +60,7 @@ export const UseTraslados = () => {
         formData.append('idEmpleados',empleadoRef.current.idEmpleados);
 
         try {
-            const {data}=await Api.post('/traslado',formData);
+            const {data}=await Api.post('/traslados/CrearTraslado.php',formData);
             console.log(data);
         } catch (error) {
             console.log(error.response.data);
