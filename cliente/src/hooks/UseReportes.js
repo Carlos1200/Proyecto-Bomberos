@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import Api from "../Api/Api";
 
-export const UseReportes = () => {
+export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) => {
   //Variables que deben calcularse manualmente
   //Tabla Minutos
   const minutosDiurnos = useRef("");
@@ -34,19 +34,28 @@ export const UseReportes = () => {
   //Tabla detalles
   const TOTAL = useRef("");
   const IdEmpleado = useRef("");
+  //Reportes
+  const fechaCreacion= useRef("");
+  const verificacion = useRef("");
+  const idUsuario=useRef("");
 
   const GenerarReporte = (
     empleadosArray,
+    idUsuarioActual,
     usuarioJefe,
     ubicacionEstacion,
     sumatoriaHorasDiurnasNormales,
     sumatoriaHorasNocturnasNormales,
-    sumatoriaHorasNormales
+    sumatoriaHorasNormales,
+    setCargando
   ) => {
     const longitud = empleadosArray.length;
-
+    setCargando(true);
     empleadosArray.forEach((empleado, index) => {
       //! Realizar Calculos
+      const date=new Date();
+      const fecha= date.toISOString().slice(0, 10);
+
       const valorxMinuto = empleado.salario / 30 / 8 / 60;
       const TotalDiurno = empleado.minutosDiurnos * valorxMinuto;
       const TotalNocturno = empleado.minutosNocturnos * valorxMinuto * 1.5;
@@ -167,6 +176,28 @@ export const UseReportes = () => {
         IdEmpleado.current = string;
       }
 
+      //id de Usuarios
+      if (!idUsuario.current) {
+        idUsuario.current = idUsuarioActual;
+      } else {
+        const string = `${idUsuario.current},${idUsuarioActual}`;
+        idUsuario.current = string;
+      }
+
+      if(!fechaCreacion.current){
+        fechaCreacion.current = fecha;
+      }else{
+        const string = `${fechaCreacion.current},${fecha}`;
+        fechaCreacion.current = string;
+      }
+
+      if(!verificacion.current){
+        verificacion.current = '0';
+      }else{
+        const string = `${verificacion.current},${0}`;
+        verificacion.current = string;
+      }
+
       //Minutos Diurnos
       if (!minutosDiurnos.current) {
         minutosDiurnos.current = empleado.minutosDiurnos;
@@ -243,7 +274,7 @@ export const UseReportes = () => {
       if (!sueldoMasHorasExtras.current) {
         sueldoMasHorasExtras.current = sueldoHorasExtras.toString();
       } else {
-        const string = `${sueldoMasHorasExtras},${sueldoHorasExtras}`;
+        const string = `${sueldoMasHorasExtras.current},${sueldoHorasExtras}`;
         sueldoMasHorasExtras.current = string;
       }
 
@@ -382,7 +413,8 @@ export const UseReportes = () => {
           sumatoriaHorasDiurnasNormales,
           sumatoriaHorasNocturnasNormales,
           sumatoriaHorasNormales,
-          longitud
+          longitud,
+          setCargando
         );
       }
     });
@@ -394,7 +426,8 @@ export const UseReportes = () => {
     sumatoriaHorasDiurnasNormales,
     sumatoriaHorasNocturnasNormales,
     sumatoriaHorasNormales,
-    longitud
+    longitud,
+    setCargando
   ) => {
     try {
       const formData = new FormData();
@@ -446,11 +479,18 @@ export const UseReportes = () => {
       formData.append("totalAportHoras", TOTAL.current);
       formData.append("idSelectTop", longitud);
       formData.append("idEmpleados", IdEmpleado.current);
+      formData.append("fechaCreacion",fechaCreacion.current);
+      formData.append("Verificacion",verificacion.current);
+      formData.append("idUsuario",idUsuario.current);
 
-      const { data } = await Api.post("/reportes/CrearReporte.php", formData);
-      console.log({ data });
+      await Api.post("/reportes/CrearReporte.php", formData);
+      limpiarEmpleados();
+      setCargando(false);
+      handleClose();
+      mostrarNotificacion();
     } catch (error) {
       console.log({ error });
+      mostrarNotificacion(true);
     }
   };
 

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Select from "react-select";
+import toast, { Toaster } from 'react-hot-toast';
 import { ListadoEmpleados } from "../ListadoEmpleados";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import { AnimatePresence } from "framer-motion";
@@ -54,10 +55,27 @@ export const GenerarReporte = () => {
     setEmpleadosSeleccionados(seleccionar);
   };
 
+  const limpiarEmpleados=()=>{
+
+    setEmpleados([...empleados,...empleadosSeleccionados]);
+
+    setEmpleadosSeleccionados([]);
+    
+  }
+
+  const mostrarNotificacion=(error=false)=>{
+    if(error){
+      toast.error("Ocurrió un error");
+    }else{
+      toast.success('Operación realizada correctamente');
+    }
+  }
+
   return (
     <>
       <Menu>
         <Background titulo='Generar Reporte'>
+          <Toaster position="top-right"/>
           <ReportsBox>
             <TextBoxTitle>
               Reporte de Planilla para Tiempo Extraordinario
@@ -119,7 +137,7 @@ export const GenerarReporte = () => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<ReportesModal handleClose={()=>setVisible(false)} empleados={empleadosSeleccionados} />}
+            {visible&&<ReportesModal handleClose={()=>setVisible(false)} empleados={empleadosSeleccionados} limpiarEmpleados={limpiarEmpleados} mostrarNotificacion={mostrarNotificacion}/>}
       </AnimatePresence>
     </>
   );

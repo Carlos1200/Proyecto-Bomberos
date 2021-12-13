@@ -15,15 +15,31 @@ class ReportesController{
         $errores=$reporte->validar();
         
         if(empty($errores)){
-            $reporte->crearAportesDescuentosMinutos();
-            $errores=$reporte->DetallesReportes();
+            $errores=$reporte->crearAportesDescuentosMinutos();
             if(empty($errores)){
-                $errores=$reporte->Autorizacion();
-                if(!empty($errores)){
+                $errores=$reporte->DetallesReportes();
+                
+                if(empty($errores)){
+                    $errores=$reporte->Autorizacion();
+                    if(empty($errores)){
+                        $reporte->crearReporte();
+                        $errores=$reporte::getErrores();
+                        if(!empty($errores)){
+                            $router->render('errores/error',[
+                                'errores'=>$errores
+                            ]);
+                        }
+                    }else{
+                        $router->render('errores/error',[
+                            'errores'=>$errores
+                        ]);
+                    }
+                }else{
                     $router->render('errores/error',[
                         'errores'=>$errores
                     ]);
                 }
+
             }else{
                 $router->render('errores/error',[
                     'errores'=>$errores

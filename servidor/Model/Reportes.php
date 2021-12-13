@@ -42,6 +42,12 @@ class Reportes extends ActiveRecord{
     public $sumatoriaHorasNocturnasNormales;
     public $sumatoriaHorasNormales;
 
+    public $idReporte;
+    public $fechaCreacion;
+    public $Verificacion;
+    public $idAutorizaciones;
+    public $idUsuario;
+
 
     public function __construct($args=[]){
         $this->minutosDiurnosNormales=$args['minutosDiurnosNormales']??'';
@@ -79,6 +85,9 @@ class Reportes extends ActiveRecord{
         $this->sumatoriaHorasDiurnasNormales=$args['sumatoriaHorasDiurnasNormales']??'';
         $this->sumatoriaHorasNocturnasNormales=$args['sumatoriaHorasNocturnasNormales']??'';
         $this->sumatoriaHorasNormales=$args['sumatoriaHorasNormales']??'';
+        $this->idUsuario=$args['idUsuario']??'';
+        $this->Verificacion=$args['Verificacion']??'';
+        $this->fechaCreacion=$args['fechaCreacion']??'';
     }
 
     public function validar()
@@ -214,6 +223,16 @@ class Reportes extends ActiveRecord{
         if(!$this->sumatoriaHorasNormales){
             self::$errores[]="La sumatoria de horas totales normales es obligatoria";
         }
+
+        if(!$this->fechaCreacion){
+            self::$errores[]="La fecha de creación es obligatoria";
+        }
+        if(!$this->Verificacion){
+            self::$errores[]="La verificación es obligatoria";
+        }
+        if(!$this->idUsuario){
+            self::$errores[]="Los id's de usuarios son obligatorios";
+        }
         return self::$errores;
     }
 
@@ -228,10 +247,49 @@ class Reportes extends ActiveRecord{
         $consulta->execute();
         
         if(!self::$db->lastInsertId()>0){
-            self::$errores[]="No se pudo agregar el reporte";
+            self::$errores[]="No se pudo agregar la autorizacion del reporte";
+        }else{
+            $this->idAutorizaciones=self::$db->lastInsertId();
         }
 
         return self::$errores;
+    }
+
+    public function CrearReporte(){
+        //Generar id's del Reporte
+        $id=$this->generateRandomString();
+        $idReporteString='';
+        for($i=1;$i<=intval($this->idSelectTop);$i++){
+            if($i==1){
+                $idReporteString=$id;
+            }else{
+                $idReporteString=$idReporteString.','.$id;
+            }
+        }
+
+        //Generar id's de autorizaciones
+        $idAutorizacionesString='';
+        for($i=1;$i<=intval($this->idSelectTop);$i++){
+            if($i==1){
+                $idAutorizacionesString=$this->idAutorizaciones;
+            }else{
+                $idAutorizacionesString=$idAutorizacionesString.','.$this->idAutorizaciones;
+            }
+        }
+
+        $query = "EXEC insertarReportes :idReporte, :fechaCreacion, :idUsuario, :Verificacion, :idAutorizaciones, :selectTop";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(":idReporte",$idReporteString,PDO::PARAM_STR);
+        $consulta->bindParam(":fechaCreacion",$this->fechaCreacion,PDO::PARAM_STR);
+        $consulta->bindParam(":idUsuario",$this->idUsuario,PDO::PARAM_STR);
+        $consulta->bindParam(":Verificacion",$this->Verificacion,PDO::PARAM_STR);
+        $consulta->bindParam(":idAutorizaciones",$idAutorizacionesString,PDO::PARAM_STR);
+        $consulta->bindParam(":selectTop",$this->idSelectTop,PDO::PARAM_INT);
+        $consulta->execute();
+
+        // if(!self::$db->lastInsertId()>0){
+        //     self::$errores[]="No se pudo agregar el reporte";
+        // }
     }
 
     function generateRandomString($length = 10) {
@@ -274,21 +332,23 @@ class Reportes extends ActiveRecord{
         $consulta->execute();
 
         if(!self::$db->lastInsertId()>0){
-            self::$errores[]="No se pudo agregar el reporte";
+            self::$errores[]="No se pudo agregar los extras del reporte";
         }
+        return self::$errores;
     }
 
     public function DetallesReportes(){
-        $query="EXEC ingresarDetallesReporte :sueldoMasHorasExtras, :totalAportHoras, :idSelectTop, :idEmpleados";
+
+        $query="EXEC ingresarDetallesReporte :sueldoMasHorasExtras, :totalAportHoras, :idEmpleados, :idSelectTop";
         $consulta=self::$db->prepare($query);
         $consulta->bindParam(":sueldoMasHorasExtras",$this->sueldoMasHorasExtras,PDO::PARAM_STR);
         $consulta->bindParam(":totalAportHoras",$this->totalAportHoras,PDO::PARAM_STR);
-        $consulta->bindParam(":idSelectTop",$this->idSelectTop,PDO::PARAM_INT);
         $consulta->bindParam(":idEmpleados",$this->idEmpleados,PDO::PARAM_STR);
+        $consulta->bindParam(":idSelectTop",$this->idSelectTop,PDO::PARAM_INT);
         $consulta->execute();
 
         if(!self::$db->lastInsertId()>0){
-            self::$errores[]="No se pudo agregar el reporte";
+            self::$errores[]="No se pudo agregar los detalles reporte";
         }
 
         return self::$errores;
