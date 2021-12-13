@@ -8,7 +8,7 @@ require_once('../../app.php');
     $router= new Router();
     use Controller\EmpleadoController;
 
-    $router->post('/api/empleados/EmpleadosDetalle.php',[EmpleadoController::class,'obtenerDetalleEmpleado']);
+    $router->post('/api/empleados/EmpleadosDetalle.php',[EmpleadoController::class,'obtenerEmpleadosDetalle']);
     $router->comprobarRutas();
     
 ?>

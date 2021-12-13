@@ -234,6 +234,16 @@ class Reportes extends ActiveRecord{
         return self::$errores;
     }
 
+    function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
     public function crearAportesDescuentosMinutos(){
         $query = "EXEC crearAportesDescuentosMinutos :minutosDiurnosNormales, :minutosNocturnosNormales, :valorMinuto, :totalExtraDiurno, :totalExtraNocturno, :totalHorasExtras, :minutosDiurnosAutorizados, :minutosNocturnosAutorizados, :minutosAutorizados, :minutosDiurnosTotales, :minutosNocturnosTotales, :ISSSdescuento, :IPSFAdescuento, :AFPCRECERdescuento, :AFPCONFIAdescuento, :retencionRenta, :totalDescuentos, :sueldoparaISSS, :Liquido, :ISSSaporte, :IPSFAaporte, :AFPCRECERaporte, :AFPCONFIAaporte, :totalAportaciones";
         $consulta=self::$db->prepare($query);
