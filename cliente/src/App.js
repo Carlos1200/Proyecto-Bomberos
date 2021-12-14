@@ -18,6 +18,7 @@ import { EmpleadosProvider } from './context/empleados/EmpleadosContext';
 import { UbicacionesProvider } from './context/ubicaciones/UbicacionesContext';
 import { PlazasProvider } from './context/plazas/PlazasContext';
 import { GrupoProvider } from './context/grupos/GrupoContext';
+import { ReportesProvider } from './context/reportes/ReportesContext';
 
 import '../src/index.css';
 
@@ -52,7 +53,9 @@ const AppState=({children})=>{
           <UbicacionesProvider>
             <PlazasProvider>
               <GrupoProvider>
-                {children}
+                <ReportesProvider>
+                  {children}
+                </ReportesProvider>
               </GrupoProvider>
             </PlazasProvider>
           </UbicacionesProvider>

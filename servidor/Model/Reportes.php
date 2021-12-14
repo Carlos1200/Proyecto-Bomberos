@@ -353,6 +353,27 @@ class Reportes extends ActiveRecord{
 
         return self::$errores;
     }
+
+    public function obtenerReportes(){
+        $query="EXEC obtenerReportes";
+        $consulta=self::$db->prepare($query);
+        $consulta->execute();
+        $reportes=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $reportes;
+    }
+
+    public function reportesFiltrados($nombreJefe){
+        if(is_null($nombreJefe)){
+            self::$errores[]="No se ha enviado el id";
+        }else{
+            $query="EXEC busquedaReportes :nombreJefe";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(":nombreJefe",$nombreJefe,PDO::PARAM_STR);
+            $consulta->execute();
+            $reportes=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $reportes;
+        }
+    }
 }
 
 
