@@ -22,7 +22,7 @@ export const EmpleadosSeleccion = ({ empleado, ubicaciones, plazas,grupos,posici
             const formData=new FormData();
             formData.append('idEmpleado',empleado.idEmpleado);
 
-            const {data}=await Api.post('empleadoDetalle',formData);
+            const {data}=await Api.post('/empleados/EmpleadosDetalle.php',formData);
             setEmpleadoDetalle(data[0]);
             const empleadoCompleto={
               ...data[0],

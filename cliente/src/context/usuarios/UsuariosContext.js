@@ -28,7 +28,7 @@ export const UsuariosProvider=({children})=>{
 
     const consultarDatos=async()=>{
         try {
-            const {data}=await Api.get(`/usuarios`);
+            const {data}=await Api.get(`/usuarios/ObtenerUsuarios.php`);
 
             dispatch({
                 type:OBTENER_USUARIOS,
@@ -44,7 +44,7 @@ export const UsuariosProvider=({children})=>{
         try {
             const formData=new FormData();
             formData.append('NombreUsuario',nombre);
-            const {data}=await Api.post(`/usuariosFiltro`,formData);
+            const {data}=await Api.post(`/usuarios/UsuariosFiltro.php`,formData);
             dispatch({
                 type:OBTENER_USUARIOS,
                 payload:data

@@ -27,7 +27,7 @@ export const TablaEmpleado = ({ notificacion, notificacionError }) => {
     try {
       const formData = new FormData();
       formData.append("idEmpleado", empleadoBorrar);
-      await Api.post("/empleadoDelete", formData);
+      await Api.post("/empleados/EliminarEmpleado.php", formData);
       setConsultar(true);
       notificacion();
       setVisibleBorrar(false);

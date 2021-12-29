@@ -1,23 +1,49 @@
-import React from 'react'
+import React,{useContext,useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import toast, { Toaster } from 'react-hot-toast';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { Menu } from '../Menu'
 import {Background} from '../Background';
+import { ReportesContext } from '../../context/reportes/ReportesContext';
+import { TablaReportes } from '../tablas/TablaReportes';
 
 export const Reportes = () => {
+
+  const [visible, setVisible] = useState(false);
+  const [inputBuscador, setInputBuscador] = useState('')
+  const {buscador,setConsultar}=useContext(ReportesContext);
+
+  const mostrarNotificacion=(error=false,msg)=>{
+    if(error){
+      toast.error(msg);
+    }else{
+      toast.success('Operación realizada correctamente');
+    }
+  }
+
     return (
       <Menu>
         <Background titulo="Administración de Reportes">
+          <Toaster position="top-right"/>
           <ReportsBox>
-            <FilterBox>
-              <FontAwesomeIcon
-                icon={faSearch}
-                style={{ fontSize: "26px", color: "#000000" }}
+          <FilterBox>
+            <FontAwesomeIcon
+                onClick={()=>{
+                  setConsultar(true);
+                  setInputBuscador('');
+                }}
+                icon={faSyncAlt}
+                style={{ fontSize: "26px", color: "#000000",cursor:'pointer' }}
               />
-              <FilterTextBox>¿Desea un archivo en específico?</FilterTextBox>
-              <BtnFilterSearch>Buscar</BtnFilterSearch>
+              <FilterTextBox placeholder="¿Desea un archivo en específico?" value={inputBuscador} onChange={(e)=>setInputBuscador(e.target.value)}/>
+              <BtnFilterSearch onClick={()=>{
+                buscador(inputBuscador);
+              }}>Buscar</BtnFilterSearch>
             </FilterBox>
+            <ContenedorTabla>
+            <TablaReportes mostrarNotificacion={mostrarNotificacion}/>
+            </ContenedorTabla>
           </ReportsBox>
         </Background>
       </Menu>
@@ -49,19 +75,27 @@ const FilterBox = styled.div`
     margin-top: 20px;
 `
 
-const FilterTextBox = styled.div`
+const FilterTextBox = styled.input`
     flex: 1;
-    padding-top: 10px;
-    padding-bottom: 5px;
+    appearance: none;
+    border: 0;
+    padding: 10px 20px 5px 20px;
     margin-left: 50px;
     margin-right: 50px;
-    text-align: center;
+    /* text-align: center; */
     font-size: 18px;
     border-bottom: 1px solid #000;
+    &:focus-visible{
+      outline: 0;
+    }
+    &::-webkit-input-placeholder {
+      text-align: center;
+    }
 `
 
-const BtnFilterSearch = styled.div`
+const BtnFilterSearch = styled.button`
     text-align: center;
+    border: 0;
     background-color: #E8E3E3;
     padding-top: 10px;
     padding-bottom: 12px;
@@ -69,23 +103,25 @@ const BtnFilterSearch = styled.div`
     padding-left: 20px;
     font-size: 18px;
     border-radius: 20px;
+    &:hover{
+      background-color: #a3a2a2;
+    }
 `
+const ContenedorTabla=styled.div`
+overflow-y: auto;
+height: 60vh;
+  &::-webkit-scrollbar {
+  width: 12px;               /* width of the entire scrollbar */
+}
 
-// const ContenedorTabla=styled.div`
-// overflow-y: auto;
-// height: 60vh;
-//   &::-webkit-scrollbar {
-//   width: 12px;               /* width of the entire scrollbar */
-// }
+  &::-webkit-scrollbar-track {
+  background: #e2e2e2;        /* color of the tracking area */
+  border-radius: 2rem;
+}
 
-//   &::-webkit-scrollbar-track {
-//   background: #e2e2e2;        /* color of the tracking area */
-//   border-radius: 2rem;
-// }
-
-//   &::-webkit-scrollbar-thumb {
-//   background-color: #343F56;    /* color of the scroll thumb */
-//   border-radius: 20px;       /* roundness of the scroll thumb */
-//   border: 3px solid #e2e2e2;  /* creates padding around scroll thumb */
-// }
-// `
+  &::-webkit-scrollbar-thumb {
+  background-color: #343F56;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid #e2e2e2;  /* creates padding around scroll thumb */
+}
+`

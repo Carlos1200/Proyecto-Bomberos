@@ -28,7 +28,7 @@ export const GrupoProvider=({children})=>{
 
     const consultarDatos=async()=>{
         try {
-            const {data}=await Api.get(`/grupo`);
+            const {data}=await Api.get(`/grupos/ObtenerGrupos.php`);
 
             dispatch({
                 type:OBTENER_GRUPOS,
@@ -44,7 +44,7 @@ export const GrupoProvider=({children})=>{
         try {
             const formData=new FormData();
             formData.append('nombreGrupo',nombre);
-            const {data}=await Api.post(`/grupoFiltro`,formData);
+            const {data}=await Api.post(`/grupos/GruposFiltro.php`,formData);
             dispatch({
                 type:OBTENER_GRUPOS,
                 payload:data

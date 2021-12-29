@@ -42,6 +42,12 @@ class Reportes extends ActiveRecord{
     public $sumatoriaHorasNocturnasNormales;
     public $sumatoriaHorasNormales;
 
+    public $idReporte;
+    public $fechaCreacion;
+    public $Verificacion;
+    public $idAutorizaciones;
+    public $idUsuario;
+
 
     public function __construct($args=[]){
         $this->minutosDiurnosNormales=$args['minutosDiurnosNormales']??'';
@@ -79,111 +85,114 @@ class Reportes extends ActiveRecord{
         $this->sumatoriaHorasDiurnasNormales=$args['sumatoriaHorasDiurnasNormales']??'';
         $this->sumatoriaHorasNocturnasNormales=$args['sumatoriaHorasNocturnasNormales']??'';
         $this->sumatoriaHorasNormales=$args['sumatoriaHorasNormales']??'';
+        $this->idUsuario=$args['idUsuario']??'';
+        $this->Verificacion=$args['Verificacion']??'';
+        $this->fechaCreacion=$args['fechaCreacion']??'';
     }
 
     public function validar()
     {
-        if(!$this->minutosDiurnosNormales){
+        if(!$this->minutosDiurnosNormales&&$this->minutosDiurnosNormales!=='0'){
             self::$errores[]="Los minutos diurnos normales son obligatorios";
         }
 
-        if(!$this->minutosNocturnosNormales){
+        if(!$this->minutosNocturnosNormales&&$this->minutosNocturnosNormales!=='0'){
             self::$errores[]="Los minutos nocturnos normales son obligatorios";
         }
 
-        if(!$this->valorMinuto){
+        if(!$this->valorMinuto && $this->valorMinuto!=='0'){
             self::$errores[]="El valor minuto es obligatorio";
         }
 
-        if(!$this->totalExtraDiurno){
+        if(!$this->totalExtraDiurno && $this->totalExtraDiurno!=='0'){
             self::$errores[]="Los minutos extras diurnos son obligatorios";
         }
 
-        if(!$this->totalExtraNocturno){
+        if(!$this->totalExtraNocturno && $this->totalExtraNocturno!=='0'){
             self::$errores[]="Los minutos extras nocturnos son obligatorios";
         }
 
-        if(!$this->totalHorasExtras){
+        if(!$this->totalHorasExtras && $this->totalHorasExtras!=='0'){
             self::$errores[]="El total horas extras son obligatorios";
         }
 
-        if(!$this->minutosDiurnosAutorizados){
+        if(!$this->minutosDiurnosAutorizados && $this->minutosDiurnosAutorizados!=='0'){
             self::$errores[]="Los minutos diurnos autorizados son obligatorios";
         }
 
-        if(!$this->minutosNocturnosAutorizados){
+        if(!$this->minutosNocturnosAutorizados && $this->minutosNocturnosAutorizados!=='0'){
             self::$errores[]="Los minutos nocturnos autorizados son obligatorios";
         }
 
-        if(!$this->minutosAutorizados){
+        if(!$this->minutosAutorizados && $this->minutosAutorizados!=='0'){
             self::$errores[]="Los minutos autorizados son obligatorios";
         }
 
-        if(!$this->minutosDiurnosTotales){
+        if(!$this->minutosDiurnosTotales && $this->minutosDiurnosTotales!=='0'){
             self::$errores[]="Los minutos diurnos totales son obligatorios";
         }
 
-        if(!$this->minutosNocturnosTotales){
+        if(!$this->minutosNocturnosTotales && $this->minutosNocturnosTotales!=='0'){
             self::$errores[]="Los minutos nocturnos totales son obligatorios";
         }
 
-        if(!$this->ISSSdescuento){
+        if(!$this->ISSSdescuento && $this->ISSSdescuento!=='0'){
             self::$errores[]="El ISSS descuento es obligatoria";
         }
 
-        if(!$this->IPSFAdescuento){
+        if(!$this->IPSFAdescuento && $this->IPSFAdescuento!=='0'){
             self::$errores[]="El IPSFA descuento es obligatoria";
         }
 
-        if(!$this->AFPCRECERdescuento){
+        if(!$this->AFPCRECERdescuento && $this->AFPCRECERdescuento!=='0'){
             self::$errores[]="El AFP CRECER descuento es obligatoria";
         }
 
-        if(!$this->AFPCONFIAdescuento){
+        if(!$this->AFPCONFIAdescuento && $this->AFPCONFIAdescuento!=='0'){
             self::$errores[]="El AFP CONFIA descuento es obligatoria";
         }
 
-        if(!$this->retencionRenta){
+        if(!$this->retencionRenta && $this->retencionRenta!=='0'){
             self::$errores[]="La retencion Renta es obligatoria";
         }
 
-        if(!$this->totalDescuentos){
+        if(!$this->totalDescuentos && $this->totalDescuentos!=='0'){
             self::$errores[]="El total descuento es obligatoria";
         }
 
-        if(!$this->sueldoparaISSS){
+        if(!$this->sueldoparaISSS && $this->sueldoparaISSS!=='0'){
             self::$errores[]="El sueldo para ISSS es obligatorio";
         }
 
-        if(!$this->Liquido){
+        if(!$this->Liquido && $this->Liquido!=='0'){
             self::$errores[]="El suedo liquido es obligatorio";
         }
 
-        if(!$this->ISSSaporte){
+        if(!$this->ISSSaporte && $this->ISSSaporte!=='0'){
             self::$errores[]="El ISSS aporte es obligatorio";
         }
 
-        if(!$this->IPSFAaporte){
+        if(!$this->IPSFAaporte && $this->IPSFAaporte!=='0'){
             self::$errores[]="El IPSFA aporte es obligatorio";
         }
 
-        if(!$this->AFPCRECERaporte){
+        if(!$this->AFPCRECERaporte && $this->AFPCRECERaporte!=='0'){
             self::$errores[]="El AFP CRECER aporte es obligatorio";
         }
 
-        if(!$this->AFPCONFIAaporte){
+        if(!$this->AFPCONFIAaporte && $this->AFPCONFIAaporte!=='0'){
             self::$errores[]="El AFP CONFIA aporte es obligatorio";
         }
 
-        if(!$this->totalAportaciones){
+        if(!$this->totalAportaciones && $this->totalAportaciones!=='0'){
             self::$errores[]="El total aportaciones es obligatorio";
         }
 
-        if(!$this->sueldoMasHorasExtras){
+        if(!$this->sueldoMasHorasExtras && $this->sueldoMasHorasExtras!=='0'){
             self::$errores[]="El sueldo con horas extras es obligatorio";
         }
 
-        if(!$this->totalAportHoras){
+        if(!$this->totalAportHoras && $this->totalAportHoras!=='0'){
             self::$errores[]="El total aportaciones de horas es obligatorio";
         }
 
@@ -203,16 +212,26 @@ class Reportes extends ActiveRecord{
             self::$errores[]="La ubicacion del jefe es obligatorio";
         }
 
-        if(!$this->sumatoriaHorasDiurnasNormales){
+        if(!$this->sumatoriaHorasDiurnasNormales && $this->sumatoriaHorasDiurnasNormales!=='0'){
             self::$errores[]="La sumatoria de horas diurnas es obligatoria";
         }
 
-        if(!$this->sumatoriaHorasNocturnasNormales){
+        if(!$this->sumatoriaHorasNocturnasNormales && $this->sumatoriaHorasNocturnasNormales!=='0'){
             self::$errores[]="La sumatoria de horas nocturnas es obligatoria";
         }
 
         if(!$this->sumatoriaHorasNormales){
             self::$errores[]="La sumatoria de horas totales normales es obligatoria";
+        }
+
+        if(!$this->fechaCreacion){
+            self::$errores[]="La fecha de creación es obligatoria";
+        }
+        if(!$this->Verificacion && $this->Verificacion!=='0'){
+            self::$errores[]="La verificación es obligatoria";
+        }
+        if(!$this->idUsuario){
+            self::$errores[]="Los id's de usuarios son obligatorios";
         }
         return self::$errores;
     }
@@ -228,10 +247,59 @@ class Reportes extends ActiveRecord{
         $consulta->execute();
         
         if(!self::$db->lastInsertId()>0){
-            self::$errores[]="No se pudo agregar el reporte";
+            self::$errores[]="No se pudo agregar la autorizacion del reporte";
+        }else{
+            $this->idAutorizaciones=self::$db->lastInsertId();
         }
 
         return self::$errores;
+    }
+
+    public function CrearReporte(){
+        //Generar id's del Reporte
+        $id=$this->generateRandomString();
+        $idReporteString='';
+        for($i=1;$i<=intval($this->idSelectTop);$i++){
+            if($i==1){
+                $idReporteString=$id;
+            }else{
+                $idReporteString=$idReporteString.','.$id;
+            }
+        }
+
+        //Generar id's de autorizaciones
+        $idAutorizacionesString='';
+        for($i=1;$i<=intval($this->idSelectTop);$i++){
+            if($i==1){
+                $idAutorizacionesString=$this->idAutorizaciones;
+            }else{
+                $idAutorizacionesString=$idAutorizacionesString.','.$this->idAutorizaciones;
+            }
+        }
+
+        $query = "EXEC insertarReportes :idReporte, :fechaCreacion, :idUsuario, :Verificacion, :idAutorizaciones, :selectTop";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(":idReporte",$idReporteString,PDO::PARAM_STR);
+        $consulta->bindParam(":fechaCreacion",$this->fechaCreacion,PDO::PARAM_STR);
+        $consulta->bindParam(":idUsuario",$this->idUsuario,PDO::PARAM_STR);
+        $consulta->bindParam(":Verificacion",$this->Verificacion,PDO::PARAM_STR);
+        $consulta->bindParam(":idAutorizaciones",$idAutorizacionesString,PDO::PARAM_STR);
+        $consulta->bindParam(":selectTop",$this->idSelectTop,PDO::PARAM_INT);
+        $consulta->execute();
+
+        // if(!self::$db->lastInsertId()>0){
+        //     self::$errores[]="No se pudo agregar el reporte";
+        // }
+    }
+
+    function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 
     public function crearAportesDescuentosMinutos(){
@@ -264,24 +332,60 @@ class Reportes extends ActiveRecord{
         $consulta->execute();
 
         if(!self::$db->lastInsertId()>0){
-            self::$errores[]="No se pudo agregar el reporte";
+            self::$errores[]="No se pudo agregar los extras del reporte";
         }
+        return self::$errores;
     }
 
     public function DetallesReportes(){
-        $query="EXEC ingresarDetallesReporte :sueldoMasHorasExtras, :totalAportHoras, :idSelectTop, :idEmpleados";
+
+        $query="EXEC ingresarDetallesReporte :sueldoMasHorasExtras, :totalAportHoras, :idEmpleados, :idSelectTop";
         $consulta=self::$db->prepare($query);
         $consulta->bindParam(":sueldoMasHorasExtras",$this->sueldoMasHorasExtras,PDO::PARAM_STR);
         $consulta->bindParam(":totalAportHoras",$this->totalAportHoras,PDO::PARAM_STR);
-        $consulta->bindParam(":idSelectTop",$this->idSelectTop,PDO::PARAM_INT);
         $consulta->bindParam(":idEmpleados",$this->idEmpleados,PDO::PARAM_STR);
+        $consulta->bindParam(":idSelectTop",$this->idSelectTop,PDO::PARAM_INT);
         $consulta->execute();
 
         if(!self::$db->lastInsertId()>0){
-            self::$errores[]="No se pudo agregar el reporte";
+            self::$errores[]="No se pudo agregar los detalles reporte";
         }
 
         return self::$errores;
+    }
+
+    public function obtenerReportes(){
+        $query="EXEC obtenerReportes";
+        $consulta=self::$db->prepare($query);
+        $consulta->execute();
+        $reportes=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $reportes;
+    }
+
+    public function reportesFiltrados($nombreJefe){
+        if(is_null($nombreJefe)){
+            self::$errores[]="No se ha enviado el id";
+        }else{
+            $query="EXEC busquedaReportes :nombreJefe";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(":nombreJefe",$nombreJefe,PDO::PARAM_STR);
+            $consulta->execute();
+            $reportes=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $reportes;
+        }
+    }
+
+    public function reportesUbicacion($ubicacion){
+        if(is_null($ubicacion)){
+            self::$errores[]="No se ha enviado la ubicación";
+        }else{
+            $query="EXEC busquedaReportesUbicacion :ubicacion";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(":nombreJefe",$ubicacion,PDO::PARAM_STR);
+            $consulta->execute();
+            $reportes=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $reportes;
+        }
     }
 }
 

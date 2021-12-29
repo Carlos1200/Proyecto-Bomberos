@@ -28,7 +28,7 @@ export const Sidebar = () => {
 
   const cerrar=async()=>{
     try {
-      await Api.get('/logout');
+      await Api.get('/login/Logout.php');
       cerrarSesion();
     } catch (error) {
       console.log({error});

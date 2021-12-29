@@ -23,3 +23,7 @@ export const OBTENER_PLAZAS="OBTENER_PLAZAS";
 //!Grupos
 
 export const OBTENER_GRUPOS="OBTENER_GRUPOS";
+
+//!Reportes
+
+export const OBTENER_REPORTE="OBTENER_REPORTE";

@@ -38,7 +38,7 @@ export const ArchivoEmpleadoModal = ({handleClose,notificacion}) => {
       formData.append('fechaCreacionEmpleado',empleado.fechaCreacionEmpleado);
 
       try {
-      await Api.post("/empleado",formData);
+      await Api.post("/empleados/CrearEmpleados.php",formData);
       setConsultar(true);
       setCargando(false)
       handleClose();

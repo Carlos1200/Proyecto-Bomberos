@@ -8,9 +8,10 @@ import { UseDatos } from "../../hooks/UseDatos";
 import { UseTraslados } from "../../hooks/UseTraslados";
 
 export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limpiarEmpleados }) => {
-  const [datosUbicacion, cargandoUbicacion] = UseDatos("ubicacion");
-  const [datosPlaza, cargandoPlaza] = UseDatos("plaza");
-  const [datosGrupo, cargandoGrupo] = UseDatos("grupo");
+  const [datosUbicacion, cargandoUbicacion] = UseDatos("ubicaciones/ObtenerUbicaciones.php");
+  const [datosPlaza, cargandoPlaza] = UseDatos("plazas/ObtenerPlazas.php");
+  const [datosGrupo, cargandoGrupo] = UseDatos("grupos/ObtenerGrupos.php");
+  
   const [cargando, setCargando] = useState(true);
   const empleadosFormulario = useRef([]);
   const [cantidad, setCantidad] = useState(0);

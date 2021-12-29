@@ -1,38 +1,29 @@
 <?php
 namespace Model;
- 
-use PDF\tFPDF;
 
-class Pdf extends tFPDF{
+use PDO;
 
+class PDF extends ActiveRecord{
+    //Obteniendo propiedades de la clase pdf
 
-    public function Header()
-{
-    global $title;
-    // Arial bold 15
-    $this->AddFont('DejaVu','','DejaVuSansCondensed-Bold.ttf',true);
-    $this->SetFont('DejaVu','',14);
-    // Calculamos ancho y posición del título.
-    $w = $this->GetStringWidth('Autorización Minutos Extras')+6;
-    $this->SetX((210-$w)/2);
-    // Título
-    $this->Cell($w,9,'Autorización Minutos Extras');
-    // Salto de línea
-    $this->Ln(10);
+    public function obtenerAutorizacion($id){
+        if(is_null($id)){
+            self::$errores[]="No se ha enviado el id";
+        }else{
+            $query="SELECT * FROM autorizaciones WHERE idAutorizaciones=:id";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(":id",$id,PDO::PARAM_INT);
+            $consulta->execute();
+            $resultado=$consulta->fetchAll(\PDO::FETCH_ASSOC);
+            if(!$resultado){
+                self::$errores[]="No se ha encontrado la autorización";
+            }else{
+                return $resultado['0'];
+            }
+        }            
+    }
 }
 
-function Footer()
-{
-    // Posición a 1,5 cm del final
-    $this->SetY(-15);
-    // Arial itálica 8
-    $this->AddFont('DejaVu','','DejaVuSansCondensed-Bold.ttf',true);
-    $this->SetFont('DejaVu','',8);
-    // Color del texto en gris
-    $this->SetTextColor(128);
-    // Número de página
-    $this->Write(10,'Página '.$this->PageNo());
-}
-}
+
 
 ?>

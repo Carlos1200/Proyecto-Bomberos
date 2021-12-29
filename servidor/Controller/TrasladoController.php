@@ -1,7 +1,6 @@
 <?php
 
     namespace Controller;
-    include_once "cors.php";
 
     use MVC\Router;
     use Model\Traslado;
@@ -26,6 +25,28 @@
                         ]);
                     }
                 }else{
+                    $router->render('errores/error',[
+                        'errores'=>$errores
+                    ]);
+                }
+            }else{
+                $router->render('errores/error',[
+                    'errores'=>$errores
+                ]);
+            }
+        }
+
+        public static function verificarTraslados(Router $router){
+            $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+            $token=str_replace("token=","",$query);
+            $traslado=new Traslado($_POST);
+            $traslado::VerificarToken($token);
+            $errores=$traslado::getErrores();
+
+            if(empty($errores)){
+                $errores=$traslado->verificarTraslados();
+
+                if(!empty($errores)){
                     $router->render('errores/error',[
                         'errores'=>$errores
                     ]);

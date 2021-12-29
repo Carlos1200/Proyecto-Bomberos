@@ -22,7 +22,7 @@ export const TablaGroup = ({mostrarNotificacion}) => {
     try {
       const formData=new FormData();
       formData.append("idGrupo",grupoBorrar);
-      await Api.post('/grupoDelete',formData);
+      await Api.post('/grupos/EliminarGrupo.php',formData);
       setConsultar(true);
       setVisibleBorrar(false);
       mostrarNotificacion()
