@@ -15,7 +15,8 @@
             "Model\\":"./Model",
             "MVC\\":"./",
             "Controller\\":"./Controller",
-            "PDF\\":"./tfpdf"
+            "PDF\\":"./tfpdf",
+            "API\\":"./api"
         }
     }
 }

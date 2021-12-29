@@ -1,4 +1,4 @@
-import React,{useContext,useState} from "react";
+import React,{useContext,useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
@@ -16,13 +16,13 @@ export const TablaGroup = ({mostrarNotificacion}) => {
   const [visibleBorrar, setVisibleBorrar] = useState(false);
   const [grupoBorrar, setGrupoBorrar] = useState(null);
 
-  const {cargando,setConsultar,grupos}=useContext(GrupoContext);
+  const {cargando,setConsultar,grupos,error}=useContext(GrupoContext);
 
   const eliminarGrupo=async()=>{
     try {
       const formData=new FormData();
       formData.append("idGrupo",grupoBorrar);
-      await Api.post('/grupoDelete',formData);
+      await Api.post('/grupos/EliminarGrupo.php',formData);
       setConsultar(true);
       setVisibleBorrar(false);
       mostrarNotificacion()
@@ -30,6 +30,13 @@ export const TablaGroup = ({mostrarNotificacion}) => {
       mostrarNotificacion(true)
     }
   }
+
+  useEffect(()=>{
+    if(error){
+      mostrarNotificacion(true)
+    }
+    // eslint-disable-next-line
+  },[error])
 
   return (
     <Contenedor>

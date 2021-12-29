@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
@@ -21,13 +21,13 @@ export const TablaEmpleado = ({ notificacion, notificacionError }) => {
   const [empleado, setEmpleado] = useState();
   const [empleadoDetalle, setEmpleadoDetalle] = useState();
 
-  const { empleados, cargando, setConsultar } = useContext(EmpleadosContext);
+  const { empleados, cargando, setConsultar,error } = useContext(EmpleadosContext);
 
   const eliminarEmpleado = async () => {
     try {
       const formData = new FormData();
       formData.append("idEmpleado", empleadoBorrar);
-      await Api.post("/empleadoDelete", formData);
+      await Api.post("/empleados/EliminarEmpleado.php", formData);
       setConsultar(true);
       notificacion();
       setVisibleBorrar(false);
@@ -39,6 +39,13 @@ export const TablaEmpleado = ({ notificacion, notificacionError }) => {
       }
     }
   };
+
+  useEffect(() => {
+    if(error){
+      notificacionError(error);
+    }
+    // eslint-disable-next-line
+  }, [error])
 
   return (
     <Contenedor>

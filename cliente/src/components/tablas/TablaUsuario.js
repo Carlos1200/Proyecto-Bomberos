@@ -1,4 +1,4 @@
-import React,{ useContext, useState} from "react";
+import React,{ useContext, useEffect, useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
@@ -16,7 +16,7 @@ export const TablaUsuario = ({mostrarNotificacion}) => {
   const [usuarioBorrar, setUsuarioBorrar] = useState(null);
   const [usuario, setUsuario] = useState();
 
-  const {usuarios,cargando,setConsultar}=useContext(UsuariosContext);
+  const {usuarios,cargando,setConsultar,error}=useContext(UsuariosContext);
 
 
 
@@ -25,15 +25,21 @@ export const TablaUsuario = ({mostrarNotificacion}) => {
       try {
         const formData=new FormData();
         formData.append("idUsuario",usuarioBorrar);
-        await Api.post('/usuariosDelete',formData);
+        await Api.post('/usuarios/EliminarUsuario.php',formData);
         setConsultar(true);
         setVisibleBorrar(false);
         mostrarNotificacion();
       } catch (error) {
-        console.log(error.response.data);
         mostrarNotificacion(true);
       }
     }
+
+    useEffect(()=>{
+      if(error){
+        mostrarNotificacion(true)
+      }
+      // eslint-disable-next-line
+    },[error])
 
   return (
     <Contenedor>

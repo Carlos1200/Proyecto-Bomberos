@@ -15,6 +15,7 @@ export const UsuariosProvider=({children})=>{
     }
     const [state, dispatch] = useReducer(UsuariosReducer, initialState);
     const [consultar, setConsultar] = useState(false);
+    const [error, setError] = useState(null);
     useEffect(()=>{
         if(consultar){
             consultarDatos();
@@ -27,7 +28,7 @@ export const UsuariosProvider=({children})=>{
 
     const consultarDatos=async()=>{
         try {
-            const {data}=await Api.get(`/usuarios`);
+            const {data}=await Api.get(`/usuarios/ObtenerUsuarios.php`);
 
             dispatch({
                 type:OBTENER_USUARIOS,
@@ -35,7 +36,7 @@ export const UsuariosProvider=({children})=>{
             });
             setConsultar(false);
         } catch (error) {
-            console.log(error.response.data||"Error en el servidor");
+            setError("Error en el servidor");
         }
     }
 
@@ -43,13 +44,13 @@ export const UsuariosProvider=({children})=>{
         try {
             const formData=new FormData();
             formData.append('NombreUsuario',nombre);
-            const {data}=await Api.post(`/usuariosFiltro`,formData);
+            const {data}=await Api.post(`/usuarios/UsuariosFiltro.php`,formData);
             dispatch({
                 type:OBTENER_USUARIOS,
                 payload:data
             });
         } catch (error) {
-            console.log(error.response.data||"Error en el servidor");
+            setError("Error en el servidor");
         }
     }
 
@@ -57,6 +58,7 @@ export const UsuariosProvider=({children})=>{
         <UsuariosContext.Provider value={{
             usuarios:state.usuarios,
             cargando:state.cargando,
+            error,
             setConsultar,
             buscador
         }}>

@@ -15,6 +15,7 @@ export const GrupoProvider=({children})=>{
     }
     const [state, dispatch] = useReducer(GrupoReducer, initialState);
     const [consultar, setConsultar] = useState(false);
+    const [error, setError] = useState(null);
     useEffect(()=>{
         if(consultar){
             consultarDatos();
@@ -27,7 +28,7 @@ export const GrupoProvider=({children})=>{
 
     const consultarDatos=async()=>{
         try {
-            const {data}=await Api.get(`/grupo`);
+            const {data}=await Api.get(`/grupos/ObtenerGrupos.php`);
 
             dispatch({
                 type:OBTENER_GRUPOS,
@@ -35,7 +36,7 @@ export const GrupoProvider=({children})=>{
             });
             setConsultar(false);
         } catch (error) {
-            console.log(error.response.data||"Error en el servidor");
+            setError("Error en el servidor");
         }
     }
 
@@ -43,13 +44,13 @@ export const GrupoProvider=({children})=>{
         try {
             const formData=new FormData();
             formData.append('nombreGrupo',nombre);
-            const {data}=await Api.post(`/grupoFiltro`,formData);
+            const {data}=await Api.post(`/grupos/GruposFiltro.php`,formData);
             dispatch({
                 type:OBTENER_GRUPOS,
                 payload:data
             });
         } catch (error) {
-            console.log(error.response.data||"Error en el servidor");
+            setError("Error en el servidor");
         }
     }
 
@@ -57,6 +58,7 @@ export const GrupoProvider=({children})=>{
         <GrupoContext.Provider value={{
             grupos:state.grupos,
             cargando:state.cargando,
+            error,
             setConsultar,
             buscador
         }}>

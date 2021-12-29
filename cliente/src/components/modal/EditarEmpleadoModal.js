@@ -49,10 +49,10 @@ export const EditarEmpleadoModal = ({
   notificacion,
   notificacionError
 }) => {
-  const [datosUbicacion, cargandoUbicacion] = UseDatos("ubicacion");
-  const [datosPlaza, cargandoPlaza] = UseDatos("plaza");
-  const [datosPension, cargandoPension] = UseDatos("pension");
-  const [datosGrupo, cargandoGrupo] = UseDatos("grupo");
+  const [datosUbicacion, cargandoUbicacion] = UseDatos("ubicaciones/ObtenerUbicaciones.php");
+  const [datosPlaza, cargandoPlaza] = UseDatos("plazas/ObtenerPlazas.php");
+  const [datosPension, cargandoPension] = UseDatos("pensiones/ObtenerPensiones.php");
+  const [datosGrupo, cargandoGrupo] = UseDatos("grupos/ObtenerGrupos.php");
   const [cargando, setCargando] = useState(true);
   const [detalles, setDetalles] = useState();
 
@@ -65,7 +65,7 @@ export const EditarEmpleadoModal = ({
   const obtenerDetalles = async () => {
     const formData = new FormData();
     formData.append("idEmpleado", empleadoId);
-    const { data } = await Api.post("/empleadoDetalle", formData);
+    const { data } = await Api.post("/empleados/EmpleadosDetalle.php", formData);
     setDetalles(data[0]);
   };
 
@@ -109,7 +109,7 @@ export const EditarEmpleadoModal = ({
 
     try {
       setConsultar(false);
-      await Api.post("/empleadoEdit",formData);
+      await Api.post("/empleados/EditarEmpleado.php",formData);
       setConsultar(true);
       handleClose();
       notificacion();

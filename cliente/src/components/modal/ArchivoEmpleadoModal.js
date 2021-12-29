@@ -1,5 +1,6 @@
 import React,{useContext, useState} from 'react'
 import styled from 'styled-components'
+import XLSX from "xlsx";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose} from '@fortawesome/free-solid-svg-icons';
 import { ExcelInput } from '../ExcelInput';
@@ -12,6 +13,16 @@ export const ArchivoEmpleadoModal = ({handleClose,notificacion}) => {
   const [empleado, setEmpleado] = useState(null);
   const [cargando, setCargando] = useState(false);
   const {setConsultar}=useContext(EmpleadosContext);
+
+  const exportFile = () => {
+		/* convert state to workbook */
+		const ws = XLSX.utils.aoa_to_sheet([['nombre','apellido','salario','ubicacion','plaza','pension','grupo']]);
+		const wb = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, "Plantilla");
+		/* generate XLSX file and send to client */
+		XLSX.writeFile(wb, "Plantilla.xlsx")
+	};
+
 
   const submit=async()=>{
     setConsultar(false);
@@ -27,7 +38,7 @@ export const ArchivoEmpleadoModal = ({handleClose,notificacion}) => {
       formData.append('fechaCreacionEmpleado',empleado.fechaCreacionEmpleado);
 
       try {
-      await Api.post("/empleado",formData);
+      await Api.post("/empleados/CrearEmpleados.php",formData);
       setConsultar(true);
       setCargando(false)
       handleClose();
@@ -58,6 +69,9 @@ export const ArchivoEmpleadoModal = ({handleClose,notificacion}) => {
                   <ExcelInput setEmpleados={setEmpleado} />
                 </div>
                 <div style={{display:'flex',justifyContent:'center'}}>
+                  <Btn onClick={exportFile} style={{marginRight:'2rem'}}>
+                    Plantilla
+                  </Btn>
                   <Btn disabled={empleado?false:true} onClick={()=>submit()} >
                     Guardar Empleados
                   </Btn>

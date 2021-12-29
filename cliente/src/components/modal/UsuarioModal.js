@@ -14,7 +14,7 @@ import { UsuariosContext } from '../../context/usuarios/UsuariosContext';
 
 
 export const UsuarioModal = ({handleClose,usuario,mostrarNotificacion}) => {
-    const [datos,cargando] = UseDatos('ubicacion');
+    const [datos,cargando] = UseDatos('ubicaciones/ObtenerUbicaciones.php');
     const [checked, setChecked] = useState(!usuario?true:false);
     const {setConsultar}=useContext(UsuariosContext);
     const schema=yup.object({
@@ -49,7 +49,7 @@ export const UsuarioModal = ({handleClose,usuario,mostrarNotificacion}) => {
         formData.append('nickUsuario',nick);
         formData.append('UbicacionUsuario',ubicacion.nombreUbicacion);
 
-        await Api.post("/usuariosEdit",formData);
+        await Api.post("/usuarios/EditarUsuario.php",formData);
         setConsultar(true);
         handleClose();
         mostrarNotificacion();
@@ -72,7 +72,7 @@ export const UsuarioModal = ({handleClose,usuario,mostrarNotificacion}) => {
         formData.append('UbicacionUsuario',ubicacion.nombreUbicacion);
         formData.append('contra',password);
 
-        await Api.post("/usuarios",formData);
+        await Api.post("/usuarios/CrearUsuario.php",formData);
         setConsultar(true);
         handleClose();
         mostrarNotificacion();

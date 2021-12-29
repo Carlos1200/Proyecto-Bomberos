@@ -14,6 +14,7 @@ export const EmpleadosProvider=({children})=>{
 
     const [state, dispatch] = useReducer(EmpleadosReducer, initialState);
     const [consultar, setConsultar] = useState(false);
+    const [error, setError] = useState(null);
     useEffect(()=>{
         if(consultar){
             consultarDatos();
@@ -26,7 +27,7 @@ export const EmpleadosProvider=({children})=>{
 
     const consultarDatos=async()=>{
         try {
-            const {data}=await Api.get(`/empleado`);
+            const {data}=await Api.get(`/empleados/ObtenerEmpleados.php`);
 
             dispatch({
                 type:OBTENER_EMPLEADOS,
@@ -34,7 +35,7 @@ export const EmpleadosProvider=({children})=>{
             });
             setConsultar(false);
         } catch (error) {
-            console.log(error.response.data||"Error en el servidor");
+            setError("Error en el servidor");
         }
     }
 
@@ -42,13 +43,13 @@ export const EmpleadosProvider=({children})=>{
         try {
             const formData=new FormData();
             formData.append('nombres',nombre);
-            const {data}=await Api.post(`/empleadosFiltrados`,formData);
+            const {data}=await Api.post(`/empleados/EmpleadosFiltro.php`,formData);
             dispatch({
                 type:OBTENER_EMPLEADOS,
                 payload:data
             });
         } catch (error) {
-            console.log(error.response.data||"Error en el servidor");
+            setError("Error en el servidor");
         }
     }
 
@@ -56,6 +57,7 @@ export const EmpleadosProvider=({children})=>{
         <EmpleadosContext.Provider value={{
             empleados:state.empleados,
             cargando:state.cargando,
+            error,
             setConsultar,
             buscador
         }}>

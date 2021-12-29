@@ -33,7 +33,9 @@ class ActiveRecord{
     public static function VerificarToken($tokenAPI){
         $token=$_ENV['API_KEY'];
 
-        if($token!==$tokenAPI){
+        if(!$tokenAPI){
+            self::$errores[]="No se ha enviado el token";
+        }else if($token!==$tokenAPI){
             self::$errores[]="El token no es válido";
         }
     }

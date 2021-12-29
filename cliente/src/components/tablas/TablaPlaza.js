@@ -1,4 +1,4 @@
-import React,{useContext,useState} from "react";
+import React,{useContext,useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
@@ -16,14 +16,14 @@ export const TablaPlaza = ({mostrarNotificacion}) => {
   const [plazaBorrar, setPlazaBorrar] = useState(null);
   const [plaza, setPlaza] = useState();
 
-  const {cargando,plazas,setConsultar}=useContext(PlazasContext);
+  const {cargando,plazas,setConsultar,error}=useContext(PlazasContext);
 
 
   const eliminarPlaza=async()=>{
     try {
       const formData=new FormData();
       formData.append("idPlaza",plazaBorrar);
-      await Api.post('/plazaDelete',formData);
+      await Api.post('/plazas/EliminarPlaza.php',formData);
       setConsultar(true);
       setVisibleBorrar(false);
       mostrarNotificacion()
@@ -31,6 +31,13 @@ export const TablaPlaza = ({mostrarNotificacion}) => {
       mostrarNotificacion(true)
     }
   }
+
+  useEffect(()=>{
+    if(error){
+      mostrarNotificacion(true)
+    }
+    // eslint-disable-next-line
+  },[error])
 
 
   return (

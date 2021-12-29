@@ -31,7 +31,7 @@ export const UbicacionModal = ({handleClose,ubicacion,mostrarNotificacion}) => {
         formData.append('idUbicacion',ubicacion.idUbicacion);
         formData.append('nombreUbicacion',ubicacionNombre);
 
-        await Api.post("/ubicacionEdit",formData);
+        await Api.post("/ubicaciones/EditarUbicacion.php",formData);
         setConsultar(true);
         handleClose();
         mostrarNotificacion();
@@ -50,7 +50,7 @@ export const UbicacionModal = ({handleClose,ubicacion,mostrarNotificacion}) => {
         const formData=new FormData();
         formData.append('nombreUbicacion',ubicacionNombre);
 
-        await Api.post("/ubicacion",formData);
+        await Api.post("/ubicaciones/CrearUbicacion.php",formData);
         setConsultar(true);
         handleClose();
         mostrarNotificacion()

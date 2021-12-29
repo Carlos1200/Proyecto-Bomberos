@@ -15,6 +15,7 @@ export const UbicacionesProvider=({children})=>{
     }
     const [state, dispatch] = useReducer(UbicacionesReducer, initialState);
     const [consultar, setConsultar] = useState(false);
+    const [error, setError] = useState(null);
     useEffect(()=>{
         if(consultar){
             consultarDatos();
@@ -27,7 +28,7 @@ export const UbicacionesProvider=({children})=>{
 
     const consultarDatos=async()=>{
         try {
-            const {data}=await Api.get(`/ubicacion`);
+            const {data}=await Api.get(`/ubicaciones/ObtenerUbicaciones.php`);
 
             dispatch({
                 type:OBTENER_UBICACIONES,
@@ -35,7 +36,7 @@ export const UbicacionesProvider=({children})=>{
             });
             setConsultar(false);
         } catch (error) {
-            console.log(error.response.data||"Error en el servidor");
+            setError("Error en el servidor");
         }
     }
 
@@ -43,13 +44,13 @@ export const UbicacionesProvider=({children})=>{
         try {
             const formData=new FormData();
             formData.append('nombreUbicacion',nombre);
-            const {data}=await Api.post(`/ubicacionFiltro`,formData);
+            const {data}=await Api.post(`/ubicaciones/UbicacionesFiltro.php`,formData);
             dispatch({
                 type:OBTENER_UBICACIONES,
                 payload:data
             });
         } catch (error) {
-            console.log(error.response.data||"Error en el servidor");
+            setError("Error en el servidor");
         }
     }
 
@@ -57,6 +58,7 @@ export const UbicacionesProvider=({children})=>{
         <UbicacionesContext.Provider value={{
             ubicaciones:state.ubicaciones,
             cargando:state.cargando,
+            error,
             setConsultar,
             buscador
         }}>

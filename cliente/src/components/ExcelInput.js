@@ -21,10 +21,10 @@ const getColor = (props) => {
 }
 
 export const ExcelInput = ({setEmpleados}) => {
-  const [datosUbicacion,cargandoUbicacion] = UseDatos('ubicacion');
-  const [datosPlaza,cargandoPlaza] = UseDatos('plaza');
-  const [datosPension,cargandoPension] = UseDatos('pension');
-  const [datosGrupo,cargandoGrupo] = UseDatos('grupo');
+  const [datosUbicacion,cargandoUbicacion] = UseDatos('ubicaciones/ObtenerUbicaciones.php');
+  const [datosPlaza,cargandoPlaza] = UseDatos('plazas/ObtenerPlazas.php');
+  const [datosPension,cargandoPension] = UseDatos('pensiones/ObtenerPensiones.php');
+  const [datosGrupo,cargandoGrupo] = UseDatos('grupos/ObtenerGrupos.php');
   const [cargando, setCargando] = useState(true);
   const [data, setData] = useState(null);
   const [archivo, setArchivo] = useState(null);

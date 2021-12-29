@@ -24,7 +24,7 @@ export const AuthProvider=({children})=>{
 
     const obtenerSesion=async()=>{
         try {
-          const {data}= await Api.get(`/logverificar`);
+          const {data}= await Api.get(`/login/Verificar.php`);
           const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=data;
           dispatch({
               type:INICIO_SESION,

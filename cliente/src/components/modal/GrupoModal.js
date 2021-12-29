@@ -31,7 +31,7 @@ export const GrupoModal = ({handleClose,grupo,mostrarNotificacion}) => {
         formData.append('idGrupo',grupo.idGrupo);
         formData.append('nombreGrupo',nombreGrupo);
 
-        await Api.post("/grupoEdit",formData);
+        await Api.post("/grupos/EditarGrupo.php",formData);
         setConsultar(true);
         handleClose();
         mostrarNotificacion();
@@ -50,7 +50,7 @@ export const GrupoModal = ({handleClose,grupo,mostrarNotificacion}) => {
         const formData=new FormData();
         formData.append('nombreGrupo',nombreGrupo);
 
-        await Api.post("/grupo",formData);
+        await Api.post("/grupos/CrearGrupo.php",formData);
         setConsultar(true);
         handleClose();
         mostrarNotificacion()
