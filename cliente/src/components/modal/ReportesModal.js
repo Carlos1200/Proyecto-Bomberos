@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWindowClose, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
@@ -17,6 +17,7 @@ export const ReportesModal = ({
 }) => {
   const { idUsuario, NombreUsuario, UbicacionUsuario } =
     useContext(AuthContext);
+
 
   const minutosFormulario = useRef([]);
   const [cantidad, setCantidad] = useState(0);

@@ -1,18 +1,21 @@
-import React,{createContext, useEffect, useReducer, useState} from 'react';
+import {createContext, useContext, useEffect, useReducer, useState} from 'react'
 import ReportesReducer from './ReportesReducer';
 import {OBTENER_REPORTE} from '../../types'
 import Api from '../../Api/Api';
+import {AuthContext} from '../Auth/AuthContext';
 
 
 export const ReportesContext=createContext();
 
 
 export const ReportesProvider=({children})=>{
-    
+
     const initialState={
         reportes:[],
         cargando:true,
     }
+
+    const {UbicacionUsuario,tipoUsuario}=useContext(AuthContext);
     const [state, dispatch] = useReducer(ReportesReducer, initialState);
     const [consultar, setConsultar] = useState(false);
     const [error, setError] = useState(null);
@@ -28,8 +31,8 @@ export const ReportesProvider=({children})=>{
 
     const consultarDatos=async()=>{
         try {
-            const {data}=await Api.get(`/reportes/ObtenerReportes.php`);
-
+            const {data}=await Api.get(`/reportes/${tipoUsuario!=="Administrador"?`ObtenerReportesUbicacion.php?nj=${UbicacionUsuario}`:'ObtenerReportes.php'}`);
+            console.log(data);
             dispatch({
                 type:OBTENER_REPORTE,
                 payload:data

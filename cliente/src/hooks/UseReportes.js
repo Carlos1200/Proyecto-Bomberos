@@ -1,7 +1,11 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
 import Api from "../Api/Api";
+import { ReportesContext } from "../context/reportes/ReportesContext";
 
 export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) => {
+
+  const {setConsultar}=useContext(ReportesContext);
+
   //Variables que deben calcularse manualmente
   //Tabla Minutos
   const minutosDiurnos = useRef("");
@@ -486,11 +490,13 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
       await Api.post("/reportes/CrearReporte.php", formData);
       limpiarEmpleados();
       setCargando(false);
+      setConsultar(true);
       handleClose();
       mostrarNotificacion();
     } catch (error) {
       console.log({ error });
       mostrarNotificacion(true);
+      setCargando(false);
     }
   };
 

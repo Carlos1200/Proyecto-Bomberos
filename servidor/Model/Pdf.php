@@ -1,8 +1,7 @@
 <?php
 namespace Model;
- 
 
-
+use PDO;
 
 class PDF extends ActiveRecord{
     //Obteniendo propiedades de la clase pdf
@@ -13,7 +12,7 @@ class PDF extends ActiveRecord{
         }else{
             $query="SELECT * FROM autorizaciones WHERE idAutorizaciones=:id";
             $consulta=self::$db->prepare($query);
-            $consulta->bindParam(":id",$id);
+            $consulta->bindParam(":id",$id,PDO::PARAM_INT);
             $consulta->execute();
             $resultado=$consulta->fetchAll(\PDO::FETCH_ASSOC);
             if(!$resultado){

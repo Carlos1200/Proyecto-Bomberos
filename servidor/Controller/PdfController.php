@@ -9,23 +9,14 @@ class PdfController{
     
     public static function generarPdf(Router $router){
         $id=null;
-        $token='';
         $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
         parse_str($query,$output);
         $existe=array_key_exists('id',$output);
-        $existeToken=array_key_exists('token',$output);
         if($existe){
             $id=$output['id'];
         }
-
-        if($existeToken){
-            $token=$output['token'];
-        }
         $pdfPropierdades = new pdfPropiedades();
         $pdf=new Pdf();
-        $pdf::VerificarToken($token);
-        $errores=Pdf::getErrores();
-        if(empty($errores)){
             $datos=$pdf->obtenerAutorizacion($id);
             $errores=$pdf::getErrores();
             if(empty($errores)){
@@ -46,11 +37,7 @@ class PdfController{
                     'errores'=>$errores
                 ]);
             }
-        }else{
-            $router->render('errores/error',[
-                'errores'=>$errores
-            ]);
-        }
+        
         
     }
 }

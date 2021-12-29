@@ -20,6 +20,8 @@
         public $idHistorialTraslados;
         public $idEmpleados;
 
+        public $fechaActual;
+
         public function __construct($args=[]){
             $this->plazaAnterior=$args['plazaAnterior']??'';
             $this->plazaActual=$args['plazaActual']??'';
@@ -33,6 +35,7 @@
             $this->tituloHistorial=$args['tituloHistorial']??'';
             $this->idHistorialTraslados=$args['idHistorialTraslados']??'';
             $this->idEmpleados=$args['idEmpleados']??'';
+            $this->fechaActual=$args['fechaActual']??'';
         }
 
         public function validar(){
@@ -120,6 +123,19 @@
             // if(!self::$db->lastInsertId()>0){
             //     self::$errores[]="No se pudo agregar los traslados";
             // }
+            return self::$errores;
+        }
+
+        public function verificarTraslados(){
+            if($this->fechaActual){
+                $sql="EXEC verificarTraslados :fechaActual";
+                $query=self::$db->prepare($sql);
+                $query->bindParam(":fechaActual",$this->fechaActual,PDO::PARAM_STR);
+                $query->execute();
+            }else{
+                self::$errores[]="La fecha actual es obligatoria";
+            }
+
             return self::$errores;
         }
 

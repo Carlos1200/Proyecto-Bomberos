@@ -92,107 +92,107 @@ class Reportes extends ActiveRecord{
 
     public function validar()
     {
-        if(!$this->minutosDiurnosNormales){
+        if(!$this->minutosDiurnosNormales&&$this->minutosDiurnosNormales!=='0'){
             self::$errores[]="Los minutos diurnos normales son obligatorios";
         }
 
-        if(!$this->minutosNocturnosNormales){
+        if(!$this->minutosNocturnosNormales&&$this->minutosNocturnosNormales!=='0'){
             self::$errores[]="Los minutos nocturnos normales son obligatorios";
         }
 
-        if(!$this->valorMinuto){
+        if(!$this->valorMinuto && $this->valorMinuto!=='0'){
             self::$errores[]="El valor minuto es obligatorio";
         }
 
-        if(!$this->totalExtraDiurno){
+        if(!$this->totalExtraDiurno && $this->totalExtraDiurno!=='0'){
             self::$errores[]="Los minutos extras diurnos son obligatorios";
         }
 
-        if(!$this->totalExtraNocturno){
+        if(!$this->totalExtraNocturno && $this->totalExtraNocturno!=='0'){
             self::$errores[]="Los minutos extras nocturnos son obligatorios";
         }
 
-        if(!$this->totalHorasExtras){
+        if(!$this->totalHorasExtras && $this->totalHorasExtras!=='0'){
             self::$errores[]="El total horas extras son obligatorios";
         }
 
-        if(!$this->minutosDiurnosAutorizados){
+        if(!$this->minutosDiurnosAutorizados && $this->minutosDiurnosAutorizados!=='0'){
             self::$errores[]="Los minutos diurnos autorizados son obligatorios";
         }
 
-        if(!$this->minutosNocturnosAutorizados){
+        if(!$this->minutosNocturnosAutorizados && $this->minutosNocturnosAutorizados!=='0'){
             self::$errores[]="Los minutos nocturnos autorizados son obligatorios";
         }
 
-        if(!$this->minutosAutorizados){
+        if(!$this->minutosAutorizados && $this->minutosAutorizados!=='0'){
             self::$errores[]="Los minutos autorizados son obligatorios";
         }
 
-        if(!$this->minutosDiurnosTotales){
+        if(!$this->minutosDiurnosTotales && $this->minutosDiurnosTotales!=='0'){
             self::$errores[]="Los minutos diurnos totales son obligatorios";
         }
 
-        if(!$this->minutosNocturnosTotales){
+        if(!$this->minutosNocturnosTotales && $this->minutosNocturnosTotales!=='0'){
             self::$errores[]="Los minutos nocturnos totales son obligatorios";
         }
 
-        if(!$this->ISSSdescuento){
+        if(!$this->ISSSdescuento && $this->ISSSdescuento!=='0'){
             self::$errores[]="El ISSS descuento es obligatoria";
         }
 
-        if(!$this->IPSFAdescuento){
+        if(!$this->IPSFAdescuento && $this->IPSFAdescuento!=='0'){
             self::$errores[]="El IPSFA descuento es obligatoria";
         }
 
-        if(!$this->AFPCRECERdescuento){
+        if(!$this->AFPCRECERdescuento && $this->AFPCRECERdescuento!=='0'){
             self::$errores[]="El AFP CRECER descuento es obligatoria";
         }
 
-        if(!$this->AFPCONFIAdescuento){
+        if(!$this->AFPCONFIAdescuento && $this->AFPCONFIAdescuento!=='0'){
             self::$errores[]="El AFP CONFIA descuento es obligatoria";
         }
 
-        if(!$this->retencionRenta){
+        if(!$this->retencionRenta && $this->retencionRenta!=='0'){
             self::$errores[]="La retencion Renta es obligatoria";
         }
 
-        if(!$this->totalDescuentos){
+        if(!$this->totalDescuentos && $this->totalDescuentos!=='0'){
             self::$errores[]="El total descuento es obligatoria";
         }
 
-        if(!$this->sueldoparaISSS){
+        if(!$this->sueldoparaISSS && $this->sueldoparaISSS!=='0'){
             self::$errores[]="El sueldo para ISSS es obligatorio";
         }
 
-        if(!$this->Liquido){
+        if(!$this->Liquido && $this->Liquido!=='0'){
             self::$errores[]="El suedo liquido es obligatorio";
         }
 
-        if(!$this->ISSSaporte){
+        if(!$this->ISSSaporte && $this->ISSSaporte!=='0'){
             self::$errores[]="El ISSS aporte es obligatorio";
         }
 
-        if(!$this->IPSFAaporte){
+        if(!$this->IPSFAaporte && $this->IPSFAaporte!=='0'){
             self::$errores[]="El IPSFA aporte es obligatorio";
         }
 
-        if(!$this->AFPCRECERaporte){
+        if(!$this->AFPCRECERaporte && $this->AFPCRECERaporte!=='0'){
             self::$errores[]="El AFP CRECER aporte es obligatorio";
         }
 
-        if(!$this->AFPCONFIAaporte){
+        if(!$this->AFPCONFIAaporte && $this->AFPCONFIAaporte!=='0'){
             self::$errores[]="El AFP CONFIA aporte es obligatorio";
         }
 
-        if(!$this->totalAportaciones){
+        if(!$this->totalAportaciones && $this->totalAportaciones!=='0'){
             self::$errores[]="El total aportaciones es obligatorio";
         }
 
-        if(!$this->sueldoMasHorasExtras){
+        if(!$this->sueldoMasHorasExtras && $this->sueldoMasHorasExtras!=='0'){
             self::$errores[]="El sueldo con horas extras es obligatorio";
         }
 
-        if(!$this->totalAportHoras){
+        if(!$this->totalAportHoras && $this->totalAportHoras!=='0'){
             self::$errores[]="El total aportaciones de horas es obligatorio";
         }
 
@@ -212,11 +212,11 @@ class Reportes extends ActiveRecord{
             self::$errores[]="La ubicacion del jefe es obligatorio";
         }
 
-        if(!$this->sumatoriaHorasDiurnasNormales){
+        if(!$this->sumatoriaHorasDiurnasNormales && $this->sumatoriaHorasDiurnasNormales!=='0'){
             self::$errores[]="La sumatoria de horas diurnas es obligatoria";
         }
 
-        if(!$this->sumatoriaHorasNocturnasNormales){
+        if(!$this->sumatoriaHorasNocturnasNormales && $this->sumatoriaHorasNocturnasNormales!=='0'){
             self::$errores[]="La sumatoria de horas nocturnas es obligatoria";
         }
 
@@ -227,7 +227,7 @@ class Reportes extends ActiveRecord{
         if(!$this->fechaCreacion){
             self::$errores[]="La fecha de creación es obligatoria";
         }
-        if(!$this->Verificacion){
+        if(!$this->Verificacion && $this->Verificacion!=='0'){
             self::$errores[]="La verificación es obligatoria";
         }
         if(!$this->idUsuario){
@@ -369,6 +369,19 @@ class Reportes extends ActiveRecord{
             $query="EXEC busquedaReportes :nombreJefe";
             $consulta=self::$db->prepare($query);
             $consulta->bindParam(":nombreJefe",$nombreJefe,PDO::PARAM_STR);
+            $consulta->execute();
+            $reportes=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $reportes;
+        }
+    }
+
+    public function reportesUbicacion($ubicacion){
+        if(is_null($ubicacion)){
+            self::$errores[]="No se ha enviado la ubicación";
+        }else{
+            $query="EXEC busquedaReportesUbicacion :ubicacion";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(":nombreJefe",$ubicacion,PDO::PARAM_STR);
             $consulta->execute();
             $reportes=$consulta->fetchAll(PDO::FETCH_ASSOC);
             return $reportes;
