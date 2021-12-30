@@ -105,8 +105,10 @@
         public static function eliminarTraslados(Router $router){
             $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
             $token=str_replace("token=","",$query);
+
             $traslado=new Traslado($_POST);
             $traslado::VerificarToken($token);
+            $traslado::verificarAdmin();
             $errores=$traslado::getErrores();
 
             if(empty($errores)){
