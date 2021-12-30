@@ -4,6 +4,7 @@
     use \PDO;
 
     class Traslado extends ActiveRecord{
+        protected static $tabla = 'historialTraslados';
 
         public $plazaAnterior;
         public $plazaActual;
@@ -138,6 +139,16 @@
 
             return self::$errores;
         }
+
+        public function obtenerTraslados(){
+            $sql = "EXEC mostrarReportesTraslados";
+            $query = self::$db->prepare($sql);
+            $query->execute();
+            $resultado=$query->fetchAll(PDO::FETCH_ASSOC);
+
+            return $resultado;
+        }
+
 
     }
 

@@ -23,8 +23,8 @@ class PdfController{
                 $pdfPropierdades->AddPage();
                 $title = 'Autorización Minutos Extras';
                 $pdfPropierdades->SetTitle($title,true);
-                $pdfPropierdades->AddFont('DejaVuu','','DejaVuSans.ttf',true);
-                $pdfPropierdades->SetFont('DejaVuu','',10);
+                //$pdfPropierdades->AddFont('DejaVuu','','DejaVuSans.ttf',true);
+                //$pdfPropierdades->SetFont('DejaVuu','',10);
                 $pdfPropierdades->Ln(10);
                 $pdfPropierdades->MultiCell(0,5,"El jefe ".$datos["creadorJefe"]." ha autorizado los siguientes minutos en la estacion de ".$datos["ubicacionEstacion"].":",0,'L');
                 $pdfPropierdades->Ln(5);

@@ -1,4 +1,4 @@
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AnimatePresence } from 'framer-motion';
 import React, { useState } from 'react'
@@ -6,6 +6,9 @@ import toast, { Toaster } from 'react-hot-toast';
 import styled from 'styled-components';
 import { Background } from '../Background';
 import { Menu } from '../Menu';
+import { TablaPlaza } from '../tablas/TablaPlaza';
+import { TablaTraslados } from '../tablas/TablaTraslados';
+
 
 export const AdminTraslados = () => {
     const [visible, setVisible] = useState(false);
@@ -21,28 +24,28 @@ export const AdminTraslados = () => {
 
     return (
       <Menu>
-        <Background titulo="Administración de Traslados" insertar={()=>setVisible(true)}>
+        <Background titulo="Administración de Traslados">
           <Toaster position="top-right"/>
           <ReportsBox>
             <FilterBox>
               <FontAwesomeIcon
-                icon={faSearch}
+                icon={faSyncAlt}
                 style={{ fontSize: "26px", color: "#000000" }}
               />
               <FilterTextBox>¿Desea un archivo en específico?</FilterTextBox>
               <BtnFilterSearch>Buscar</BtnFilterSearch>
             </FilterBox>
             <ContenedorTabla>
-            {/* <TablaPlaza consultar={consultar} mostrarNotificacion={mostrarNotificacion}/> */}
+            {<TablaTraslados consultar={consultar} mostrarNotificacion={mostrarNotificacion}/>}
             </ContenedorTabla>
           </ReportsBox>
         </Background>
-        {/* <AnimatePresence
+        {/*<AnimatePresence
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
             {visible&&<PlazaModal handleClose={()=>setVisible(false)} consultarPlaza={setConsultar} mostrarNotificacion={mostrarNotificacion}/>}
-        </AnimatePresence> */}
+        </AnimatePresence>*/}
       </Menu>
     );
 }
