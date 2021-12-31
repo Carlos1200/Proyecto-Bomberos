@@ -7,6 +7,8 @@ import Api from '../../Api/Api';
 import { PlazaModal } from "../modal/PlazaModal";
 import { Eliminar } from "../modal/Eliminar";
 import { PlazasContext } from "../../context/plazas/PlazasContext";
+import { TrasladosModal } from "../modal/TrasladosModal";
+import { TrasladosDetallesModal } from "../modal/TrasladosDetallesModal";
 
 
 export const TablaTraslados = ({mostrarNotificacion}) => {
@@ -36,8 +38,9 @@ export const TablaTraslados = ({mostrarNotificacion}) => {
   const eliminarTraslados = async() => {
     try {
       const formData=new FormData();
-      formData.append("idTraslado",trasladoBorrar);
+      formData.append("idReporteHistorial",trasladoBorrar);
       await Api.post('/traslados/EliminarTraslados.php',formData);
+
       //setConsultar(true);
       setVisibleBorrar(false);
       mostrarNotificacion()
@@ -97,12 +100,12 @@ export const TablaTraslados = ({mostrarNotificacion}) => {
       </Table>
       )}
       </ContenedorTabla>
-      {/*<AnimatePresence
+      {<AnimatePresence
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<PlazaModal handleClose={()=>setVisible(false)} plaza={plaza} mostrarNotificacion={mostrarNotificacion}/>}
-      </AnimatePresence>*/}
+            {acceder&&<TrasladosDetallesModal handleClose={()=>setAcceder(false)} traslado={traslado} mostrarNotificacion={mostrarNotificacion}/>}
+      </AnimatePresence>}
       <AnimatePresence
             initial={false}
             exitBeforeEnter={true}

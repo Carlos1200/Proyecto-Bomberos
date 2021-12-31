@@ -87,7 +87,7 @@
             $traslado::VerificarToken($token);
             $traslado::VerificarAdmin();
 
-            $errores = $plaza->validar(false);
+            $errores = $traslado->validar(false);
             if(empty($errores)){
                 $errores=$traslado->editarPlaza();
                 if(!empty($errores)){
@@ -125,6 +125,34 @@
                 ]);
             }
 
+        }
+
+        public static function ObtenerDetalleTraslado(Router $router){
+            $query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+            $token = str_replace("token=", "", $query);
+
+            $traslado = new Traslado($_POST);
+            $traslado::VerificarToken($token);
+            $errores=$traslado::getErrores();
+
+            if(empty($errores)){
+                $traslado=$traslado->leerTrasladoDetalles();
+                $errores=$traslado::getErrores();
+                if(empty($errores)){
+                    $router->render('traslados/traslados',[
+                        'traslados'=>$traslados
+                    ]);
+                }else{
+                    $router->render('errores/error',[
+                        'errores'=>$errores
+                    ]);
+                }
+    
+            }else{
+                $router->render('errores/error',[
+                    'errores'=>$errores
+                ]);
+            }
         }
 
     }

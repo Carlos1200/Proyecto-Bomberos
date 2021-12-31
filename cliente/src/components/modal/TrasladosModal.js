@@ -20,6 +20,8 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
 
   const {PrepararDatos}=UseTraslados();
 
+  
+
   useEffect(()=>{
     setCantidad(empleados.length-1);
   },[empleados])

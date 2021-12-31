@@ -88,7 +88,7 @@ class Plaza extends ActiveRecord{
             $consulta->execute();
 
             if(!self::$db->rowCount() > 0){
-                self::$errores[]="No se Eliminar la Plaza";
+                self::$errores[]="No se Elimino la Plaza";
             }
 
         }else{
