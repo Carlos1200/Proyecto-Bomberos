@@ -162,6 +162,7 @@
 
         }
 
+        
         public function eliminarTraslados(){
             if($this->idReporteHistorial){
                 $query='EXEC borrarReportesTraslados :idReporteHistorial';
@@ -179,6 +180,8 @@
 
             return self::$errores;
         }
+
+        
 
     }
 

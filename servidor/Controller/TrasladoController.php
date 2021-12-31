@@ -155,6 +155,33 @@
             }
         }
 
+        public static function ObtenerDetalleTrasladoEmpleados(Router $router){
+            $query = parse_url($SERVER['REQUEST_URI'], PHP_URL_QUERY);
+            $token:: str_replace("token=", "",$query);
+
+            $traslado = new Traslado($_POST);
+            $traslado::VerificarToken($token);
+            $errores=$traslado::getErrores();
+
+            if(empty($errores)){
+                $traslado=$traslado->ObtenerTrasladosDetalles();
+                $errores=$traslado::getErrores();
+                if(empty($errores)){
+                    $router->render('traslados/traslados',[
+                        'traslados'=>$traslados
+                    ]);
+                }else{
+                    $router->render('errores/error',[
+                        'errores'=>$errores
+                    ]);
+                }
+            }else{
+                $router->render('errores/error',[
+                    'errores'=>$errores
+                ]);
+            }
+        }
+
     }
 
 ?>
