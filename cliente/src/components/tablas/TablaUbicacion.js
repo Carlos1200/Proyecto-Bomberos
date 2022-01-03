@@ -1,43 +1,61 @@
-import React,{useContext, useEffect, useState} from "react";
+import { useEffect, useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
+import {
+  atom,
+  useRecoilState,
+} from 'recoil';
 import {UbicacionModal} from '../modal/UbicacionModal'
 import { Eliminar } from "../modal/Eliminar";
-import Api from "../../Api/Api";
-import { UbicacionesContext } from "../../context/ubicaciones/UbicacionesContext";
+import { eliminarUbicaciones, getUbicaciones } from "../../services/ubicacionesServices";
 
+export const ubicacionesState = atom({
+  key: 'ubicacionesState',
+  default: [],
+});
 
 export const TablaUbicacion = ({mostrarNotificacion}) => {
+
+  
+  const [ubicaciones, setUbicaciones] = useRecoilState(ubicacionesState);
+  const [cargando, setCargando] = useState(true);
 
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
   const [ubicacionBorrar, setUbicacionBorrar] = useState(null);
   const [ubicacion, setUbicacion] = useState();
-  const {ubicaciones,setConsultar,cargando,error}=useContext(UbicacionesContext);
 
   
   const eliminarUbicacion=async()=>{
-    try {
-      const formData=new FormData();
-      formData.append("idUbicacion",ubicacionBorrar);
-      const resp=await Api.post('/ubicaciones/EliminarUbicacion.php',formData);
-      console.log(resp);
-      setConsultar(true);
+    const formData=new FormData();
+    formData.append("idUbicacion",ubicacionBorrar);
+
+    eliminarUbicaciones(formData).then(()=>{
+      setUbicaciones(oldValue=>{
+        const newValue=oldValue.filter(item=>item.idUbicacion!==ubicacionBorrar);
+        return newValue;
+      })
       setVisibleBorrar(false);
-      mostrarNotificacion()
-    } catch (error) {
-      mostrarNotificacion(false);
-    }
+      mostrarNotificacion();
+    }).catch(err=>{
+      console.log({err});
+      if(!err.response){
+        mostrarNotificacion(false);
+      }
+    })
   }
 
   useEffect(()=>{
-    if(error){
+    getUbicaciones().then(res=>{
+      setUbicaciones(res);
+    }).catch(err=>{
       mostrarNotificacion(true)
-    }
-    // eslint-disable-next-line
-  },[error])
+    }).finally(()=>{
+      setCargando(false);
+    })
+  },[]);
 
   return (
     <Contenedor>

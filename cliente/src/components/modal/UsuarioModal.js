@@ -1,4 +1,4 @@
-import React,{useContext, useState} from 'react'
+import { useEffect, useState} from 'react'
 import styled from 'styled-components'
 import Select from 'react-select'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,17 +6,31 @@ import { faWindowClose,faSave,} from '@fortawesome/free-solid-svg-icons';
 import {useForm, Controller} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup'
+import { useSetRecoilState } from 'recoil';
 import { Modal } from '../Modal'
-import { UseDatos } from '../../hooks/UseDatos';
-import Api from '../../Api/Api';
-import { UsuariosContext } from '../../context/usuarios/UsuariosContext';
+import { actualizarUsuarios, nuevoUsuario } from '../../services/usuariosServices';
+import { usuariosState } from '../tablas/TablaUsuario';
+import { getUbicaciones } from '../../services/ubicacionesServices';
 
 
 
 export const UsuarioModal = ({handleClose,usuario,mostrarNotificacion}) => {
-    const [datos,cargando] = UseDatos('ubicaciones/ObtenerUbicaciones.php');
+
+  const setUsuario=useSetRecoilState(usuariosState);
+    const [ubicaciones, setubicaciones] = useState([]);
+    const [cargando, setCargando] = useState(true);
     const [checked, setChecked] = useState(!usuario?true:false);
-    const {setConsultar}=useContext(UsuariosContext);
+
+    useEffect(()=>{
+      getUbicaciones().then(res=>{
+        setubicaciones(res);
+      }).catch(err=>{
+        mostrarNotificacion(true,"Error en el servidor");
+      }).finally(()=>{
+        setCargando(false);
+      });
+    },[]);
+
     const schema=yup.object({
       nombre:yup.string().required("El usuario no debe ir vacío"),
       nick:yup.string().matches(RegExp('^(?=[a-zA-Z0-9._]{6,20}$)(?!.*[_.]{2})[^_.].*[^_.]$'),{message:"Nombre de usuarios con formato incorrecto"}).required("El usuario no debe ir vacío"),
@@ -40,49 +54,55 @@ export const UsuarioModal = ({handleClose,usuario,mostrarNotificacion}) => {
       }
     });
     const SubmitEdit=async({nombre,ubicacion,nick,tipo})=>{
-      try {
-        setConsultar(false);
-        const formData=new FormData();
-        formData.append('idUsuario',usuario.idUsuario);
-        formData.append('NombreUsuario',nombre);
-        formData.append('tipoUsuario',tipo.value);
-        formData.append('nickUsuario',nick);
-        formData.append('UbicacionUsuario',ubicacion.nombreUbicacion);
-
-        await Api.post("/usuarios/EditarUsuario.php",formData);
-        setConsultar(true);
-        handleClose();
-        mostrarNotificacion();
-
-      } catch (error) {
+      
+      const formData=new FormData();
+      formData.append('idUsuario',usuario.idUsuario);
+      formData.append('NombreUsuario',nombre);
+      formData.append('tipoUsuario',tipo.value);
+      formData.append('nickUsuario',nick);
+      formData.append('UbicacionUsuario',ubicacion.nombreUbicacion);
+      actualizarUsuarios(formData).then(()=>{
+        setUsuario((oldValue)=>{
+          const newValue=oldValue.map(item=>{
+            if(item.idUsuario===usuario.idUsuario){
+              item.NombreUsuario=nombre;
+              item.nickUsuario=nick;
+              item.tipoUsuario=tipo.value;
+              item.UbicacionUsuario=ubicacion.nombreUbicacion;
+            }
+            return item;
+          })
+          return newValue;
+        })
+      }).catch((error)=>{
+        console.log({error});
         if(!error.response){
           mostrarNotificacion(true,"Error en el servidor")
         }else{
           mostrarNotificacion(true,error.response.data[0]);
         }
-      }
+      });
     }
     const SubmitNuevo=async({nombre,ubicacion,tipo,nick,password})=>{
-      try {
-        setConsultar(false);
-        const formData=new FormData();
-        formData.append('NombreUsuario',nombre);
-        formData.append('tipoUsuario',tipo.value);
-        formData.append('nickUsuario',nick);
-        formData.append('UbicacionUsuario',ubicacion.nombreUbicacion);
-        formData.append('contra',password);
+      
+      const formData=new FormData();
+      formData.append('NombreUsuario',nombre);
+      formData.append('tipoUsuario',tipo.value);
+      formData.append('nickUsuario',nick);
+      formData.append('UbicacionUsuario',ubicacion.nombreUbicacion);
+      formData.append('contra',password);
 
-        await Api.post("/usuarios/CrearUsuario.php",formData);
-        setConsultar(true);
+      nuevoUsuario(formData).then((res)=>{
+        setUsuario((oldvalue)=>oldvalue.concat(res[0]));
         handleClose();
         mostrarNotificacion();
-      } catch (error) {
+      }).catch((error)=>{
         if(!error.response){
           mostrarNotificacion(true,"Error en el servidor")
         }else{
           mostrarNotificacion(true,error.response.data[0]);
         }
-      }
+      })
     }
 
     return (
@@ -122,17 +142,18 @@ export const UsuarioModal = ({handleClose,usuario,mostrarNotificacion}) => {
                   control={control}
                   render={({ field: { onChange, value } }) =>(
                       <Select 
-                      options={datos}
+                      options={ubicaciones}
                       getOptionLabel={(ubicacion)=>ubicacion.nombreUbicacion}
                       getOptionValue={(ubicacion)=>ubicacion.nombreUbicacion}
                       value={value}
                       placeholder="Selecciona una Ubicación"
                       onChange={onChange}
+                      menuPlacement="top"
                     />
                     )
                   }
                   name="ubicacion"
-                  defaultValue={usuario&&(()=>datos.find((ubicacion)=>ubicacion.nombreUbicacion===usuario.UbicacionUsuario))}
+                  defaultValue={usuario&&(()=>ubicaciones.find((ubicacion)=>ubicacion.nombreUbicacion===usuario.UbicacionUsuario))}
                 />
                 {errors.ubicacion&& <TextError>{errors.ubicacion.nombreUbicacion.message}</TextError>}
                 <Label>Tipo de usuario</Label>
@@ -145,6 +166,7 @@ export const UsuarioModal = ({handleClose,usuario,mostrarNotificacion}) => {
                       placeholder="Selecciona un Tipo de usuario"
                       value={value}
                       onChange={onChange}
+                      menuPlacement="top"
                     />
                   )}
                   name="tipo"

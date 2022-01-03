@@ -37,7 +37,7 @@ export const TablaReportes = ({mostrarNotificacion}) => {
                 <ColumInput>{reporteCol.creadorJefe}</ColumInput>
                 <ColumInput>{reporteCol.fechaCreado.split(" ")[0]}</ColumInput>
                 <ColumInput>
-                <a href={`${BaseURL}/pdf/VerPdf.php?id=${reporteCol.idAutorizaciones}`} target="_blank">
+                <a href={`${BaseURL}/pdf/VerPdf.php?id=${reporteCol.idAutorizaciones}`} target="_blank" rel="noreferrer">
                   <FontAwesomeIcon
                     icon={faLink}
                     style={{ fontSize: "23px", color: "#0801BF" }}

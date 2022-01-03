@@ -1,20 +1,28 @@
-import React,{ useContext, useState} from 'react'
+import {useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import toast, { Toaster } from 'react-hot-toast';
 import {  faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { AnimatePresence } from 'framer-motion';
+import { useSetRecoilState } from 'recoil';
 import { Menu } from '../Menu'
 import {Background} from '../Background';
-import { TablaEmpleado } from '../tablas/TablaEmpleado';
+import { empleadosState, TablaEmpleado } from '../tablas/TablaEmpleado';
 import { NuevoEmpleadoModal } from '../modal/NuevoEmpleadoModal';
-import { EmpleadosContext } from '../../context/empleados/EmpleadosContext';
+import {useBuscador} from '../../hooks/useBuscador';
+import { buscadorEmpleados } from '../../services/empleadosServices';
 
 
 export const Empleados = () => {
+  const setEmpleados=useSetRecoilState(empleadosState);
   const [visible, setVisible] = useState(false);
   const [inputBuscador, setInputBuscador] = useState('')
-  const {setConsultar,buscador}=useContext(EmpleadosContext);
+
+  const {buscador,reset}=useBuscador({
+    promise:buscadorEmpleados,
+    setState:setEmpleados,
+  })
+
   const mostrarNotificacion=()=>{
     toast.success('Operación realizada correctamente');
   }
@@ -31,7 +39,7 @@ export const Empleados = () => {
             <FilterBox>
             <FontAwesomeIcon
                 onClick={()=>{
-                  setConsultar(true);
+                  reset();
                   setInputBuscador('');
                 }}
                 icon={faSyncAlt}
@@ -39,7 +47,9 @@ export const Empleados = () => {
               />
               <FilterTextBox placeholder="¿Desea un archivo en específico?" value={inputBuscador} onChange={(e)=>setInputBuscador(e.target.value)}/>
               <BtnFilterSearch onClick={()=>{
-                buscador(inputBuscador);
+                const formData=new FormData();
+                formData.append('nombres',inputBuscador);
+                buscador(formData);
               }}>Buscar</BtnFilterSearch>
             </FilterBox>
             <ContenedorTabla>

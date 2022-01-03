@@ -1,19 +1,26 @@
-import React,{useContext, useState} from 'react'
+import { useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import toast, { Toaster } from 'react-hot-toast';
 import { faSyncAlt} from '@fortawesome/free-solid-svg-icons';
 import { AnimatePresence } from 'framer-motion';
+import { useSetRecoilState } from 'recoil';
 import { Menu } from '../Menu'
-import {TablaUsuario} from '../tablas/TablaUsuario';
+import {TablaUsuario, usuariosState} from '../tablas/TablaUsuario';
 import { Background } from '../Background';
 import { UsuarioModal } from '../modal/UsuarioModal';
-import { UsuariosContext } from '../../context/usuarios/UsuariosContext';
+import { useBuscador } from '../../hooks/useBuscador';
+import { buscadorUsuarios } from '../../services/usuariosServices';
 export const Usuarios = () => {
 
+  const setUsuarios=useSetRecoilState(usuariosState);
   const [visible, setVisible] = useState(false);
   const [inputBuscador, setInputBuscador] = useState('')
-  const {buscador,setConsultar}=useContext(UsuariosContext);
+
+  const {buscador,reset}=useBuscador({
+    promise:buscadorUsuarios,
+    setState:setUsuarios,
+  });
 
   const mostrarNotificacion=(error=false,msg)=>{
     if(error){
@@ -31,7 +38,7 @@ export const Usuarios = () => {
             <FilterBox>
               <FontAwesomeIcon
                 onClick={()=>{
-                  setConsultar(true);
+                  reset();
                   setInputBuscador('');
                 }}
                 icon={faSyncAlt}
@@ -39,7 +46,9 @@ export const Usuarios = () => {
               />
               <FilterTextBox placeholder="¿Desea un archivo en específico?" value={inputBuscador} onChange={(e)=>setInputBuscador(e.target.value)}/>
               <BtnFilterSearch onClick={()=>{
-                buscador(inputBuscador);
+                const formData=new FormData();
+                formData.append('NombreUsuario',inputBuscador);
+                buscador(formData);
               }}>Buscar</BtnFilterSearch>
             </FilterBox>
             <ContenedorTabla>

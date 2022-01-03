@@ -53,16 +53,22 @@ class Ubicacion extends ActiveRecord{
     }
 
     public function nuevaUbicacion(){
-        $query="INSERT INTO ".self::$tabla. "(nombreUbicacion) VALUES(:nombreUbicacion)";
+        $query="EXEC insertarUbicaciones :nombreUbicacion";
         $consulta=self::$db->prepare($query);
         $consulta->bindParam(':nombreUbicacion',$this->nombreUbicacion,PDO::PARAM_STR);
         $consulta->execute();
-
         if(!self::$db->lastInsertId()>0){
             self::$errores[]="No se pudo agregar una nueva Ubicacion";
+            return null;
+        }else{
+            $query="SELECT top (1) nombreUbicacion, idUbicacion from ubicacionEmpleado order by idUbicacion desc";
+            $consulta=self::$db->prepare($query);
+            $consulta->execute();
+            $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $datos;
         }
+        
 
-        return self::$errores;
     }
 
     public function editarUbicacion(){
@@ -71,11 +77,6 @@ class Ubicacion extends ActiveRecord{
         $consulta->bindParam(':idUbicacion',$this->idUbicacion,PDO::PARAM_INT);
         $consulta->bindParam(':nombreUbicacion',$this->nombreUbicacion,PDO::PARAM_STR);
         $consulta->execute();
-
-        if(!self::$db->rowCount()>0){
-            self::$errores[]="No se pudo editar la Ubicacion";
-        }
-
         return self::$errores;
     }
 

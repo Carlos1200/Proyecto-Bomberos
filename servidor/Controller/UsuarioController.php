@@ -72,9 +72,14 @@ class UsuarioController{
                 $usuario->hashearContra();
 
                 //Crear Usuario
-                $errores=$usuario->crearUsuario();
+                $usuarios=$usuario->crearUsuario();
+                $errores=$usuario::getErrores();
 
-                if(!empty($errores)){
+                if(empty($errores)){
+                    $router->render('usuarios/usuarios',[
+                        'usuarios'=>$usuarios
+                    ]);
+                }else{
                     $router->render('errores/error',[
                         'errores'=>$errores
                     ]);

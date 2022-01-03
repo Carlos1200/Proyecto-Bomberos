@@ -16,6 +16,7 @@ class Empleado extends ActiveRecord{
     public $nombreUbicacion;
     public $idPlaza;
     public $fechaCreacionEmpleado;
+    public $selectTop;
     
     public function __construct($args=[])
     {
@@ -29,6 +30,7 @@ class Empleado extends ActiveRecord{
         $this->nombreUbicacion=$args['nombreUbicacion']??'';
         $this->idPlaza=$args['idPlaza']??'';
         $this->fechaCreacionEmpleado=$args['fechaCreacionEmpleado']??'';
+        $this->selectTop=$args['selectTop']??'';
     }
 
     public function validar($nuevo=true)
@@ -62,6 +64,9 @@ class Empleado extends ActiveRecord{
         if($nuevo){
             if(!$this->fechaCreacionEmpleado){
                 self::$errores[]="La fecha de creación del empleado es obligatorio";
+            }
+            if(!$this->selectTop){
+                self::$errores[]="La cantidad de empleados es obligatoria";
             }
         }
         return self::$errores;
@@ -132,6 +137,14 @@ class Empleado extends ActiveRecord{
 
         if(!self::$db->lastInsertId()>0){
             self::$errores[]="No se pudo agregar nuevos usuarios";
+            return null;
+        }else{
+            $query="EXEC vistaUltimoEmpleado :selectTop";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(':selectTop',$this->selectTop,PDO::PARAM_INT);
+            $consulta->execute();
+            $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $datos;
         }
 
         return self::$errores;
