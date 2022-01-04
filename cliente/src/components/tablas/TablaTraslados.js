@@ -6,7 +6,6 @@ import { AnimatePresence } from "framer-motion";
 import Api from '../../Api/Api';
 import { PlazaModal } from "../modal/PlazaModal";
 import { Eliminar } from "../modal/Eliminar";
-import { PlazasContext } from "../../context/plazas/PlazasContext";
 import { TrasladosModal } from "../modal/TrasladosModal";
 import { TrasladosDetallesModal } from "../modal/TrasladosDetallesModal";
 
