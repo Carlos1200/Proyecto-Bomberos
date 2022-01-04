@@ -1,4 +1,3 @@
-import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose,faSave,} from '@fortawesome/free-solid-svg-icons';
@@ -6,8 +5,9 @@ import {useForm} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup'
 import { Modal } from '../Modal'
-import Api from '../../Api/Api';
-import { GrupoContext } from '../../context/grupos/GrupoContext';
+import { useSetRecoilState } from 'recoil';
+import { grupoState } from '../tablas/TablaGroup';
+import { editarGrupo, nuevoGrupo } from '../../services/gruposServices';
 
 const schema=yup.object({
     nombreGrupo:yup.string().required("El nombre del grupo no debe ir vacío"),
@@ -15,8 +15,7 @@ const schema=yup.object({
 
 export const GrupoModal = ({handleClose,grupo,mostrarNotificacion}) => {
 
-
-  const {setConsultar}=useContext(GrupoContext);
+  const setGrupos=useSetRecoilState(grupoState);
 
     const { register, handleSubmit,formState: { errors } } = useForm({
       resolver:yupResolver(schema),
@@ -24,43 +23,46 @@ export const GrupoModal = ({handleClose,grupo,mostrarNotificacion}) => {
         nombreGrupo:grupo?grupo.nombreGrupo:'',
       }
     });
-    const SubmitEditar=async({nombreGrupo})=>{
-      try {
-        setConsultar(false)
-        const formData=new FormData();
-        formData.append('idGrupo',grupo.idGrupo);
-        formData.append('nombreGrupo',nombreGrupo);
-
-        await Api.post("/grupos/EditarGrupo.php",formData);
-        setConsultar(true);
-        handleClose();
-        mostrarNotificacion();
-      } catch (error) {
-        if(!error.response){
-          mostrarNotificacion(true,"Error en el servidor")
-        }else{
-          mostrarNotificacion(true,error.response.data[0]);
-        }
-      }
-    }
+    const SubmitEditar = async ({ nombreGrupo }) => {
+      const formData = new FormData();
+      formData.append("idGrupo", grupo.idGrupo);
+      formData.append("nombreGrupo", nombreGrupo);
+      editarGrupo(formData)
+        .then(() => {
+          setGrupos((oldValue) => {
+            return oldValue.map((item) => {
+              if (item.idGrupo === grupo.idGrupo) {
+                return { ...item, nombreGrupo };
+              }
+              return item;
+            });
+          });
+          handleClose();
+          mostrarNotificacion();
+        })
+        .catch((error) => {
+          if (!error.response) {
+            mostrarNotificacion(true, "Error en el servidor");
+          } else {
+            mostrarNotificacion(true, error.response.data[0]);
+          }
+        });
+    };
 
     const SubmitNuevo=async({nombreGrupo})=>{
-      try {
-        setConsultar(false)
-        const formData=new FormData();
-        formData.append('nombreGrupo',nombreGrupo);
-
-        await Api.post("/grupos/CrearGrupo.php",formData);
-        setConsultar(true);
+      const formData=new FormData();
+      formData.append('nombreGrupo',nombreGrupo);
+      nuevoGrupo(formData).then((res)=>{
+        setGrupos((oldValue)=>oldValue.concat(res[0]));
         handleClose();
-        mostrarNotificacion()
-      } catch (error) {
+        mostrarNotificacion();
+      }).catch(error=>{
         if(!error.response){
           mostrarNotificacion(true,"Error en el servidor")
         }else{
           mostrarNotificacion(true,error.response.data[0]);
         }
-      }
+      })
     }
 
     return (

@@ -23,9 +23,13 @@ class PlazaController{
 
             if(empty($errores)){
                 //Crear plaza
-                $errores=$plaza->nuevaPlaza();
-
-                if(!empty($errores)){
+                $plazas=$plaza->nuevaPlaza();
+                $errores=$plaza::getErrores();
+                if(empty($errores)){
+                    $router->render('plazas/plazas',[
+                        'plazas'=>$plazas
+                    ]); 
+                }else{
                     $router->render('errores/error',[
                         'errores'=>$errores
                     ]);

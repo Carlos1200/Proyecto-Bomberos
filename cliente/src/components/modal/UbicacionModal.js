@@ -1,13 +1,13 @@
-import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose,faSave,} from '@fortawesome/free-solid-svg-icons';
 import {useForm} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
+import {useSetRecoilState} from 'recoil'
 import * as yup from 'yup'
 import { Modal } from '../Modal'
-import Api from '../../Api/Api';
-import { UbicacionesContext } from '../../context/ubicaciones/UbicacionesContext';
+import { actualizarUbicacion, nuevaUbicacion } from '../../services/ubicacionesServices';
+import { ubicacionesState } from '../tablas/TablaUbicacion';
 
 const schema=yup.object({
   ubicacionNombre:yup.string().required("La ubicación no debe ir vacía"),
@@ -15,8 +15,7 @@ const schema=yup.object({
 
 export const UbicacionModal = ({handleClose,ubicacion,mostrarNotificacion}) => {
 
-  
-    const {setConsultar}=useContext(UbicacionesContext);
+    const setUbicacionesState=useSetRecoilState(ubicacionesState);
 
     const { register, handleSubmit,formState: { errors } } = useForm({
       resolver:yupResolver(schema),
@@ -25,42 +24,50 @@ export const UbicacionModal = ({handleClose,ubicacion,mostrarNotificacion}) => {
       }
     });
     const SubmitEditar=async({ubicacionNombre})=>{
-      try {
-        setConsultar(false)
-        const formData=new FormData();
-        formData.append('idUbicacion',ubicacion.idUbicacion);
-        formData.append('nombreUbicacion',ubicacionNombre);
+      const formData=new FormData();
+      formData.append('idUbicacion',ubicacion.idUbicacion);
+      formData.append('nombreUbicacion',ubicacionNombre);
 
-        await Api.post("/ubicaciones/EditarUbicacion.php",formData);
-        setConsultar(true);
+      actualizarUbicacion(formData)
+      .then(()=>{
+        setUbicacionesState(oldValue=>{
+          const newValue=oldValue.map(item=>{
+            if(item.idUbicacion===ubicacion.idUbicacion){
+              item.nombreUbicacion=ubicacionNombre;
+            }
+            return item;
+          })
+          return newValue;
+        })
         handleClose();
         mostrarNotificacion();
-      } catch (error) {
-        if(!error.response){
+      })
+      .catch(err=>{
+        console.log({err});
+        if(!err.response){
           mostrarNotificacion(true,"Error en el servidor")
         }else{
-          mostrarNotificacion(true,error.response.data[0]);
+          mostrarNotificacion(true,err.response.data[0]);
         }
-      }
+      })
     }
 
     const SubmitNuevo=async({ubicacionNombre})=>{
-      try {
-        setConsultar(false)
-        const formData=new FormData();
-        formData.append('nombreUbicacion',ubicacionNombre);
+      
+      const formData=new FormData();
+      formData.append('nombreUbicacion',ubicacionNombre);
 
-        await Api.post("/ubicaciones/CrearUbicacion.php",formData);
-        setConsultar(true);
+      nuevaUbicacion(formData).then((res)=>{
+        setUbicacionesState((oldValue)=> oldValue.concat(res[0]));
         handleClose();
         mostrarNotificacion()
-      } catch (error) {
-        if(!error.response){
+      }).catch(err=>{
+        if(!err.response){
           mostrarNotificacion(true,"Error en el servidor")
         }else{
-          mostrarNotificacion(true,error.response.data[0]);
+          mostrarNotificacion(true,err.response.data[0]);
         }
-      }
+      })
     }
 
     return (

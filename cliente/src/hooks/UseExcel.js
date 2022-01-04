@@ -108,7 +108,7 @@ export const UseExcel = (setError) => {
                 empleados.idUbicacion=empleado.ubicacion;
                 empleados.idPlaza=empleado.plaza;
                 empleados.fechaCreacionEmpleado=fecha
-
+                empleados.selectTop=empleadosNuevo.current.length;
             }else{
 
                 empleados.nombres=`${empleados.nombres},${empleado.nombre}`;

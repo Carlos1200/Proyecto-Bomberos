@@ -110,6 +110,13 @@ class Usuario extends ActiveRecord{
         
         if(!self::$db->lastInsertId()>0){
             self::$errores[]="No se pudo agregar un nuevo usuario";
+            return null;
+        }else{
+            $query="SELECT top (1) NombreUsuario, nickUsuario,idUsuario,UbicacionUsuario,tipoUsuario from usuarios order by idUsuario desc";
+            $consulta=self::$db->prepare($query);
+            $consulta->execute();
+            $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $datos;
         }
 
     }

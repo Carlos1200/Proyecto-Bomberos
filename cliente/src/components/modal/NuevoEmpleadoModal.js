@@ -1,4 +1,4 @@
-import React,{useContext, useEffect, useState} from 'react'
+import { useEffect, useState} from 'react'
 import styled from 'styled-components'
 import Select from 'react-select'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,12 +6,13 @@ import { faWindowClose,faUserPlus,faCheck} from '@fortawesome/free-solid-svg-ico
 import {useForm, Controller} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup'
+import { useSetRecoilState } from 'recoil';
 import { Modal } from '../Modal'
 import { UseDatos } from '../../hooks/UseDatos';
-import Api from '../../Api/Api';
 import { ListadoEmpleados } from '../ListadoEmpleados';
 import { UseEmpleados } from '../../hooks/UseEmpleados';
-import { EmpleadosContext } from '../../context/empleados/EmpleadosContext';
+import { empleadosState } from '../tablas/TablaEmpleado';
+import { nuevosEmpleados } from '../../services/empleadosServices';
 
 const schema=yup.object({
   nombres:yup.string().required("Los nombres son obligatorios"),
@@ -52,10 +53,10 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
     const [datosGrupo,cargandoGrupo] = UseDatos('grupos/ObtenerGrupos.php');
     const [cargando, setCargando] = useState(true);
     const [empleados, setEmpleados] = useState([]);
+    const setEmpleadosState=useSetRecoilState(empleadosState);
     
-    const {crearString,nombresCol,apellidosCol,grupoCol,pensionCol,plazaCol,ubicacionCol,salarioCol,fechaCol} = UseEmpleados();
+    const {crearString,nombresCol,apellidosCol,grupoCol,pensionCol,plazaCol,ubicacionCol,salarioCol,fechaCol,selectTop} = UseEmpleados();
 
-    const {setConsultar}=useContext(EmpleadosContext);
 
   useEffect(()=>{
     if(!cargandoUbicacion&&!cargandoPlaza&&!cargandoPension&&!cargandoGrupo){
@@ -94,7 +95,6 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
     }
 
     const insertarEmpleados=async()=>{
-      setConsultar(false);
       const formData=new FormData();
       formData.append('nombres',nombresCol);
       formData.append('apellidos',apellidosCol)
@@ -104,15 +104,13 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
       formData.append('idUbicacion',ubicacionCol)
       formData.append('idPlaza',plazaCol)
       formData.append('fechaCreacionEmpleado',fechaCol);
-
-      try {
-      await Api.post("/empleados/CrearEmpleados.php",formData);
-      setConsultar(true);
-      handleClose();
-      } catch (error) {
+      formData.append('selectTop',selectTop);
+      nuevosEmpleados(formData).then((res)=>{
+        setEmpleadosState((oldValue)=>[...oldValue,...res]);
+        handleClose();
+      }).catch(error=>{
         console.log(error.response.data);
-      }
-      
+      })
     }
 
     return (

@@ -50,9 +50,16 @@ class Plaza extends ActiveRecord{
 
         if(!self::$db->lastInsertId()>0){
             self::$errores[]="No se pudo agregar una nueva plaza";
+            return null;
+        }else{
+            $query="SELECT top (1) nombrePlaza, idPlaza from plazaNominal order by idPlaza desc";
+            $consulta=self::$db->prepare($query);
+            $consulta->execute();
+            $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $datos;
         }
 
-        return self::$errores;
+        
     }
 
     public function plazaFiltro(){ 

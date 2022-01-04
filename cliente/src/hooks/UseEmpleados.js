@@ -9,6 +9,7 @@ export const UseEmpleados = () => {
     const grupoCol = useRef('');
     const salarioCol = useRef('');
     const fechaCol = useRef('');
+    const selectTop = useRef(0);
     const crearString=({nombres,apellidos,ubicacion,plaza,pension,grupo,salario,fechaCreacionEmpleado})=>{
 
         if(!nombresCol.current){
@@ -17,6 +18,8 @@ export const UseEmpleados = () => {
             const string=`${nombresCol.current},${nombres}`
             nombresCol.current=string;
         }
+
+        selectTop.current=selectTop.current+1;
         
         if(!apellidosCol.current){
             apellidosCol.current=apellidos;
@@ -79,6 +82,7 @@ export const UseEmpleados = () => {
         grupoCol:grupoCol.current,
         salarioCol:salarioCol.current,
         fechaCol:fechaCol.current,
+        selectTop:selectTop.current,
         crearString
     }
 

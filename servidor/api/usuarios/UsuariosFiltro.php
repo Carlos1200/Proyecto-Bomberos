@@ -8,7 +8,7 @@ require_once('../../app.php');
     $router= new Router();
     use Controller\UsuarioController;
 
-    $router->post('/api/usuarios/UsuariosFiltro',[UsuarioController::class,'obtenerUsuarioFiltrado']);
+    $router->post('/api/usuarios/UsuariosFiltro.php',[UsuarioController::class,'obtenerUsuarioFiltrado']);
 
     $router->comprobarRutas();
     

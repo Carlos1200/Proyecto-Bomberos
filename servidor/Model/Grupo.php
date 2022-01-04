@@ -72,9 +72,14 @@ class Grupo extends ActiveRecord{
 
         if(!self::$db->lastInsertId()>0){
             self::$errores[]="No se pudo agregar un nuevo Grupo";
-        }
-
-        return self::$errores;
+            return null;
+       }else{
+            $query="SELECT top (1) nombreGrupo, idGrupo from grupos order by idGrupo desc";
+            $consulta=self::$db->prepare($query);
+            $consulta->execute();
+            $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $datos;
+       }
     }
 
     public function obtenerGrupos(){

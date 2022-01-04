@@ -1,4 +1,4 @@
-import React,{useContext, useState} from 'react'
+import {useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import toast, { Toaster } from 'react-hot-toast';
@@ -6,16 +6,25 @@ import {  faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { AnimatePresence } from 'framer-motion';
 import { Menu } from './../Menu';
 import {Background} from '../Background';
-import { TablaPlaza } from '../tablas/TablaPlaza';
+import { plazasState, TablaPlaza } from '../tablas/TablaPlaza';
 import { PlazaModal } from '../modal/PlazaModal';
-import { PlazasContext } from '../../context/plazas/PlazasContext';
+import {useBuscador} from '../../hooks/useBuscador';
+import { useSetRecoilState } from 'recoil';
+import { buscadorPlazas } from '../../services/plazasServices';
 
 
 
 export const Plazas = () => {
+
+  const setPlazas=useSetRecoilState(plazasState);
+  
   const [visible, setVisible] = useState(false);
   const [inputBuscador, setInputBuscador] = useState('')
-  const {buscador,setConsultar}=useContext(PlazasContext);
+  const {buscador,reset}=useBuscador({
+    promise:buscadorPlazas,
+    setState:setPlazas,
+  });
+
 
   const mostrarNotificacion=(error=false,msg)=>{
     if(error){
@@ -33,7 +42,7 @@ export const Plazas = () => {
             <FilterBox>
             <FontAwesomeIcon
                 onClick={()=>{
-                  setConsultar(true);
+                  reset();
                   setInputBuscador('');
                 }}
                 icon={faSyncAlt}
@@ -41,7 +50,9 @@ export const Plazas = () => {
               />
               <FilterTextBox placeholder="¿Desea un archivo en específico?" value={inputBuscador} onChange={(e)=>setInputBuscador(e.target.value)}/>
               <BtnFilterSearch onClick={()=>{
-                buscador(inputBuscador);
+                const formData=new FormData();
+                formData.append('nombrePlaza',inputBuscador);
+                buscador(formData);
               }}>Buscar</BtnFilterSearch>
             </FilterBox>
             <ContenedorTabla>

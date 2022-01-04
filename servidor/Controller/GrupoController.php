@@ -23,9 +23,14 @@ class GrupoController{
 
             if(empty($errores)){
                 //Crear grupo
-                $errores=$grupo->nuevoGrupo();
+                $grupos=$grupo->nuevoGrupo();
+                $errores=$grupo::getErrores();
 
-                if(!empty($errores)){
+                if(empty($errores)){
+                    $router->render('grupo/grupo',[
+                        'grupos'=>$grupos
+                    ]);
+                }else{
                     $router->render('errores/error',[
                         'errores'=>$errores
                     ]);

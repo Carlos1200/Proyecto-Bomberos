@@ -1,5 +1,8 @@
-import React from 'react'
+
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  RecoilRoot,
+} from 'recoil';
 import { Login } from './components/screens/Login';
 import { NuevaCuenta } from './components/screens/NuevaCuenta';
 import { Reportes } from './components/screens/Reportes';
@@ -12,12 +15,7 @@ import RutaPrivada from './components/RutaPrivada';
 import { Grupos } from './components/screens/Grupos';
 import { Traslados } from './components/screens/Traslados';
 import { AuthProvider } from './context/Auth/AuthContext';
-import {UsuariosProvider} from './context/usuarios/UsuariosContext';
 import { AdminTraslados } from './components/screens/AdminTraslados';
-import { EmpleadosProvider } from './context/empleados/EmpleadosContext';
-import { UbicacionesProvider } from './context/ubicaciones/UbicacionesContext';
-import { PlazasProvider } from './context/plazas/PlazasContext';
-import { GrupoProvider } from './context/grupos/GrupoContext';
 import { ReportesProvider } from './context/reportes/ReportesContext';
 
 import '../src/index.css';
@@ -47,22 +45,13 @@ const App = () => {
 
 const AppState=({children})=>{
   return(
-    <AuthProvider>
-      <UsuariosProvider>
-        <EmpleadosProvider>
-          <UbicacionesProvider>
-            <PlazasProvider>
-              <GrupoProvider>
-                <ReportesProvider>
-                  {children}
-                </ReportesProvider>
-              </GrupoProvider>
-            </PlazasProvider>
-          </UbicacionesProvider>
-        </EmpleadosProvider>
-      </UsuariosProvider>
-    </AuthProvider>
-
+    <RecoilRoot>
+      <AuthProvider>
+        <ReportesProvider>
+          {children}
+        </ReportesProvider>
+      </AuthProvider>
+    </RecoilRoot>
   )
 }
 
