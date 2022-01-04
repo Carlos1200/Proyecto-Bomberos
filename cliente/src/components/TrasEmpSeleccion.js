@@ -35,6 +35,7 @@ export const TrasEmpSeleccion = ({nombres, apellidos, plazaAnterior, plazaNueva,
             setCargando(false);
 
         } catch(error){
+            //Error por si falla al llamar la info de la bdd
             console.log(error);
         }
 
