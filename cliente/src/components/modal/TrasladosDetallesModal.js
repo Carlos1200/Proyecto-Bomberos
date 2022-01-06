@@ -11,6 +11,7 @@ export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificaci
 
     const [trasladoDetalle, setTrasladoDetalle] = useState();
     const [cargando, setCargando] = useState(true);
+    //Comentario de TrasladdosDetallesModal Funcional
 
     const traslEmplFormulario = useRef();
 
