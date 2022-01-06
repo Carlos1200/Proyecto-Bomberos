@@ -9,8 +9,8 @@ import * as yup from 'yup'
 import { useSetRecoilState } from 'recoil';
 import { Modal } from '../Modal'
 import { actualizarUsuarios, nuevoUsuario } from '../../services/usuariosServices';
-import { usuariosState } from '../tablas/TablaUsuario';
 import { getUbicaciones } from '../../services/ubicacionesServices';
+import { usuariosState } from '../../atom/AtomTablas';
 
 
 
@@ -61,19 +61,18 @@ export const UsuarioModal = ({handleClose,usuario,mostrarNotificacion}) => {
       formData.append('tipoUsuario',tipo.value);
       formData.append('nickUsuario',nick);
       formData.append('UbicacionUsuario',ubicacion.nombreUbicacion);
-      actualizarUsuarios(formData).then(()=>{
+      actualizarUsuarios(formData).then((res)=>{
         setUsuario((oldValue)=>{
-          const newValue=oldValue.map(item=>{
-            if(item.idUsuario===usuario.idUsuario){
-              item.NombreUsuario=nombre;
-              item.nickUsuario=nick;
-              item.tipoUsuario=tipo.value;
-              item.UbicacionUsuario=ubicacion.nombreUbicacion;
+          return oldValue.map(item=>{
+            if(item.idUsuario===res.idUsuario){
+              return res;
+            }else{
+              return item;
             }
-            return item;
-          })
-          return newValue;
+          });
         })
+        handleClose();
+        mostrarNotificacion();
       }).catch((error)=>{
         console.log({error});
         if(!error.response){

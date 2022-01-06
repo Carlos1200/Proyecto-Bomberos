@@ -1,9 +1,9 @@
-import React,{useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose,faDoorOpen} from '@fortawesome/free-solid-svg-icons';
 import { Modal } from '../Modal'
-import Api from '../../Api/Api';
+import { detallesEmpleados } from '../../services/empleadosServices';
 
 export const VerDetallesEmpleadosModal = ({handleClose,empleado,notificacionError}) => {
 
@@ -11,21 +11,17 @@ export const VerDetallesEmpleadosModal = ({handleClose,empleado,notificacionErro
   const [cargando, setCargando] = useState(true);
 
   useEffect(()=>{
-    obtenerDetalles();
+    const formData=new FormData();
+      formData.append('idEmpleado',empleado.idEmpleado);
+    detallesEmpleados(formData).then((res)=>{
+      setEmpleadoDetalle(res);
+    }).catch(error=>{
+      notificacionError("Ocurrió un error")
+    }).finally(()=>{
+      setCargando(false);
+    })
     // eslint-disable-next-line
   },[]); 
-
-  const obtenerDetalles=async()=>{
-    try {
-      const formData=new FormData();
-      formData.append('idEmpleado',empleado.idEmpleado);
-      const {data}=await Api.post('/empleados/EmpleadosDetalle.php',formData);
-      setEmpleadoDetalle(data[0]);
-      setCargando(false);
-    } catch (error) {
-      notificacionError("Ocurrió un error")
-    }
-  }
     return (
       <Modal handleClose={handleClose}>
         <Contenedor>
@@ -66,8 +62,8 @@ export const VerDetallesEmpleadosModal = ({handleClose,empleado,notificacionErro
                 <Valor>{empleadoDetalle.nombrePension}</Valor>
               </ContValor>
               <ContValor>
-                <Label>Pensión:</Label>
-                <Valor>{Number(empleadoDetalle.salarioNormal).toFixed(2)}</Valor>
+                <Label>Salario:</Label>
+                <Valor>{Number(empleadoDetalle.salarioNominal).toFixed(2)}</Valor>
               </ContValor>
               <ContValor>
                 <Label>Fecha de Creación:</Label>

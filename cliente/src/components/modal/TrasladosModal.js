@@ -4,19 +4,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWindowClose,faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "../Modal";
 import { EmpleadosSeleccion } from "../EmpleadosSeleccion";
-import { UseDatos } from "../../hooks/UseDatos";
 import { UseTraslados } from "../../hooks/UseTraslados";
+import { getUbicaciones } from "../../services/ubicacionesServices";
+import { getPlazas } from "../../services/plazasServices";
+import { getGrupos } from "../../services/gruposServices";
 
 export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limpiarEmpleados }) => {
-  const [datosUbicacion, cargandoUbicacion] = UseDatos("ubicaciones/ObtenerUbicaciones.php");
-  const [datosPlaza, cargandoPlaza] = UseDatos("plazas/ObtenerPlazas.php");
-  const [datosGrupo, cargandoGrupo] = UseDatos("grupos/ObtenerGrupos.php");
   
   const [tituloDetalle, setTituloDetalle] = useState("");
 
   const [cargando, setCargando] = useState(true);
   const empleadosFormulario = useRef([]);
   const [cantidad, setCantidad] = useState(0);
+  const [infoEmpleado, setInfoEmpleado] = useState({
+    ubicaciones:[],
+    plazas:[],
+    grupos:[]
+  });
 
   const {PrepararDatos}=UseTraslados();
 
@@ -27,10 +31,25 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
   },[empleados])
   
   useEffect(() => {
-    if (!cargandoUbicacion && !cargandoPlaza&&!cargandoGrupo) {
-      setCargando(false);
-    }
-  }, [cargandoUbicacion, cargandoPlaza,cargandoGrupo]);
+    Promise.all([
+      getUbicaciones(),
+      getPlazas(),
+      getGrupos(),
+    ])
+      .then(([ubicaciones, plazas, grupos]) => {
+        setInfoEmpleado({
+          ubicaciones,
+          plazas,
+          grupos,
+        });
+      })
+      .catch((error) => {
+        mostrarNotificacion(true);
+      })
+      .finally(() => {
+        setCargando(false);
+      });
+  }, []);
 
   return (
     <Modal handleClose={handleClose} grande={true}>
@@ -67,10 +86,9 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
                 key={empleado.idEmpleado}
                 posicion={index}
                 empleado={empleado}
-                ubicaciones={datosUbicacion}
-                plazas={datosPlaza}
-                grupos={datosGrupo}
-                titulo={tituloDetalle}
+                ubicaciones={infoEmpleado.ubicaciones}
+                plazas={infoEmpleado.plazas}
+                grupos={infoEmpleado.grupos}
                 empleadosFormulario={empleadosFormulario}
                 ultimo={cantidad}
               />

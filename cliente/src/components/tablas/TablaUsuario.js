@@ -10,11 +10,8 @@ import {
 import { UsuarioModal } from "../modal/UsuarioModal";
 import { Eliminar } from "../modal/Eliminar";
 import { eliminarUsuarios, getUsuarios } from "../../services/usuariosServices";
+import { usuariosState } from "../../atom/AtomTablas";
 
-export const usuariosState = atom({
-  key: 'usuariosState',
-  default: [],
-});
 
 export const TablaUsuario = ({mostrarNotificacion}) => {
 

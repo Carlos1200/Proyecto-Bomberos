@@ -6,11 +6,12 @@ import {  faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { AnimatePresence } from 'framer-motion';
 import { Menu } from './../Menu';
 import {Background} from '../Background';
-import { plazasState, TablaPlaza } from '../tablas/TablaPlaza';
+import {  TablaPlaza } from '../tablas/TablaPlaza';
 import { PlazaModal } from '../modal/PlazaModal';
 import {useBuscador} from '../../hooks/useBuscador';
 import { useSetRecoilState } from 'recoil';
 import { buscadorPlazas } from '../../services/plazasServices';
+import { plazasState } from '../../atom/AtomTablas';
 
 
 

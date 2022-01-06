@@ -7,10 +7,11 @@ import { AnimatePresence } from 'framer-motion';
 import { useSetRecoilState } from 'recoil';
 import { Menu } from './../Menu';
 import {Background} from '../Background';
-import { grupoState, TablaGroup } from '../tablas/TablaGroup';
+import { TablaGroup } from '../tablas/TablaGroup';
 import { GrupoModal } from '../modal/GrupoModal';
 import {useBuscador} from '../../hooks/useBuscador'
 import { buscadorGrupos } from '../../services/gruposServices';
+import { grupoState } from '../../atom/AtomTablas';
 
 
 

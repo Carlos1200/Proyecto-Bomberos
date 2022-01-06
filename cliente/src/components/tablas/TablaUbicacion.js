@@ -4,17 +4,12 @@ import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import {
-  atom,
   useRecoilState,
 } from 'recoil';
 import {UbicacionModal} from '../modal/UbicacionModal'
 import { Eliminar } from "../modal/Eliminar";
 import { eliminarUbicaciones, getUbicaciones } from "../../services/ubicacionesServices";
-
-export const ubicacionesState = atom({
-  key: 'ubicacionesState',
-  default: [],
-});
+import { ubicacionesState } from "../../atom/AtomTablas";
 
 export const TablaUbicacion = ({mostrarNotificacion}) => {
 

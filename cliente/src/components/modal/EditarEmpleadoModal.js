@@ -8,19 +8,22 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useSetRecoilState } from "recoil";
 import { Modal } from "../Modal";
-import { empleadosState } from "../tablas/TablaEmpleado";
-import { detallesEmpleados, editarEmpleados } from "../../services/empleadosServices";
+import {
+  detallesEmpleados,
+  editarEmpleados,
+} from "../../services/empleadosServices";
 import { getUbicaciones } from "../../services/ubicacionesServices";
 import { getPlazas } from "../../services/plazasServices";
 import { getGrupos } from "../../services/gruposServices";
 import { getPensiones } from "../../services/pensionesServices";
+import { empleadosState } from "../../atom/AtomTablas";
 
 const schema = yup.object({
   nombres: yup.string().required("Los nombres son obligatorios"),
   apellidos: yup.string().required("Los apellidos son obligatorios"),
   salario: yup
     .string()
-    .matches(RegExp("^[0-9]\\d*$"), {
+    .matches(RegExp("^[0-9.]+$"), {
       message: "El salario debe ser un número positivo",
     })
     .required("El salario Es obligatorio"),
@@ -46,34 +49,43 @@ export const EditarEmpleadoModal = ({
   handleClose,
   empleadoId,
   notificacion,
-  notificacionError
+  notificacionError,
 }) => {
   const [infoEmpleado, setInfoEmpleado] = useState();
   const [cargando, setCargando] = useState(true);
   const [detalles, setDetalles] = useState();
-  const setEmpleados=useSetRecoilState(empleadosState);
+  const setEmpleados = useSetRecoilState(empleadosState);
 
-  useEffect(()=>{
+  useEffect(() => {
     const formData = new FormData();
     formData.append("idEmpleado", empleadoId);
-    Promise.all([getUbicaciones(),getPlazas(),getGrupos(),getPensiones(),detallesEmpleados(formData)]).then(([ubicaciones,plazas,grupos,pensiones,detalles])=>{
-      setInfoEmpleado({
-        ubicaciones,
-        plazas,
-        grupos,
-        pensiones
+    Promise.all([
+      getUbicaciones(),
+      getPlazas(),
+      getGrupos(),
+      getPensiones(),
+      detallesEmpleados(formData),
+    ])
+      .then(([ubicaciones, plazas, grupos, pensiones, detalles]) => {
+        setInfoEmpleado({
+          ubicaciones,
+          plazas,
+          grupos,
+          pensiones,
+        });
+        setDetalles(detalles);
+      })
+      .catch((error) => {
+        if (!error.response) {
+          notificacionError("Error en el servidor");
+        } else {
+          notificacionError(error.response.data[0]);
+        }
+      })
+      .finally(() => {
+        setCargando(false);
       });
-      setDetalles(detalles);
-    }).catch(error=>{
-      if(!error.response){
-        notificacionError("Error en el servidor")
-      }else{
-        notificacionError(error.response.data[0]);
-      }
-    }).finally(()=>{
-      setCargando(false);
-    });
-  },[])
+  }, []);
 
   const {
     handleSubmit,
@@ -83,41 +95,47 @@ export const EditarEmpleadoModal = ({
     resolver: yupResolver(schema),
   });
 
-  const editarEmpleado = async({nombres,apellidos,salario,ubicacion,plaza,pension,grupo}) => {
-    const formData=new FormData();
-    formData.append('idEmpleado',empleadoId);
-    formData.append('nombres',nombres);
-    formData.append('apellidos',apellidos)
-    formData.append('salarioNominal',salario)
-    formData.append('idGrupo',grupo.idGrupo)
-    formData.append('idPension',pension.idPension)
-    formData.append('idUbicacion',ubicacion.idUbicacion)
-    formData.append('idPlaza',plaza.idPlaza)
+  const editarEmpleado = async ({
+    nombres,
+    apellidos,
+    salario,
+    ubicacion,
+    plaza,
+    pension,
+    grupo,
+  }) => {
+    const formData = new FormData();
+    formData.append("idEmpleado", empleadoId);
+    formData.append("nombres", nombres);
+    formData.append("apellidos", apellidos);
+    formData.append("salarioNominal", Number.parseFloat(salario).toFixed(2));
+    formData.append("idGrupo", grupo.idGrupo);
+    formData.append("idPension", pension.idPension);
+    formData.append("idUbicacion", ubicacion.idUbicacion);
+    formData.append("idPlaza", plaza.idPlaza);
 
-    editarEmpleados(formData).then(()=>{
-      setEmpleados((oldValue)=>{
-        return oldValue.map((empleado)=>{
-          if(empleado.idEmpleado===empleadoId){
-            empleado.nombres=nombres;
-            empleado.apellidos=apellidos;
-            empleado.salarioNominal=salario;
-            empleado.idGrupo=grupo.idGrupo;
-            empleado.idPension=pension.idPension;
-            empleado.idUbicacion=ubicacion.idUbicacion;
-            empleado.idPlaza=plaza.idPlaza;
-          }
-          return empleado;
-        });
+    editarEmpleados(formData)
+      .then((res) => {
+        setEmpleados((oldValue) => {
+           return oldValue.map((empleado) => {
+            if(empleado.idEmpleado===res.idEmpleado){
+              return res;
+            }else{
+              return empleado;
+            }
+          });
+          });
+        handleClose();
+        notificacion();
       })
-      handleClose();
-      notificacion();
-    }).catch(error=>{
-      if(!error.response){
-        notificacionError("Error en el servidor")
-      }else{
-        notificacionError(error.response.data[0]);
-      }
-    })
+      .catch((error) => {
+        console.log(error);
+        if (!error.response) {
+          notificacionError("Error en el servidor");
+        } else {
+          notificacionError(error.response.data[0]);
+        }
+      });
   };
   return (
     <Modal handleClose={handleClose}>
@@ -170,7 +188,7 @@ export const EditarEmpleadoModal = ({
                 />
               )}
               name='salario'
-              defaultValue={detalles.salarioNominal}
+              defaultValue={Number.parseFloat(detalles.salarioNominal).toFixed(2)}
             />
             {errors.salario && <TextError>{errors.salario.message}</TextError>}
             <Label>Ubicacion</Label>
@@ -279,7 +297,7 @@ export const EditarEmpleadoModal = ({
                   marginRight: "1rem",
                 }}
               />
-              <Label>Agregar Empleado</Label>
+              <Label>Editar Empleado</Label>
             </ContenedorBoton>
           </Form>
         )}
@@ -322,7 +340,7 @@ const Textbox = styled.input`
   margin: 0;
   width: 100%;
   border-radius: 0.2rem;
-  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-family: Georgia, "Times New Roman", Times, serif;
 `;
 
 const Form = styled.div`

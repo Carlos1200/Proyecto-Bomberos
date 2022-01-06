@@ -12,11 +12,9 @@ import { EditarEmpleadoModal } from "../modal/EditarEmpleadoModal";
 import { Eliminar } from "../modal/Eliminar";
 import { VerDetallesEmpleadosModal } from "../modal/VerDetallesEmpleadosModal";
 import { eliminarEmpleados, getEmpleados } from "../../services/empleadosServices";
+import { empleadosState } from "../../atom/AtomTablas";
 
-export const empleadosState = atom({
-  key: 'empleadosState',
-  default: [],
-});
+
 
 export const TablaEmpleado = ({ notificacion, notificacionError }) => {
   const [visible, setVisible] = useState(false);

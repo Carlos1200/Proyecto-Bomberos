@@ -9,7 +9,7 @@ export const nuevaUbicacion = (ubicacion)=>
 
 export const actualizarUbicacion = (ubicacion)=>
     Api.post("/ubicaciones/EditarUbicacion.php",ubicacion)
-    .then((res) => res.data);
+    .then((res) => res.data[0]);
 
 export const eliminarUbicaciones=(ubicacion)=>
   Api.post("/ubicaciones/EliminarUbicacion.php",ubicacion)

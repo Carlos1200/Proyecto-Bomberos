@@ -99,8 +99,13 @@ class UbicacionesController{
         $errores=$ubicacion->validar(false);
 
         if(empty($errores)){
-            $errores=$ubicacion->editarUbicacion();
-            if(!empty($errores)){
+            $ubicaciones=$ubicacion->editarUbicacion();
+            $errores=$ubicacion::getErrores();
+            if(empty($errores)){
+                $router->render('ubicaciones/ubicaciones',[
+                    'ubicaciones'=>$ubicaciones
+                ]);
+            }else{
                 $router->render('errores/error',[
                     'errores'=>$errores
                 ]);

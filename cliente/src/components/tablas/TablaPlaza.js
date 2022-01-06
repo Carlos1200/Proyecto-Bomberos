@@ -4,17 +4,14 @@ import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
 import {
-  atom,
   useRecoilState,
 } from 'recoil';
 import { PlazaModal } from "../modal/PlazaModal";
 import { Eliminar } from "../modal/Eliminar";
 import { eliminarPlazas, getPlazas } from "../../services/plazasServices";
+import { plazasState } from "../../atom/AtomTablas";
 
-export const plazasState = atom({
-  key: 'plazasState',
-  default: [],
-});
+
 
 
 export const TablaPlaza = ({mostrarNotificacion}) => {

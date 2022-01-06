@@ -7,10 +7,11 @@ import { AnimatePresence } from 'framer-motion';
 import {useSetRecoilState} from 'recoil'
 import { Menu } from '../Menu'
 import {Background} from '../Background';
-import { TablaUbicacion, ubicacionesState } from '../tablas/TablaUbicacion';
 import { UbicacionModal } from '../modal/UbicacionModal';
 import { useBuscador } from '../../hooks/useBuscador';
 import { buscadorUbicaciones } from '../../services/ubicacionesServices';
+import { ubicacionesState } from '../../atom/AtomTablas';
+import { TablaUbicacion } from '../tablas/TablaUbicacion';
 
 
 export const Ubicaciones = () => {

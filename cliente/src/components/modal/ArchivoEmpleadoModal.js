@@ -7,7 +7,7 @@ import { useSetRecoilState } from 'recoil';
 import { ExcelInput } from '../ExcelInput';
 import { Modal } from '../Modal';
 import { nuevosEmpleados } from '../../services/empleadosServices';
-import { empleadosState } from '../tablas/TablaEmpleado';
+import { empleadosState } from '../../atom/AtomTablas';
 
 export const ArchivoEmpleadoModal = ({handleClose,notificacion}) => {
 

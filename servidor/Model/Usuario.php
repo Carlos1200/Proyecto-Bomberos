@@ -131,12 +131,14 @@ class Usuario extends ActiveRecord{
         $consulta->bindParam(':contra',$this->contra,PDO::PARAM_STR);
         $consulta->bindParam(':UbicacionUsuario',$this->UbicacionUsuario,PDO::PARAM_STR);
         $consulta->execute();
-
-        if(!self::$db->rowCount() > 0){
-            self::$errores[]="No se pudo actualizar el usuario";
-        }
-
-        return self::$errores;
+        
+            //Obtener usuario actualizado
+            $query="SELECT * FROM usuarios WHERE idUsuario=:idUsuario";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(':idUsuario',$this->idUsuario,PDO::PARAM_INT);
+            $consulta->execute();
+            $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $datos;
     }
 
     public function validar()

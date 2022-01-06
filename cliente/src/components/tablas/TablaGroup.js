@@ -7,11 +7,7 @@ import { atom, useRecoilState } from "recoil";
 import { Eliminar } from "../modal/Eliminar";
 import { GrupoModal } from "../modal/GrupoModal";
 import { eliminarGrupos, getGrupos } from "../../services/gruposServices";
-
-export const grupoState = atom({
-  key: 'grupoState',
-  default: [],
-});
+import { grupoState } from "../../atom/AtomTablas";
 
 
 export const TablaGroup = ({mostrarNotificacion}) => {
