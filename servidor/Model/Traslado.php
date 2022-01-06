@@ -155,11 +155,10 @@
         public function ObtenerTrasladosDetalles(){
             $query="EXEC leerReportesTraslados :idReporteHistorial";
             $consulta=self::$db->prepare($query);
-            $consulta->bindParam(':nombres',$this->idReporteHistorial,PDO::PARAM_STR);
+            $consulta->bindParam(':idReporteHistorial',$this->idReporteHistorial,PDO::PARAM_INT);
             $consulta->execute();
             $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
             return $datos;
-
         }
 
         

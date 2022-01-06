@@ -5,11 +5,15 @@ import { faWindowClose,faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "../Modal";
 import { EmpleadosSeleccion } from "../EmpleadosSeleccion";
 import Api from "../../Api/Api";
+import { TrasEmpSeleccion } from "../TrasEmpSeleccion";
 
-export const TrasladosDetallesModal = ({handleClose, traslado, notifiacionError}) =>{
+export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificacion}) =>{
 
     const [trasladoDetalle, setTrasladoDetalle] = useState();
     const [cargando, setCargando] = useState(true);
+    //Comentario de TrasladdosDetallesModal Funcional
+
+    const traslEmplFormulario = useRef();
 
     useEffect(() => {
         obtenerDetalles();
@@ -18,12 +22,16 @@ export const TrasladosDetallesModal = ({handleClose, traslado, notifiacionError}
     const obtenerDetalles = async() => {
         try {
             const formData = new FormData();
-            formData.append('idReporteHistorial',traslado.idReporteHistorial);
-            const {data} = await Api.post('/traslados/TrasladosDetalle.php',formData);
-            setTrasladoDetalle(data[0]);
+            formData.append('idReporteHistorial',traslado.idHistorialTraslados);
+            
+            const {data} = await Api.post('traslados/TraslEmpDetalle.php', formData);
+            setTrasladoDetalle(data);
+            
+            traslEmplFormulario.current = data;
             setCargando(false);
         } catch (error) {
-            notifiacionError("Ocurrio un error");
+            console.log({error})
+            mostrarNotificacion("Ocurrio un error");
         }
     }
 
@@ -50,37 +58,29 @@ export const TrasladosDetallesModal = ({handleClose, traslado, notifiacionError}
                 <Header>
                     <Titulo>Detalle de Empleados del Traslado</Titulo>
                 </Header>
-                {/*!cargando ? (
+                {!cargando ? (
                 <>
                 <ContenedorEmpleados>
-                    {empleados.map((empleado,index) => (
-                    <EmpleadosSeleccion
+                    {trasladoDetalle.map((empleado,index) => (
+                    <TrasEmpSeleccion
                         key={empleado.idEmpleado}
-                        posicion={index}
                         empleado={empleado}
-                        ubicaciones={datosUbicacion}
-                        plazas={datosPlaza}
-                        grupos={datosGrupo}
-                        titulo={tituloDetalle}
-                        empleadosFormulario={empleadosFormulario}
-                        ultimo={cantidad}
+                        traslEmplFormulario={traslEmplFormulario}
+                        posicion={index}
                     />
                     ))}
                 </ContenedorEmpleados>
                 <Btn type="button" onClick={()=>{
-                    PrepararDatos(empleadosFormulario.current)
-                    limpiarEmpleados();
-                    handleClose();  
-                    mostrarNotificacion();
+                    handleClose();
                 }}>
-                <Text>Agregar</Text>
+                <Label>Agregar</Label>
                 <FontAwesomeIcon
                     icon={faSignInAlt}
                     style={{ fontSize: "23px", color: "#fff" }}
                 />
                 </Btn>
                 </>
-                ) : null*/}
+                ) : null}
             </Contenedor>
             
             <p>Hola Mundo</p>
@@ -135,6 +135,23 @@ const ContenedorBoton=styled.div`
   cursor: pointer;
 `
 
+const Btn=styled.button`
+    display: flex;
+    margin: 0 auto;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #04B99C;
+    border-radius: 1rem;
+    margin-top: 1rem;
+    padding: 0 1rem;
+    border: 0;
+    transition: background-color .3s ease-in-out;
+    &:hover{
+      background-color: #028671;
+
+    }
+`
+
 const ContenedorEmpleados = styled.div`
   overflow-y: auto;
   height: 55vh;
@@ -152,4 +169,5 @@ const ContenedorEmpleados = styled.div`
     border-radius: 20px; /* roundness of the scroll thumb */
     border: 3px solid #e2e2e2; /* creates padding around scroll thumb */
   }
-`;
+`
+;

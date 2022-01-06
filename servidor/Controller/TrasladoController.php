@@ -136,7 +136,7 @@
             $errores=$traslado::getErrores();
 
             if(empty($errores)){
-                $traslado=$traslado->leerTrasladoDetalles();
+                $traslados=$traslado->leerTrasladoDetalles();
                 $errores=$traslado::getErrores();
                 if(empty($errores)){
                     $router->render('traslados/traslados',[
@@ -156,15 +156,15 @@
         }
 
         public static function ObtenerDetalleTrasladoEmpleados(Router $router){
-            $query = parse_url($SERVER['REQUEST_URI'], PHP_URL_QUERY);
-            $token:: str_replace("token=", "",$query);
+            $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+            $token=str_replace("token=","",$query);
 
             $traslado = new Traslado($_POST);
             $traslado::VerificarToken($token);
             $errores=$traslado::getErrores();
 
             if(empty($errores)){
-                $traslado=$traslado->ObtenerTrasladosDetalles();
+                $traslados=$traslado->ObtenerTrasladosDetalles();
                 $errores=$traslado::getErrores();
                 if(empty($errores)){
                     $router->render('traslados/traslados',[

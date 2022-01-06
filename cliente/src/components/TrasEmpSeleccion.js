@@ -1,54 +1,69 @@
 import React,{useState,useEffect} from "react";
 import Select from "react-select";
 import styled from "styled-components";
-import Api from "../Api/Api";
 
-export const TrasEmpSeleccion = ({nombres, apellidos, plazaAnterior, plazaNueva, plazaActual, ubicacionAnterior, ubicacionNueva, ubicacionActual, grupoAnterior, grupoNuevo, grupoActual, descripcion, traslEmpFormulario,posicion}) => {
+export const TrasEmpSeleccion = ({empleado, traslEmplFormulario, posicion}) => {
 
     const [traslEmpDetalle, setTraslEmpDetalle] = useState();
     const [cargando, setCargando] = useState(true);
 
-    const obtenerDetallesTraslados = async() =>{
-
-        try{
-            const formData = formData();
-            formData.append('idReporteHistorial',traslado.idReporteHistorial);
-            
-            const {data} = await Api.post('traslados/TraslEmpDetalle.php', formData);
-            setTraslEmpDetalle(data[0]);
-            const trasladoCompleto={
-                ...data[0],
-                nombres:data[0].nombres,
-                apellidos:data[0].apellidos,
-                plazaAnterior:data[0].plazaAnterior,
-                plazaNueva:data[0].plazaNueva,
-                plazaActual:data[0].plazaActual,
-                ubicacionAnterior:data[0].ubicacionAnterior,
-                ubicacionNueva:data[0].ubicacionNueva,
-                ubicacionActual:data[0].ubicacionActual,
-                grupoAnterior:data[0].grupoAnterior,
-                grupoNuevo:data[0].grupoNuevo,
-                descripcion:data[0].descripcion,
-            }
-
-            traslEmpFormulario.current[posicion] = trasladoCompleto;
-            setCargando(false);
-
-        } catch(error){
-            //Error por si falla al llamar la info de la bdd
-            console.log(error);
-        }
-
-    }
-
     useEffect(() => {
-        obtenerDetallesTraslados();
-        // eslint-disable-next-line
+      setTraslEmpDetalle(traslEmplFormulario.current[posicion]);
+      setCargando(false);
+      // eslint-disable-next-line
     }, [])
 
     return(
         <Contenedor>
-            
+            {!cargando?(
+              <>
+              <div style={{display:"flex", justifyContent:'center'}}>
+                <Nombres style={{marginRight:'1rem',fontSize:'1.5rem'}}>{traslEmpDetalle.nombres}</Nombres>
+                <Nombres style={{fontSize:'1.5rem'}}>{traslEmpDetalle.apellidos}</Nombres>
+                <ContenedorColumnas>
+                  <div>
+                    <ContenedorInfo>
+                      <Nombres>
+                        Plaza Anterior: <Span>{traslEmpDetalle.plazaAnterior}</Span>
+                      </Nombres>
+                      <Nombres>
+                        Próxima Plaza: <Span>{traslEmpDetalle.plazaNueva}</Span>
+                      </Nombres>
+                      <Nombres>
+                        Plaza Actual: <Span>{traslEmpDetalle.plazaActual}</Span>
+                      </Nombres>
+                    </ContenedorInfo>
+                    <ContenedorInfo>
+                      <Nombres>
+                        Ubicación Anterior: <Span>{traslEmpDetalle.ubicacionAnterior}</Span>
+                      </Nombres>
+                      <Nombres>
+                        Próxima Ubicación: <Span>{traslEmpDetalle.ubicacionNueva}</Span>
+                      </Nombres>
+                      <Nombres>
+                        Ubicación Actual: <Span>{traslEmpDetalle.ubicacionActual}</Span>
+                      </Nombres>
+                    </ContenedorInfo>
+                    <ContenedorInfo>
+                      <Nombres>
+                        Grupo Anterior: <Span>{traslEmpDetalle.grupoAnterior}</Span>
+                      </Nombres>
+                      <Nombres>
+                        Próximo Grupo: <Span>{traslEmpDetalle.grupoAnterior}</Span>
+                      </Nombres>
+                      <Nombres>
+                        Grupo Actual: <Span>{traslEmpDetalle.grupoActual}</Span>
+                      </Nombres>
+                    </ContenedorInfo>
+                  </div>
+                </ContenedorColumnas>
+                <div>
+                  <Nombres>Descripción</Nombres>
+                  <Nombres>{traslEmpDetalle.descripcion}</Nombres>
+                </div>
+              </div>
+              </>
+            ):null}
         </Contenedor>
     )
 
