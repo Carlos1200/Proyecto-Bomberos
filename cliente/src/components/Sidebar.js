@@ -10,7 +10,7 @@ import {
   faPowerOff,
   faExchangeAlt,
   faObjectGroup,
-  // faRandom
+  faRandom
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Btn } from "./Btn";
@@ -86,11 +86,11 @@ export const Sidebar = () => {
             />
           </>
         )}
-        {/* <Btn
+        {<Btn
           titulo='Administrador de Traslados'
           icono={faRandom}
           redirect='admin-traslados'
-        /> */}
+        />}
         <Btn
           titulo='Traslados'
           icono={faExchangeAlt}

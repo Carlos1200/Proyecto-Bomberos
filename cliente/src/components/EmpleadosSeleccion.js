@@ -3,7 +3,7 @@ import Select from "react-select";
 import styled from "styled-components";
 import Api from "../Api/Api";
 
-export const EmpleadosSeleccion = ({ empleado, ubicaciones, plazas,grupos,posicion,empleadosFormulario,ultimo }) => {
+export const EmpleadosSeleccion = ({ empleado, ubicaciones, plazas,grupos,posicion,empleadosFormulario,ultimo, titulo }) => {
 
     const [empleadoDetalle, setEmpleadoDetalle] = useState();
     const [cargando, setCargando] = useState(true);
@@ -12,6 +12,13 @@ export const EmpleadosSeleccion = ({ empleado, ubicaciones, plazas,grupos,posici
     const [plazasSelect, setPlazasSelect] = useState()
     const [gruposSelect, setGruposSelect ] = useState();
     const [fechaInput, setFechaInput] = useState()
+
+    useEffect (() => {
+      if(empleadosFormulario.current[posicion]){
+        empleadosFormulario.current[posicion].titulo = titulo;
+      }
+    },[titulo])
+      
 
     const obtenerDetalles=async()=>{
 
@@ -34,7 +41,7 @@ export const EmpleadosSeleccion = ({ empleado, ubicaciones, plazas,grupos,posici
               plazaAnterior:data[0].nombrePlaza,
               grupoAnterior:data[0].nombreGrupo,
               fechaCambio:fecha,
-              titulo:"Traslado"
+              
             }
 
             empleadosFormulario.current[posicion]=empleadoCompleto;

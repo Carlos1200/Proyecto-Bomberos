@@ -85,7 +85,7 @@ export const MinutosSeleccion = ({
         ...data[0],
         minutosDiurnos: "0",
         minutosNocturnos: "0",
-        salario:Number(data[0].salarioNormal),
+        salario:Number(data[0].salarioNominal),
         idTipoPension:resp.data.filter(pension=>pension.nombrePension===data[0].nombrePension)[0].idPension,
       };
 

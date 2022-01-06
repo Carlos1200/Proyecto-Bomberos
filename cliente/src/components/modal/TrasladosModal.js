@@ -12,11 +12,15 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
   const [datosPlaza, cargandoPlaza] = UseDatos("plazas/ObtenerPlazas.php");
   const [datosGrupo, cargandoGrupo] = UseDatos("grupos/ObtenerGrupos.php");
   
+  const [tituloDetalle, setTituloDetalle] = useState("");
+
   const [cargando, setCargando] = useState(true);
   const empleadosFormulario = useRef([]);
   const [cantidad, setCantidad] = useState(0);
 
   const {PrepararDatos}=UseTraslados();
+
+  
 
   useEffect(()=>{
     setCantidad(empleados.length-1);
@@ -27,6 +31,7 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
       setCargando(false);
     }
   }, [cargandoUbicacion, cargandoPlaza,cargandoGrupo]);
+
   return (
     <Modal handleClose={handleClose} grande={true}>
       <Contenedor>
@@ -48,6 +53,12 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
           />
         </div>
         <Titulo>Traslado de Empleados</Titulo>
+        <InputDiv>
+          <Input value={tituloDetalle} placeholder="Título para el Traslado" onChange={(e)=>{
+            setTituloDetalle(e.target.value);
+          }}/>
+        </InputDiv>
+        
         {!cargando ? (
             <>
           <ContenedorEmpleados>
@@ -59,6 +70,7 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
                 ubicaciones={datosUbicacion}
                 plazas={datosPlaza}
                 grupos={datosGrupo}
+                titulo={tituloDetalle}
                 empleadosFormulario={empleadosFormulario}
                 ultimo={cantidad}
               />
@@ -132,4 +144,18 @@ const Text=styled.p`
   color: #fff;
   font-size: 1.5rem;
   margin-right: .7rem;
+`
+const InputDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const Input = styled.input`
+  margin-bottom: 1rem;
+  appearance: none;
+  border: 1px solid #CCCCCC;
+  border-radius: .2rem;
+  padding: .5rem 1rem;
+  width: 50%;
 `

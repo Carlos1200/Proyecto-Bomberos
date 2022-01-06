@@ -4,6 +4,7 @@
     use \PDO;
 
     class Traslado extends ActiveRecord{
+        protected static $tabla = 'historialTraslados';
 
         public $plazaAnterior;
         public $plazaActual;
@@ -20,7 +21,9 @@
         public $idHistorialTraslados;
         public $idEmpleados;
 
+        public $idReporteHistorial;
         public $fechaActual;
+
 
         public function __construct($args=[]){
             $this->plazaAnterior=$args['plazaAnterior']??'';
@@ -35,6 +38,7 @@
             $this->tituloHistorial=$args['tituloHistorial']??'';
             $this->idHistorialTraslados=$args['idHistorialTraslados']??'';
             $this->idEmpleados=$args['idEmpleados']??'';
+            $this->idReporteHistorial=$args['idReporteHistorial']??'';
             $this->fechaActual=$args['fechaActual']??'';
         }
 
@@ -138,6 +142,46 @@
 
             return self::$errores;
         }
+
+        public function obtenerTraslados(){
+            $sql = "EXEC mostrarReportesTraslados";
+            $query = self::$db->prepare($sql);
+            $query->execute();
+            $resultado=$query->fetchAll(PDO::FETCH_ASSOC);
+
+            return $resultado;
+        }
+
+        public function ObtenerTrasladosDetalles(){
+            $query="EXEC leerReportesTraslados :idReporteHistorial";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(':nombres',$this->idReporteHistorial,PDO::PARAM_STR);
+            $consulta->execute();
+            $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $datos;
+
+        }
+
+        
+        public function eliminarTraslados(){
+            if($this->idReporteHistorial){
+                $query='EXEC borrarReportesTraslados :idReporteHistorial';
+                $consulta=self::$db->prepare($query);
+                $consulta->bindParam(':idReporteHistorial',$this->idReporteHistorial,PDO::PARAM_INT);
+                $consulta->execute();
+
+                if(!self::$db->rowCount() > 0){
+                    self::$errores[]="No se Elimino el Traslado";
+                }
+
+            } else {
+                self::$errores[]="El id de los Traslados es obligatorio";
+            }
+
+            return self::$errores;
+        }
+
+        
 
     }
 
