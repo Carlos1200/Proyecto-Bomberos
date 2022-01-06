@@ -10,7 +10,6 @@ import { TablaReportes } from '../tablas/TablaReportes';
 
 export const Reportes = () => {
 
-  const [visible, setVisible] = useState(false);
   const [inputBuscador, setInputBuscador] = useState('')
   const {buscador,setConsultar}=useContext(ReportesContext);
 

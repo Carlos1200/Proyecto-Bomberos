@@ -3,28 +3,28 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWindowClose,faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "../Modal";
-import { EmpleadosSeleccion } from "../EmpleadosSeleccion";
 import Api from "../../Api/Api";
 import { TrasEmpSeleccion } from "../TrasEmpSeleccion";
 
 export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificacion}) =>{
 
-    const [trasladoDetalle, setTrasladoDetalle] = useState();
+    const [trasladoDetalle, setTrasladoDetalle] = useState('');
     const [cargando, setCargando] = useState(true);
-    //Comentario de TrasladdosDetallesModal Funcional
 
     const traslEmplFormulario = useRef();
 
     useEffect(() => {
         obtenerDetalles();
+        // eslint-disable-next-line
     }, [])
 
     const obtenerDetalles = async() => {
         try {
             const formData = new FormData();
-            formData.append('idReporteHistorial',traslado.idHistorialTraslados);
+            formData.append('idReporteHistorial',traslado.idReporteHistorial);
             
             const {data} = await Api.post('traslados/TraslEmpDetalle.php', formData);
+            console.log(data);
             setTrasladoDetalle(data);
             
             traslEmplFormulario.current = data;
@@ -82,8 +82,6 @@ export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificaci
                 </>
                 ) : null}
             </Contenedor>
-            
-            <p>Hola Mundo</p>
         </Modal>
 
     )
@@ -110,29 +108,6 @@ const Label=styled.p`
     font-size: 1.5rem;
     margin-bottom: 1rem;
     margin-top: 10px;
-`
-
-const Valor=styled.p`
-  margin-left: 1rem;
-  font-size: 1.1rem;
-  font-family:Georgia, 'Times New Roman', Times, serif;
-`
-
-const ContValor=styled.div`
-  display: flex;
-  align-items: center;
-`
-
-const ContenedorBotones=styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`
-const ContenedorBoton=styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
 `
 
 const Btn=styled.button`

@@ -89,14 +89,14 @@
 
             $errores = $traslado->validar(false);
             if(empty($errores)){
-                $errores=$traslado->editarPlaza();
+                // $errores=$traslado->editarPlaza();
                 if(!empty($errores)){
                     $router->render('errores/error',[
                         'errores'=>$errores
                     ]);
                 }
             } else {
-                $router._render('errores/error',[
+                $router->render('errores/error',[
                     'errores'=>$errores
                 ]);
             }
@@ -136,7 +136,7 @@
             $errores=$traslado::getErrores();
 
             if(empty($errores)){
-                $traslados=$traslado->leerTrasladoDetalles();
+                $traslados=$traslado->ObtenerTrasladosDetalles();
                 $errores=$traslado::getErrores();
                 if(empty($errores)){
                     $router->render('traslados/traslados',[

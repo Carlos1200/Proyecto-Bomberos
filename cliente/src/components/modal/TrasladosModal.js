@@ -16,6 +16,7 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
   const [cargando, setCargando] = useState(true);
   const empleadosFormulario = useRef([]);
   const [cantidad, setCantidad] = useState(0);
+  const [error, setError] = useState(false);
   const [infoEmpleado, setInfoEmpleado] = useState({
     ubicaciones:[],
     plazas:[],
@@ -23,7 +24,6 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
   });
 
   const {PrepararDatos}=UseTraslados();
-
   
 
   useEffect(()=>{
@@ -49,6 +49,7 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
       .finally(() => {
         setCargando(false);
       });
+      // eslint-disable-next-line
   }, []);
 
   return (
@@ -59,7 +60,7 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
             width: "100%",
             display: "flex",
             justifyContent: "flex-end",
-            margin: "-1.3rem 0",
+            margin: "0 0 -3rem 0",
           }}>
           <FontAwesomeIcon
             icon={faWindowClose}
@@ -75,8 +76,10 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
         <InputDiv>
           <Input value={tituloDetalle} placeholder="Título para el Traslado" onChange={(e)=>{
             setTituloDetalle(e.target.value);
+            setError(false);
           }}/>
         </InputDiv>
+        {error && <TextError>El titulo es obligatorio</TextError>}
         
         {!cargando ? (
             <>
@@ -91,14 +94,20 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
                 grupos={infoEmpleado.grupos}
                 empleadosFormulario={empleadosFormulario}
                 ultimo={cantidad}
+                titulo={tituloDetalle}
               />
             ))}
           </ContenedorEmpleados>
           <Btn type="button" onClick={()=>{
-            PrepararDatos(empleadosFormulario.current)
-            limpiarEmpleados();
-            handleClose();  
-            mostrarNotificacion();
+            if(!tituloDetalle){
+              setError(true);
+            }else{
+
+              PrepararDatos(empleadosFormulario.current)
+              limpiarEmpleados();
+              handleClose();  
+              mostrarNotificacion();
+            }
           }}>
           <Text>Agregar</Text>
           <FontAwesomeIcon
@@ -177,3 +186,10 @@ const Input = styled.input`
   padding: .5rem 1rem;
   width: 50%;
 `
+
+const TextError = styled.p`
+  margin-top: -13px;
+  text-align: center;
+  color: #f39c12;
+  margin-bottom: 0;
+`;

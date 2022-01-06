@@ -6,16 +6,13 @@ import { faWindowClose,faUserPlus,faCheck} from '@fortawesome/free-solid-svg-ico
 import {useForm, Controller} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup'
-import { useSetRecoilState } from 'recoil';
 import { Modal } from '../Modal'
 import { ListadoEmpleados } from '../ListadoEmpleados';
 import { UseEmpleados } from '../../hooks/UseEmpleados';
-import { nuevosEmpleados } from '../../services/empleadosServices';
 import { getUbicaciones } from '../../services/ubicacionesServices';
 import { getPlazas } from '../../services/plazasServices';
 import { getGrupos } from '../../services/gruposServices';
 import { getPensiones } from '../../services/pensionesServices';
-import { empleadosState } from '../../atom/AtomTablas';
 
 const schema=yup.object({
   nombres:yup.string().required("Los nombres son obligatorios"),
@@ -84,6 +81,7 @@ export const NuevoEmpleadoModal = ({handleClose,mostrarNotificacionNuevo}) => {
         .finally(() => {
           setCargando(false);
         });
+        // eslint-disable-next-line
     }, []);
 
     const { register, handleSubmit,formState: { errors },control } = useForm({

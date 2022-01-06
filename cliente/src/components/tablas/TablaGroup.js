@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
-import { atom, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { Eliminar } from "../modal/Eliminar";
 import { GrupoModal } from "../modal/GrupoModal";
 import { eliminarGrupos, getGrupos } from "../../services/gruposServices";
@@ -42,6 +42,7 @@ export const TablaGroup = ({mostrarNotificacion}) => {
     }).finally(()=>{
       setCargando(false);
     })
+    // eslint-disable-next-line
   },[])
 
   return (

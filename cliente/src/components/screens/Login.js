@@ -6,7 +6,6 @@ import * as yup from "yup";
 import { useHistory } from "react-router-dom";
 import Logo from "../../assets/LogoBomberos.png";
 import error from "../../assets/error.png";
-import Background from "../../assets/login.jpg";
 import Api from '../../Api/Api';
 import { AuthContext } from "../../context/Auth/AuthContext";
 
@@ -56,7 +55,6 @@ export const Login = () => {
   return (
     <>
       <Container>
-        <Picture></Picture>
         <LoginBox>
           <div>
             <LogoImage src={Logo} />
@@ -64,7 +62,7 @@ export const Login = () => {
           <TitleLogin>
             <label>Cuerpo de Bomberos</label>
             <br />
-            <label>Inicio de Sesion</label>
+            <label>Inicio de Sesión</label>
           </TitleLogin>
           <div>
             <FormLogin onSubmit={handleSubmit(onSubmit)}>
@@ -110,18 +108,12 @@ export const Login = () => {
 
 const Container = styled.div`
   display: flex;
-`;
-const Picture = styled.div`
-  background: url(${Background});
   height: 100vh;
-  width: 50%;
-  background-size: cover;
-  background-position: center;
+  background-color: #343f56;
 `;
 const LoginBox = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: #343f56;
   justify-content: center;
   align-items: center;
   font-family: sans-serif;

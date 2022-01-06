@@ -1,5 +1,4 @@
 import React,{useState,useEffect} from "react";
-import Select from "react-select";
 import styled from "styled-components";
 
 export const TrasEmpSeleccion = ({empleado, traslEmplFormulario, posicion}) => {
@@ -98,32 +97,3 @@ const ContenedorInfo = styled.div`
   gap: 1rem;
   padding: 0 1rem;
 `;
-
-const Justificacion = styled.textarea`
-  resize: none;
-  overflow-y: auto;
-  width: 100%;
-  height: 6rem;
-  &::-webkit-scrollbar {
-    width: 12px; /* width of the entire scrollbar */
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #e2e2e2; /* color of the tracking area */
-    border-radius: 2rem;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #343f56; /* color of the scroll thumb */
-    border-radius: 20px; /* roundness of the scroll thumb */
-    border: 3px solid #e2e2e2; /* creates padding around scroll thumb */
-  }
-`;
-
-const Fecha=styled.input`
-  margin-bottom: 1rem;
-  appearance: none;
-  border: 1px solid #CCCCCC;
-  border-radius: .2rem;
-  padding: .5rem 1rem;
-`

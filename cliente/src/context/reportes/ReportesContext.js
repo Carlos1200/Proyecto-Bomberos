@@ -23,10 +23,12 @@ export const ReportesProvider=({children})=>{
         if(consultar){
             consultarDatos();
         }
+        // eslint-disable-next-line
     },[consultar]);
 
     useEffect(()=>{
         consultarDatos();
+        // eslint-disable-next-line
     },[]);
 
     const consultarDatos=async()=>{

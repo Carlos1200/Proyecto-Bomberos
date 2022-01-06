@@ -47,6 +47,7 @@ export const TablaPlaza = ({mostrarNotificacion}) => {
     }).finally(()=>{
       setCargando(false);
     })
+    // eslint-disable-next-line
   },[])
 
 

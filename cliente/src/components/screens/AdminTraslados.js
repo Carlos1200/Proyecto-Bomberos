@@ -6,7 +6,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import styled from 'styled-components';
 import { Background } from '../Background';
 import { Menu } from '../Menu';
-import { TablaPlaza } from '../tablas/TablaPlaza';
+import { PlazaModal } from '../modal/PlazaModal';
 import { TablaTraslados } from '../tablas/TablaTraslados';
 
 
@@ -36,16 +36,16 @@ export const AdminTraslados = () => {
               <BtnFilterSearch>Buscar</BtnFilterSearch>
             </FilterBox>
             <ContenedorTabla>
-            {<TablaTraslados consultar={consultar} mostrarNotificacion={mostrarNotificacion}/>}
+              <TablaTraslados consultar={consultar} mostrarNotificacion={mostrarNotificacion}/>
             </ContenedorTabla>
           </ReportsBox>
         </Background>
-        {/*<AnimatePresence
+        <AnimatePresence
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
             {visible&&<PlazaModal handleClose={()=>setVisible(false)} consultarPlaza={setConsultar} mostrarNotificacion={mostrarNotificacion}/>}
-        </AnimatePresence>*/}
+        </AnimatePresence>
       </Menu>
     );
 }

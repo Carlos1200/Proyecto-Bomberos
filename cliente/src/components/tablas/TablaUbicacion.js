@@ -50,6 +50,7 @@ export const TablaUbicacion = ({mostrarNotificacion}) => {
     }).finally(()=>{
       setCargando(false);
     })
+    // eslint-disable-next-line
   },[]);
 
   return (

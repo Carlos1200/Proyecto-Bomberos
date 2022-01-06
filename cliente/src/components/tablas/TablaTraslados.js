@@ -1,12 +1,10 @@
-import React,{useContext,useEffect,useState} from "react";
+import React,{useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolderOpen, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
 import Api from '../../Api/Api';
-import { PlazaModal } from "../modal/PlazaModal";
 import { Eliminar } from "../modal/Eliminar";
-import { TrasladosModal } from "../modal/TrasladosModal";
 import { TrasladosDetallesModal } from "../modal/TrasladosDetallesModal";
 
 
@@ -17,7 +15,6 @@ export const TablaTraslados = ({mostrarNotificacion}) => {
   const [trasladoBorrar, setTrasladoBorrar] = useState(null);  //Id del traslado a Borrar
   const [traslado, setTraslado] = useState();
 
-  //const {cargando,traslados,error}= useContext(TrasladosContext);
   const [traslados, setTraslados] = useState();
   const [cargando, setCargando] = useState(true);
 
@@ -50,6 +47,7 @@ export const TablaTraslados = ({mostrarNotificacion}) => {
 
   useEffect(()=>{
     ObtenerTraslados();
+    // eslint-disable-next-line
   },[])
 
 

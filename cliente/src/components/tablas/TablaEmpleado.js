@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
-import { atom, useRecoilState } from "recoil";
+import {  useRecoilState } from "recoil";
 import { EditarEmpleadoModal } from "../modal/EditarEmpleadoModal";
 import { Eliminar } from "../modal/Eliminar";
 import { VerDetallesEmpleadosModal } from "../modal/VerDetallesEmpleadosModal";
@@ -54,6 +54,7 @@ export const TablaEmpleado = ({ notificacion, notificacionError }) => {
     }).finally(() => {
       setCargando(false);
     });
+    // eslint-disable-next-line
   }, [])
 
   return (

@@ -29,6 +29,7 @@ export const UsuarioModal = ({handleClose,usuario,mostrarNotificacion}) => {
       }).finally(()=>{
         setCargando(false);
       });
+      // eslint-disable-next-line
     },[]);
 
     const schema=yup.object({

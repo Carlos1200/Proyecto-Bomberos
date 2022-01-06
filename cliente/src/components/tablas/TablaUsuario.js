@@ -4,7 +4,6 @@ import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import {
-  atom,
   useRecoilState,
 } from 'recoil';
 import { UsuarioModal } from "../modal/UsuarioModal";
@@ -44,6 +43,7 @@ export const TablaUsuario = ({mostrarNotificacion}) => {
       }).finally(()=>{
         setCargando(false);
       });
+      // eslint-disable-next-line
     },[])
 
   return (

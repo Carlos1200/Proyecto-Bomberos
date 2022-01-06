@@ -85,6 +85,7 @@ export const EditarEmpleadoModal = ({
       .finally(() => {
         setCargando(false);
       });
+      // eslint-disable-next-line
   }, []);
 
   const {
