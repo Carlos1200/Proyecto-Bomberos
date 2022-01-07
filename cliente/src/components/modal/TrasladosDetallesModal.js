@@ -22,7 +22,7 @@ export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificaci
     const obtenerDetalles = async() => {
         try {
             const formData = new FormData();
-            formData.append('idReporteHistorial',traslado.idHistorialTraslados);
+            formData.append('idReporteHistorial',traslado.idReporteHistorial);
             
             const {data} = await Api.post('traslados/TraslEmpDetalle.php', formData);
             setTrasladoDetalle(data);
@@ -70,22 +70,11 @@ export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificaci
                     />
                     ))}
                 </ContenedorEmpleados>
-                <Btn type="button" onClick={()=>{
-                    handleClose();
-                }}>
-                <Label>Agregar</Label>
-                <FontAwesomeIcon
-                    icon={faSignInAlt}
-                    style={{ fontSize: "23px", color: "#fff" }}
-                />
-                </Btn>
                 </>
                 ) : null}
             </Contenedor>
             
-            <p>Hola Mundo</p>
         </Modal>
-
     )
 
 

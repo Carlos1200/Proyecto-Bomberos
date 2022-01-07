@@ -8,7 +8,7 @@ require_once('../../app.php');
     $router= new Router();
     use Controller\TrasladoController;
 
-    $router->post('/api/traslados/TrasladosDetalle.php',[TrasladoController::class,'ObtenerDetalleTraslado']);
+    $router->post('/api/traslados/VerificarTraslados.php',[TrasladoController::class,'verificarTraslados']);
     $router->comprobarRutas();
     
 ?>

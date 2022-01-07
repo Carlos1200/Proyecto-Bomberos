@@ -4,7 +4,6 @@ import { faFolderOpen, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
 import Api from '../../Api/Api';
-import { PlazaModal } from "../modal/PlazaModal";
 import { Eliminar } from "../modal/Eliminar";
 import { TrasladosModal } from "../modal/TrasladosModal";
 import { TrasladosDetallesModal } from "../modal/TrasladosDetallesModal";
@@ -85,7 +84,7 @@ export const TablaTraslados = ({mostrarNotificacion}) => {
             <ColumInput>
             <BtnEliminar onClick={()=>{
                 setVisibleBorrar(true)
-                setTrasladoBorrar(traslado.idHistorialTraslados)
+                setTrasladoBorrar(traslado.idReporteHistorial)
               }}>
                 <FontAwesomeIcon
                   icon={faTrashAlt}
@@ -102,7 +101,7 @@ export const TablaTraslados = ({mostrarNotificacion}) => {
       {<AnimatePresence
             initial={false}
             exitBeforeEnter={true}
-            onExitComplete={() => null}>
+            onExitComplete={() => null} >
             {acceder&&<TrasladosDetallesModal handleClose={()=>setAcceder(false)} traslado={traslado} mostrarNotificacion={mostrarNotificacion}/>}
       </AnimatePresence>}
       <AnimatePresence

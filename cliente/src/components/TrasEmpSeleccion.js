@@ -49,7 +49,7 @@ export const TrasEmpSeleccion = ({empleado, traslEmplFormulario, posicion}) => {
                         Grupo Anterior: <Span>{traslEmpDetalle.grupoAnterior}</Span>
                       </Nombres>
                       <Nombres>
-                        Próximo Grupo: <Span>{traslEmpDetalle.grupoAnterior}</Span>
+                        Próximo Grupo: <Span>{traslEmpDetalle.grupoNuevo}</Span>
                       </Nombres>
                       <Nombres>
                         Grupo Actual: <Span>{traslEmpDetalle.grupoActual}</Span>

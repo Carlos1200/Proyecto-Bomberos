@@ -1,9 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useCallback } from 'react';
 import { Route, Redirect } from 'react-router-dom';
+import Api from '../Api/Api';
 import {AuthContext} from '../context/Auth/AuthContext';
 
 
 const RutaPrivada = ({ component: Component, ...props  }) => {
+
+    
 
     const {login,cargando} = useContext(AuthContext);
     if(cargando){

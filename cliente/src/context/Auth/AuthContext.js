@@ -42,7 +42,7 @@ export const AuthProvider=({children})=>{
             type:CERRAR_SESION
             })
         }
-      }
+    }
 
     const inicioSesion=(idUsuario,NombreUsuario,tipoUsuario,UbicacionUsuario,login)=>{
         dispatch({

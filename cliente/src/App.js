@@ -1,4 +1,4 @@
-
+import { useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import {
   RecoilRoot,
@@ -19,9 +19,27 @@ import { AdminTraslados } from './components/screens/AdminTraslados';
 import { ReportesProvider } from './context/reportes/ReportesContext';
 
 import '../src/index.css';
+import Api from './Api/Api';
 
 const App = () => {
-  
+
+  const ValidarTraslados = useCallback(
+    async () => {
+      const date=new Date();
+      const fecha= date.toISOString().slice(0, 10);
+      
+      const formData = new FormData();
+      formData.append("fechaActual", fecha);
+      const data = await Api.post('/traslados/VerificarTraslados.php',formData);
+      console.log(data);
+    },
+    [],
+  )
+
+  useEffect(() => {
+    ValidarTraslados();
+  }, [])
+
   return (
     <AppState>
       <Router>

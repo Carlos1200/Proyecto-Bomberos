@@ -123,7 +123,7 @@
             $query->bindParam(":idHistorialTraslados",$this->idHistorialTraslados,PDO::PARAM_STR);
             $query->bindParam(":idEmpleados",$this->idEmpleados,PDO::PARAM_STR);
             $query->execute();
-
+            
             // if(!self::$db->lastInsertId()>0){
             //     self::$errores[]="No se pudo agregar los traslados";
             // }
