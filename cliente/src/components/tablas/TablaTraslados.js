@@ -93,7 +93,7 @@ export const TablaTraslados = ({mostrarNotificacion}) => {
       {<AnimatePresence
             initial={false}
             exitBeforeEnter={true}
-            onExitComplete={() => null}>
+            onExitComplete={() => null} >
             {acceder&&<TrasladosDetallesModal handleClose={()=>setAcceder(false)} traslado={traslado} mostrarNotificacion={mostrarNotificacion}/>}
       </AnimatePresence>}
       <AnimatePresence

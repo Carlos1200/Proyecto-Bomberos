@@ -157,6 +157,16 @@
             return $resultado;
         }
 
+        public function obtenerTrasladosFiltrados($nombre){
+            $sql = "EXEC buscarReportesTraslados :nombre";
+            $query = self::$db->prepare($sql);
+            $query->bindParam(":nombre",$nombre,PDO::PARAM_STR);
+            $query->execute();
+            $resultado=$query->fetchAll(PDO::FETCH_ASSOC);
+
+            return $resultado;
+        }
+
         public function ObtenerTrasladosDetalles(){
             $query="EXEC leerReportesTraslados :idReporteHistorial";
             $consulta=self::$db->prepare($query);

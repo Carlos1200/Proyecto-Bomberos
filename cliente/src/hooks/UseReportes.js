@@ -1,13 +1,10 @@
-import { useContext, useRef } from "react";
+import { useRef } from "react";
 import { useSetRecoilState } from "recoil";
-import Api from "../Api/Api";
 import { reportesState } from "../atom/AtomTablas";
-import { ReportesContext } from "../context/reportes/ReportesContext";
 import { crearReportes } from "../services/reportesServices";
 
 export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) => {
 
-  const {setConsultar}=useContext(ReportesContext);
   const setReportes=useSetRecoilState(reportesState);
   //Variables que deben calcularse manualmente
   //Tabla Minutos

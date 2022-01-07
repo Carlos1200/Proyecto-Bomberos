@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import { useSetRecoilState } from "recoil";
-import Api from "../Api/Api";
 import { trasladosState } from "../atom/AtomTablas";
 import { crearTraslados } from "../services/trasladosServices";
 
@@ -69,12 +68,6 @@ export const UseTraslados = (mostrarNotificacion) => {
             console.log({err});
             mostrarNotificacion(true);
         });
-        // try {
-        //     const {data}=await Api.post('/traslados/CrearTraslado.php',formData);
-        //     console.log(data);
-        // } catch (error) {
-        //     console.log(error.response.data);
-        // }
     }
 
     return {

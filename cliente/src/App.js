@@ -1,4 +1,4 @@
-
+import { useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import {
   RecoilRoot,
@@ -17,11 +17,29 @@ import { Traslados } from './components/screens/Traslados';
 import { AuthProvider } from './context/Auth/AuthContext';
 import { AdminTraslados } from './components/screens/AdminTraslados';
 import { ReportesProvider } from './context/reportes/ReportesContext';
+import { verificarTraslados } from './services/trasladosServices';
 
 import '../src/index.css';
 
 const App = () => {
-  
+
+  const ValidarTraslados = useCallback(
+    async () => {
+      const date=new Date();
+      const fecha= date.toISOString().slice(0, 10);
+      
+      const formData = new FormData();
+      formData.append("fechaActual", fecha);
+      verificarTraslados(formData)
+    },
+    [],
+  )
+
+  useEffect(() => {
+    ValidarTraslados();
+    // eslint-disable-next-line
+  }, [])
+
   return (
     <AppState>
       <Router>

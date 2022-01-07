@@ -1,10 +1,10 @@
 import React, {useEffect, useState, useRef} from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWindowClose,faSignInAlt } from "@fortawesome/free-solid-svg-icons";
+import { faWindowClose } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "../Modal";
 import { TrasEmpSeleccion } from "../TrasEmpSeleccion";
-import { detallesEmpleados } from "../../services/empleadosServices";
+import { detallesTraslados } from "../../services/trasladosServices";
 
 export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificacion}) =>{
 
@@ -21,11 +21,13 @@ export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificaci
     const obtenerDetalles = async() => {
             const formData = new FormData();
             formData.append('idReporteHistorial',traslado.idReporteHistorial);
-            detallesEmpleados(formData).then(res => {
+            
+            detallesTraslados(formData).then(res => {
                 setTrasladoDetalle(res);
                 traslEmplFormulario.current = res;
 
             }).catch(err => {
+                console.log({err});
                 mostrarNotificacion("Ocurrio un error");
             }).finally(() => {
                 setCargando(false);
@@ -61,26 +63,15 @@ export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificaci
                     {trasladoDetalle.map((empleado,index) => (
                     <TrasEmpSeleccion
                         key={empleado.idEmpleado}
-                        empleado={empleado}
                         traslEmplFormulario={traslEmplFormulario}
                         posicion={index}
                     />
                     ))}
                 </ContenedorEmpleados>
-                <Btn type="button" onClick={()=>{
-                    handleClose();
-                }}>
-                <Label>Agregar</Label>
-                <FontAwesomeIcon
-                    icon={faSignInAlt}
-                    style={{ fontSize: "23px", color: "#fff" }}
-                />
-                </Btn>
                 </>
                 ) : null}
             </Contenedor>
         </Modal>
-
     )
 
 
@@ -99,29 +90,6 @@ const Titulo=styled.h2`
 `
 const Header=styled.div`
     
-`
-
-const Label=styled.p`
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    margin-top: 10px;
-`
-
-const Btn=styled.button`
-    display: flex;
-    margin: 0 auto;
-    justify-content: space-around;
-    align-items: center;
-    background-color: #04B99C;
-    border-radius: 1rem;
-    margin-top: 1rem;
-    padding: 0 1rem;
-    border: 0;
-    transition: background-color .3s ease-in-out;
-    &:hover{
-      background-color: #028671;
-
-    }
 `
 
 const ContenedorEmpleados = styled.div`

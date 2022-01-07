@@ -5,6 +5,8 @@ import {AuthContext} from '../context/Auth/AuthContext';
 
 const RutaPrivada = ({ component: Component, ...props  }) => {
 
+    
+
     const {login,cargando} = useContext(AuthContext);
     if(cargando){
       return <p>Cargando...</p>
