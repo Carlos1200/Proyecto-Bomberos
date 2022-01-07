@@ -387,6 +387,19 @@ class Reportes extends ActiveRecord{
             return $reportes;
         }
     }
+
+    public function leerDetallesReportes($idReporte){
+        if(is_null($idReporte)){
+            self::$errores[]="No se ha enviado el id del reporte";
+        }else{
+            $query="EXEC LeerDetallesReporte :idReporte";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(":idReporte",$idReporte,PDO::PARAM_STR);
+            $consulta->execute();
+            $reportes=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $reportes;
+        }
+    }
 }
 
 
