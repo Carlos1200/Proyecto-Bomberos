@@ -22,9 +22,13 @@ class ReportesController{
                 if(empty($errores)){
                     $errores=$reporte->Autorizacion();
                     if(empty($errores)){
-                        $reporte->crearReporte();
+                        $reportes=$reporte->crearReporte();
                         $errores=$reporte::getErrores();
-                        if(!empty($errores)){
+                        if(empty($errores)){
+                            $router->render('reportes/reportes',[
+                                'reportes'=>$reportes
+                            ]);
+                        }else{
                             $router->render('errores/error',[
                                 'errores'=>$errores
                             ]);

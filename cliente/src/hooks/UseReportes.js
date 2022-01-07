@@ -1,11 +1,14 @@
 import { useContext, useRef } from "react";
+import { useSetRecoilState } from "recoil";
 import Api from "../Api/Api";
+import { reportesState } from "../atom/AtomTablas";
 import { ReportesContext } from "../context/reportes/ReportesContext";
+import { crearReportes } from "../services/reportesServices";
 
 export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) => {
 
   const {setConsultar}=useContext(ReportesContext);
-
+  const setReportes=useSetRecoilState(reportesState);
   //Variables que deben calcularse manualmente
   //Tabla Minutos
   const minutosDiurnos = useRef("");
@@ -433,7 +436,6 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
     longitud,
     setCargando
   ) => {
-    try {
       const formData = new FormData();
       formData.append("minutosDiurnosNormales", minutosDiurnos.current);
       formData.append("minutosNocturnosNormales", minutosNocturnos.current);
@@ -487,17 +489,17 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
       formData.append("Verificacion",verificacion.current);
       formData.append("idUsuario",idUsuario.current);
 
-      await Api.post("/reportes/CrearReporte.php", formData);
-      limpiarEmpleados();
-      setCargando(false);
-      setConsultar(true);
-      handleClose();
-      mostrarNotificacion();
-    } catch (error) {
-      console.log({ error });
-      mostrarNotificacion(true);
-      setCargando(false);
-    }
+      crearReportes(formData).then(res=>{
+        setReportes(oldValue=>[res,...oldValue]);
+        limpiarEmpleados();
+        setCargando(false);
+        handleClose();
+        mostrarNotificacion();
+      }).catch(error=>{
+        console.log({ error });
+        mostrarNotificacion(true);
+        setCargando(false);
+      })
   };
 
   return {

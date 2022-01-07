@@ -18,8 +18,13 @@
                 $errores=$traslado->crearTraslado();
 
                 if(empty($errores)){
-                    $errores=$traslado->crearTrasladoIndividual();
-                    if(!empty($errores)){
+                    $traslados=$traslado->crearTrasladoIndividual();
+                    $errores=$traslado::getErrores();
+                    if(empty($errores)){
+                        $router->render('traslados/traslados',[
+                            'traslados'=>$traslados
+                        ]);
+                    }else{
                         $router->render('errores/error',[
                             'errores'=>$errores
                         ]);

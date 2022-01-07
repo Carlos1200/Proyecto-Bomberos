@@ -1,20 +1,34 @@
-import React,{useState,useContext} from "react";
+import {useState,useContext, useEffect} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolderOpen, faTrashAlt,faCheck,faLink } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
 import env from 'react-dotenv'
-import { ReportesContext } from "../../context/reportes/ReportesContext";
+import { reportesState } from "../../atom/AtomTablas";
+import { obtenerReportes } from "../../services/reportesServices";
+import { AuthContext } from "../../context/Auth/AuthContext";
 
 const BaseURL=env.BASE_URL;
 
 export const TablaReportes = ({mostrarNotificacion}) => {
 
+  const [reportes, setReportes] = useRecoilState(reportesState)
+  const {UbicacionUsuario,tipoUsuario}=useContext(AuthContext);
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
   const [reporteBorrar, setReporteBorrar] = useState(null);
   const [reporte, setReporte] = useState();
+  const [cargando, setCargando] = useState(true);
 
-  const {cargando,reportes,setConsultar,error}=useContext(ReportesContext);
+  useEffect(()=>{
+    obtenerReportes(tipoUsuario,UbicacionUsuario).then(res=>{
+      setReportes(res);
+    }).catch(()=>{
+      mostrarNotificacion(true,"Error en el servidor");
+    }).finally(()=>{
+      setCargando(false);
+    })
+  },[])
 
   return (
     <Contenedor>

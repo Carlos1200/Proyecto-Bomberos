@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWindowClose,faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "../Modal";
-import Api from "../../Api/Api";
 import { TrasEmpSeleccion } from "../TrasEmpSeleccion";
+import { detallesEmpleados } from "../../services/empleadosServices";
 
 export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificacion}) =>{
 
-    const [trasladoDetalle, setTrasladoDetalle] = useState('');
+    const [trasladoDetalle, setTrasladoDetalle] = useState([]);
     const [cargando, setCargando] = useState(true);
 
     const traslEmplFormulario = useRef();
@@ -19,20 +19,17 @@ export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificaci
     }, [])
 
     const obtenerDetalles = async() => {
-        try {
             const formData = new FormData();
             formData.append('idReporteHistorial',traslado.idReporteHistorial);
-            
-            const {data} = await Api.post('traslados/TraslEmpDetalle.php', formData);
-            console.log(data);
-            setTrasladoDetalle(data);
-            
-            traslEmplFormulario.current = data;
-            setCargando(false);
-        } catch (error) {
-            console.log({error})
-            mostrarNotificacion("Ocurrio un error");
-        }
+            detallesEmpleados(formData).then(res => {
+                setTrasladoDetalle(res);
+                traslEmplFormulario.current = res;
+
+            }).catch(err => {
+                mostrarNotificacion("Ocurrio un error");
+            }).finally(() => {
+                setCargando(false);
+            })
     }
 
     return(

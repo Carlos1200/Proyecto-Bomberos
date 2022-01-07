@@ -7,8 +7,8 @@ import { AuthContext } from "../../context/Auth/AuthContext";
 import { AnimatePresence } from "framer-motion";
 import { Background } from "../Background";
 import { Menu } from "../Menu";
-import Api from "../../Api/Api";
 import {ReportesModal} from '../modal/ReportesModal'
+import { getEmpleados, ObtenerEmpleadosFiltrados } from "../../services/empleadosServices";
 
 export const GenerarReporte = () => {
   const { NombreUsuario, UbicacionUsuario, tipoUsuario } =
@@ -25,12 +25,15 @@ export const GenerarReporte = () => {
       if (tipoUsuario !== "Administrador") {
         const formData = new FormData();
         formData.append("nombreUbicacion", UbicacionUsuario);
-        const { data } = await Api.post("/empleados/ObtenerEmpleadosFiltrados.php", formData);
-        setEmpleados(data);
+        ObtenerEmpleadosFiltrados(formData).then((res) => {
+          setEmpleados(res);
+        });
       } else {
-        const { data } = await Api.get("/empleados/ObtenerEmpleados.php");
-        setEmpleados(data);
+        getEmpleados().then((data) => {
+          setEmpleados(data);
+        });
       }
+
       setCargando(false);
     } catch (error) {
       console.log(error);

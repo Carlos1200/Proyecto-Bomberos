@@ -1,10 +1,13 @@
 import { useRef } from "react";
+import { useSetRecoilState } from "recoil";
 import Api from "../Api/Api";
+import { trasladosState } from "../atom/AtomTablas";
+import { crearTraslados } from "../services/trasladosServices";
 
-export const UseTraslados = () => {
+export const UseTraslados = (mostrarNotificacion) => {
     
     const empleadoRef = useRef({});
-
+    const setTraslados=useSetRecoilState(trasladosState);
     
     const PrepararDatos=(traslados)=>{
 
@@ -59,12 +62,19 @@ export const UseTraslados = () => {
         formData.append('idHistorialTraslados',empleadoRef.current.idHistorialTraslados);
         formData.append('idEmpleados',empleadoRef.current.idEmpleados);
 
-        try {
-            const {data}=await Api.post('/traslados/CrearTraslado.php',formData);
-            console.log(data);
-        } catch (error) {
-            console.log(error.response.data);
-        }
+        crearTraslados(formData).then((res) => {
+            setTraslados(oldValue=>[res,...oldValue]);
+            mostrarNotificacion();
+        }).catch((err) => {
+            console.log({err});
+            mostrarNotificacion(true);
+        });
+        // try {
+        //     const {data}=await Api.post('/traslados/CrearTraslado.php',formData);
+        //     console.log(data);
+        // } catch (error) {
+        //     console.log(error.response.data);
+        // }
     }
 
     return {

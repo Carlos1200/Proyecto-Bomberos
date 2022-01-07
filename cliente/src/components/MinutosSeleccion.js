@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Api from "../Api/Api";
+import { detallesEmpleados } from "../services/empleadosServices";
+import { getPensiones } from "../services/pensionesServices";
 
 const schema = yup.object({
   minDiurno: yup
@@ -27,7 +28,7 @@ export const MinutosSeleccion = ({
   setErrores,
   erroresArray
 }) => {
-  const [empleadoDetalle, setEmpleadoDetalle] = useState();
+  const [empleadoDetalle, setEmpleadoDetalle] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [validacion, setValidacion] = useState({
     validacionDiurno: true,
@@ -74,26 +75,25 @@ export const MinutosSeleccion = ({
   };
 
   const obtenerDetalles = async () => {
-    try {
       const formData = new FormData();
       formData.append("idEmpleado", empleado.idEmpleado);
-
-      const { data } = await Api.post("/empleados/EmpleadosDetalle.php", formData);
-      const resp=await Api.get('/pensiones/ObtenerPensiones.php');
-      setEmpleadoDetalle(data[0]);
-      const empleadoCompleto = {
-        ...data[0],
-        minutosDiurnos: "0",
-        minutosNocturnos: "0",
-        salario:Number(data[0].salarioNominal),
-        idTipoPension:resp.data.filter(pension=>pension.nombrePension===data[0].nombrePension)[0].idPension,
-      };
-
-      minutosFormulario.current[posicion] = empleadoCompleto;
-      setCargando(false);
-    } catch (error) {
-      console.log(error);
-    }
+      Promise.all([detallesEmpleados(formData),getPensiones()]).then(([detalles,pensiones]) => {
+        setEmpleadoDetalle(detalles);
+        const empleadoCompleto = {
+          ...detalles,
+          minutosDiurnos: "0",
+          minutosNocturnos: "0",
+          salario:Number(detalles.salarioNominal),
+          idTipoPension:pensiones.filter(pension=>pension.nombrePension===detalles.nombrePension)[0].idPension,
+        };
+  
+        minutosFormulario.current[posicion] = empleadoCompleto;
+        
+      }).catch((error) => {
+        console.log(error);
+      }).finally(() => {
+        setCargando(false);
+      });
   };
 
   return (

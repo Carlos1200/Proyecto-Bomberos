@@ -15,5 +15,8 @@ export const eliminarEmpleados = (idEmpleado) =>
 export const buscadorEmpleados=(nombre)=>Api.post("/empleados/EmpleadosFiltro.php",nombre)
 .then((res) => res.data);
 
+export const ObtenerEmpleadosFiltrados=(ubicacion)=>Api.post("/empleados/ObtenerEmpleadosFiltrados.php",ubicacion)
+.then((res) => res.data);
+
 export const detallesEmpleados=(id)=>Api.post("/empleados/EmpleadosDetalle.php",id)
 .then((res) => res.data[0]); 

@@ -26,3 +26,13 @@ export const ubicacionesState = atom({
 key: 'ubicacionesState',
 default: [],
 });
+
+export const trasladosState = atom({
+key: 'trasladosState',
+default: [],
+});
+
+export const reportesState = atom({
+key: 'reportesState',
+default: [],
+});

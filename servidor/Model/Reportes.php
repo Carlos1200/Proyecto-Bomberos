@@ -287,9 +287,13 @@ class Reportes extends ActiveRecord{
         $consulta->bindParam(":selectTop",$this->idSelectTop,PDO::PARAM_INT);
         $consulta->execute();
 
-        // if(!self::$db->lastInsertId()>0){
-        //     self::$errores[]="No se pudo agregar el reporte";
-        // }
+        $query="select DISTINCT top(1) autorizaciones.creadorJefe, reportes.fechaCreado, reportes.verificacion, reportes.idReporte, autorizaciones.idAutorizaciones
+        from autorizaciones INNER JOIN reportes on autorizaciones.idAutorizaciones = reportes.idAutorizaciones 
+        order by autorizaciones.idAutorizaciones desc";
+        $consulta=self::$db->prepare($query);
+        $consulta->execute();
+        $resultado=$consulta->fetch(PDO::FETCH_ASSOC);
+        return $resultado;
     }
 
     function generateRandomString($length = 10) {
