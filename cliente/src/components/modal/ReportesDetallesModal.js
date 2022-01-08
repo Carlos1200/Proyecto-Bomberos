@@ -1,18 +1,19 @@
 import React, {useEffect, useState, useRef} from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWindowClose } from "@fortawesome/free-solid-svg-icons";
+import { faSave, faWindowClose } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "../Modal";
 import { obtenerDetallesReportes } from "../../services/reportesServices";
 import { RepEmpSeleccion } from "../RepEmpSeleccion";
+import { useAutorizacion } from "../../hooks/useAutorizacion";
 
 export const ReportesDetallesModal = ({handleClose, reporte, mostrarNotificacion}) =>{
 
     const [reportesDetalle, setReportesDetalle] = useState([]);
     const [cargando, setCargando] = useState(true);
-
+    const [errores, setErrores] = useState([true]);
     const ReportEmplFormulario = useRef();
-
+    const {guardarReporte} = useAutorizacion();
     useEffect(() => {
         obtenerDetalles();
         // eslint-disable-next-line
@@ -20,9 +21,8 @@ export const ReportesDetallesModal = ({handleClose, reporte, mostrarNotificacion
 
     const obtenerDetalles = async() => {
             obtenerDetallesReportes(reporte.idReporte).then(res => {
-                console.log(res);
                 setReportesDetalle(res);
-                ReportEmplFormulario.current = res;
+                ReportEmplFormulario.current = {idReporte: reporte.idReporte, empleados: res};
             }).catch(err => {
                 console.log({err});
                 mostrarNotificacion("Ocurrio un error");
@@ -62,9 +62,23 @@ export const ReportesDetallesModal = ({handleClose, reporte, mostrarNotificacion
                         key={empleado.idEmpleado}
                         ReportEmplFormulario={ReportEmplFormulario}
                         posicion={index}
+                        setErrores={setErrores}
+                        erroresArray={errores}
                     />
                     ))}
                 </ContenedorEmpleados>
+                <Btn
+                    type='button'
+                    disabled={errores.includes(true)}
+                    onClick={() => {
+                        guardarReporte(ReportEmplFormulario.current.empleados,ReportEmplFormulario.current.idReporte);
+                    }}>
+                    <Text>Guardar Reporte</Text>
+                    <FontAwesomeIcon
+                        icon={faSave}
+                        style={{ fontSize: "23px", color: "#fff" }}
+                    />
+                </Btn>
                 </>
                 ) : null}
             </Contenedor>
@@ -108,3 +122,26 @@ const ContenedorEmpleados = styled.div`
   }
 `
 ;
+
+const Btn = styled.button`
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #04b99c;
+  opacity: ${props => (props.disabled ? 0.5 : 1)};
+  border-radius: 1rem;
+  margin-top: 1rem;
+  padding: 0 1rem;
+  border: 0;
+  transition: background-color 0.3s ease-in-out;
+  &:hover {
+    background-color: #028671;
+  }
+`;
+
+const Text = styled.p`
+  color: #fff;
+  font-size: 1.5rem;
+  margin-right: 0.7rem;
+`;
