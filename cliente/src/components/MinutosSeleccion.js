@@ -196,13 +196,6 @@ const ContenedorInfo = styled.div`
   padding: 0 1rem;
 `;
 
-// const Fecha = styled.input`
-//   margin-bottom: 1rem;
-//   appearance: none;
-//   border: 1px solid #cccccc;
-//   border-radius: 0.2rem;
-//   padding: 0.5rem 1rem;
-// `;
 
 const TextError = styled.p`
   margin-top: -13px;

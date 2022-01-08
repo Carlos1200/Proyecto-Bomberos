@@ -111,7 +111,7 @@ class ReportesController{
         $reporte::VerificarToken($token);
         $errores=$reporte::getErrores();
         if(empty($errores)){
-            $reportes=$reporte->reportesFiltrados($nj);
+            $reportes=$reporte->reportesUbicacion($nj);
             if(empty($errores)){
                 $router->render('reportes/reportes',[
                     'reportes'=>$reportes
@@ -142,6 +142,43 @@ class ReportesController{
         $errores=$reporte::getErrores();
         if(empty($errores)){
             $reportes=$reporte->obtenerReportes();
+            if(empty($errores)){
+                $router->render('reportes/reportes',[
+                    'reportes'=>$reportes
+                ]);
+            }else{
+                $router->render('errores/error',[
+                    'errores'=>$errores
+                ]);
+            }
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
+    }
+
+    public static function leerDetallesReportes(Router $router){
+        $nj=null;
+        $token='';
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        parse_str($query,$output);
+        $existe=array_key_exists('nj',$output);
+        $existeToken=array_key_exists('token',$output);
+        if($existe){
+            $nj=$output['nj'];
+        }
+
+        if($existeToken){
+            $token=$output['token'];
+        }
+
+        $reporte=new Reportes();
+        $reporte::VerificarToken($token);
+        $errores=$reporte::getErrores();
+        if(empty($errores)){
+            $reportes=$reporte->leerDetallesReportes($nj);
+            $errores=$reporte::getErrores();
             if(empty($errores)){
                 $router->render('reportes/reportes',[
                     'reportes'=>$reportes

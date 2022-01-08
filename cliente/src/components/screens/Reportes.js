@@ -1,17 +1,24 @@
-import React,{useContext,useState} from 'react'
+import {useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import toast, { Toaster } from 'react-hot-toast';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { useSetRecoilState } from 'recoil';
 import { Menu } from '../Menu'
 import {Background} from '../Background';
-import { ReportesContext } from '../../context/reportes/ReportesContext';
 import { TablaReportes } from '../tablas/TablaReportes';
+import { useBuscador } from '../../hooks/useBuscador';
+import { obtenerReportesFiltrados } from '../../services/reportesServices';
+import { reportesState } from '../../atom/AtomTablas';
 
 export const Reportes = () => {
-
+  const setReportes=useSetRecoilState(reportesState);
   const [inputBuscador, setInputBuscador] = useState('')
-  const {buscador,setConsultar}=useContext(ReportesContext);
+
+  const {buscador,reset}=useBuscador({
+    promise:obtenerReportesFiltrados,
+    setState:setReportes,
+  });
 
   const mostrarNotificacion=(error=false,msg)=>{
     if(error){
@@ -29,7 +36,7 @@ export const Reportes = () => {
           <FilterBox>
             <FontAwesomeIcon
                 onClick={()=>{
-                  setConsultar(true);
+                  reset();
                   setInputBuscador('');
                 }}
                 icon={faSyncAlt}
