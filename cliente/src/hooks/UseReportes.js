@@ -60,9 +60,9 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
       const date=new Date();
       const fecha= date.toISOString().slice(0, 10);
 
-      const valorxMinuto = empleado.salario / 30 / 8 / 60;
+      const valorxMinuto = (((empleado.salario / 30 )/ 8 )/ 60);
       const TotalDiurno = empleado.minutosDiurnos * valorxMinuto;
-      const TotalNocturno = empleado.minutosNocturnos * valorxMinuto * 1.5;
+      const TotalNocturno = (empleado.minutosNocturnos * valorxMinuto )* 1.5;
       const TotalExtras = Math.round((TotalDiurno + TotalNocturno) * 100) / 100;
       const sueldoHorasExtras = empleado.salario + TotalExtras;
 
@@ -103,7 +103,7 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
       const sueldo_ISSS =
         empleado.salario +
         TotalExtras -
-        (empleado.salario * 0.105 +
+        ((empleado.salario * 0.105) +
           ISSS_descuento +
           IPSFA_descuento +
           AFPCRECER_descuento +
