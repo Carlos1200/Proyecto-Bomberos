@@ -43,6 +43,9 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
   const verificacion = useRef("");
   const idUsuario=useRef("");
 
+  const idPensionActual=useRef("");
+  const salarioActual=useRef("");
+
   const GenerarReporte = (
     empleadosArray,
     idUsuarioActual,
@@ -178,6 +181,22 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
       } else {
         const string = `${IdEmpleado.current},${empleado.idEmpleado}`;
         IdEmpleado.current = string;
+      }
+
+      //id de pensiones
+      if(!idPensionActual.current){
+        idPensionActual.current = empleado.idTipoPension;
+      }else{
+        const string = `${idPensionActual.current},${empleado.idTipoPension}`;
+        idPensionActual.current = string;
+      }
+
+      //Salarios
+      if (!salarioActual.current) {
+        salarioActual.current = empleado.salario;
+      } else {
+        const string = `${salarioActual.current},${empleado.salario}`;
+        salarioActual.current = string;
       }
 
       //id de Usuarios
@@ -485,6 +504,9 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
       formData.append("fechaCreacion",fechaCreacion.current);
       formData.append("Verificacion",verificacion.current);
       formData.append("idUsuario",idUsuario.current);
+
+      formData.append("idPensionActual",idPensionActual.current);
+      formData.append("salarioActual",salarioActual.current);
 
       crearReportes(formData).then(res=>{
         setReportes(oldValue=>[res,...oldValue]);

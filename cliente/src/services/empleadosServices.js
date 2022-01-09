@@ -20,3 +20,6 @@ export const ObtenerEmpleadosFiltrados=(ubicacion)=>Api.post("/empleados/Obtener
 
 export const detallesEmpleados=(id)=>Api.post("/empleados/EmpleadosDetalle.php",id)
 .then((res) => res.data[0]); 
+
+export const detallesEmpleadosLotes=(id)=>Api.post("/empleados/EmpleadosDetallesLotes.php",id)
+.then((res) => res.data); 

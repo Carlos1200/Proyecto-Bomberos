@@ -21,6 +21,7 @@ export const ReportesDetallesModal = ({handleClose, reporte, mostrarNotificacion
 
     const obtenerDetalles = async() => {
             obtenerDetallesReportes(reporte.idReporte).then(res => {
+                console.log(res);
                 setReportesDetalle(res);
                 ReportEmplFormulario.current = {idReporte: reporte.idReporte, empleados: res};
             }).catch(err => {

@@ -3,8 +3,6 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { detallesEmpleados } from "../services/empleadosServices";
-import { getPensiones } from "../services/pensionesServices";
 
 const schema = yup.object({
   minDiurno: yup
@@ -26,7 +24,8 @@ export const MinutosSeleccion = ({
   minutosFormulario,
   posicion,
   setErrores,
-  erroresArray
+  erroresArray,
+  pensiones,
 }) => {
   const [empleadoDetalle, setEmpleadoDetalle] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -74,26 +73,21 @@ export const MinutosSeleccion = ({
     }
   };
 
-  const obtenerDetalles = async () => {
-      const formData = new FormData();
-      formData.append("idEmpleado", empleado.idEmpleado);
-      Promise.all([detallesEmpleados(formData),getPensiones()]).then(([detalles,pensiones]) => {
-        setEmpleadoDetalle(detalles);
+  const obtenerDetalles = () => {
+      
+        setEmpleadoDetalle(empleado);
         const empleadoCompleto = {
-          ...detalles,
+          ...empleado,
           minutosDiurnos: "0",
           minutosNocturnos: "0",
-          salario:Number(detalles.salarioNominal),
-          idTipoPension:pensiones.filter(pension=>pension.nombrePension===detalles.nombrePension)[0].idPension,
+          salario:Number(empleado.salarioNominal),
+          idTipoPension:pensiones.filter(pension=>pension.nombrePension===empleado.nombrePension)[0].idPension,
         };
   
         minutosFormulario.current[posicion] = empleadoCompleto;
-        
-      }).catch((error) => {
-        console.log(error);
-      }).finally(() => {
+
         setCargando(false);
-      });
+
   };
 
   return (

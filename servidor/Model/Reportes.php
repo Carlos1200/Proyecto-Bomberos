@@ -47,6 +47,9 @@ class Reportes extends ActiveRecord{
     public $Verificacion;
     public $idAutorizaciones;
     public $idUsuario;
+    public $idPensionActual;
+    public $salarioActual;
+
 
 
     public function __construct($args=[]){
@@ -88,10 +91,20 @@ class Reportes extends ActiveRecord{
         $this->idUsuario=$args['idUsuario']??'';
         $this->Verificacion=$args['Verificacion']??'';
         $this->fechaCreacion=$args['fechaCreacion']??'';
+        $this->idPensionActual=$args['idPensionActual']??'';
+        $this->salarioActual=$args['salarioActual']??'';
     }
 
     public function validar()
     {
+        if(!$this->idPensionActual)
+        {
+            $this->errors[] = "El id Pension es obligatorio";
+        }
+        if(!$this->salarioActual)
+        {
+            $this->errors[] = "El salario actual es obligatorio";
+        }
         if(!$this->minutosDiurnosNormales&&$this->minutosDiurnosNormales!=='0'){
             self::$errores[]="Los minutos diurnos normales son obligatorios";
         }
@@ -343,11 +356,13 @@ class Reportes extends ActiveRecord{
 
     public function DetallesReportes(){
 
-        $query="EXEC ingresarDetallesReporte :sueldoMasHorasExtras, :totalAportHoras, :idEmpleados, :idSelectTop";
+        $query="EXEC ingresarDetallesReporte :sueldoMasHorasExtras, :totalAportHoras, :idEmpleados, :idPensionActual, :salarioActual, :idSelectTop";
         $consulta=self::$db->prepare($query);
         $consulta->bindParam(":sueldoMasHorasExtras",$this->sueldoMasHorasExtras,PDO::PARAM_STR);
         $consulta->bindParam(":totalAportHoras",$this->totalAportHoras,PDO::PARAM_STR);
         $consulta->bindParam(":idEmpleados",$this->idEmpleados,PDO::PARAM_STR);
+        $consulta->bindParam(":idPensionActual",$this->idPensionActual,PDO::PARAM_STR);
+        $consulta->bindParam(":salarioActual",$this->salarioActual,PDO::PARAM_STR);
         $consulta->bindParam(":idSelectTop",$this->idSelectTop,PDO::PARAM_INT);
         $consulta->execute();
 
