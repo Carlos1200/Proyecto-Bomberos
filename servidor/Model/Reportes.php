@@ -416,6 +416,7 @@ class Reportes extends ActiveRecord{
             $consulta->bindParam(":idReporte",$idReporte,PDO::PARAM_STR);
             $consulta->execute();
             $reportes=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            
             return $reportes;
         }
     }
