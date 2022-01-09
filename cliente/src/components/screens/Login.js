@@ -6,9 +6,8 @@ import * as yup from "yup";
 import { useHistory } from "react-router-dom";
 import Logo from "../../assets/LogoBomberos.png";
 import error from "../../assets/error.png";
-import Background from "../../assets/login.jpg";
-import Api from '../../Api/Api';
 import { AuthContext } from "../../context/Auth/AuthContext";
+import { iniciarSesion } from "../../services/authServices";
 
 const schema=yup.object({
   usuario:yup.string().required("El usuario no debe ir vacio"),
@@ -31,17 +30,13 @@ export const Login = () => {
     const formData=new FormData();
     formData.append('nickUsuario',usuario);
     formData.append('contra',contra);
-
-    try {
-      const {data}=await Api.post(`/login/Login.php`,formData);
-      console.log(data)
-      const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=data;
+    iniciarSesion(formData).then(res=>{
+      const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=res;
       inicioSesion(idUsuario,NombreUsuario,tipoUsuario,UbicacionUsuario,login);
-      if(data.login){
+      if(res.login){
         history.push("/usuarios");
       }
-    } catch (error) {
-      console.log({error})
+    }).catch(error=>{
       if(!error.response){
         setErrores(["Error en el servidor"])
       }else{
@@ -50,13 +45,11 @@ export const Login = () => {
       setTimeout(() => {
         setErrores(null);
       }, 3000);
-    }
+    });
   }
 
   return (
-    <>
       <Container>
-        <Picture></Picture>
         <LoginBox>
           <div>
             <LogoImage src={Logo} />
@@ -64,7 +57,7 @@ export const Login = () => {
           <TitleLogin>
             <label>Cuerpo de Bomberos</label>
             <br />
-            <label>Inicio de Sesion</label>
+            <label>Inicio de Sesión</label>
           </TitleLogin>
           <div>
             <FormLogin onSubmit={handleSubmit(onSubmit)}>
@@ -103,30 +96,27 @@ export const Login = () => {
           </div>
         </LoginBox>
       </Container>
-    </>
   );
 };
 
 
 const Container = styled.div`
   display: flex;
-`;
-const Picture = styled.div`
-  background: url(${Background});
-  height: 100vh;
-  width: 50%;
-  background-size: cover;
-  background-position: center;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: #343f56;
+  padding-bottom: 2rem;
+  height: 100%;
 `;
 const LoginBox = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: #343f56;
   justify-content: center;
   align-items: center;
   font-family: sans-serif;
-  width: 50%;
-  flex: 1;
+  padding: 2rem 0;
+
 `;
 const LogoImage = styled.img`
   border-radius: 320px;
@@ -150,8 +140,11 @@ const FormLogin = styled.form`
 `;
 const DivLogin=styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   margin-top: 6mm;
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
 `;
 
 const Textbox = styled.input`

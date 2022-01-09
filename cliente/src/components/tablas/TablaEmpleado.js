@@ -7,16 +7,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
-import { atom, useRecoilState } from "recoil";
+import {  useRecoilState } from "recoil";
 import { EditarEmpleadoModal } from "../modal/EditarEmpleadoModal";
 import { Eliminar } from "../modal/Eliminar";
 import { VerDetallesEmpleadosModal } from "../modal/VerDetallesEmpleadosModal";
 import { eliminarEmpleados, getEmpleados } from "../../services/empleadosServices";
+import { empleadosState } from "../../atom/AtomTablas";
 
-export const empleadosState = atom({
-  key: 'empleadosState',
-  default: [],
-});
+
 
 export const TablaEmpleado = ({ notificacion, notificacionError }) => {
   const [visible, setVisible] = useState(false);
@@ -56,6 +54,7 @@ export const TablaEmpleado = ({ notificacion, notificacionError }) => {
     }).finally(() => {
       setCargando(false);
     });
+    // eslint-disable-next-line
   }, [])
 
   return (

@@ -98,8 +98,13 @@ class PlazaController{
 
         $errores=$plaza->validar(false);
         if(empty($errores)){
-            $errores=$plaza->editarPlaza();
-            if(!empty($errores)){
+            $plazas=$plaza->editarPlaza();
+            $errores=$plaza::getErrores();
+            if(empty($errores)){
+                $router->render('plazas/plazas',[
+                    'plazas'=>$plazas
+                ]);
+            }else{
                 $router->render('errores/error',[
                     'errores'=>$errores
                 ]);

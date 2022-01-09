@@ -6,11 +6,12 @@ import { faSyncAlt} from '@fortawesome/free-solid-svg-icons';
 import { AnimatePresence } from 'framer-motion';
 import { useSetRecoilState } from 'recoil';
 import { Menu } from '../Menu'
-import {TablaUsuario, usuariosState} from '../tablas/TablaUsuario';
+import {TablaUsuario} from '../tablas/TablaUsuario';
 import { Background } from '../Background';
 import { UsuarioModal } from '../modal/UsuarioModal';
 import { useBuscador } from '../../hooks/useBuscador';
 import { buscadorUsuarios } from '../../services/usuariosServices';
+import { usuariosState } from '../../atom/AtomTablas';
 export const Usuarios = () => {
 
   const setUsuarios=useSetRecoilState(usuariosState);

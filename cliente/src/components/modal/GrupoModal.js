@@ -4,10 +4,10 @@ import { faWindowClose,faSave,} from '@fortawesome/free-solid-svg-icons';
 import {useForm} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup'
-import { Modal } from '../Modal'
 import { useSetRecoilState } from 'recoil';
-import { grupoState } from '../tablas/TablaGroup';
+import { Modal } from '../Modal'
 import { editarGrupo, nuevoGrupo } from '../../services/gruposServices';
+import { grupoState } from '../../atom/AtomTablas';
 
 const schema=yup.object({
     nombreGrupo:yup.string().required("El nombre del grupo no debe ir vacío"),

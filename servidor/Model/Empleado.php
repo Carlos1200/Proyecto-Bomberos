@@ -120,6 +120,14 @@ class Empleado extends ActiveRecord{
         $consulta->bindParam(':idUbicacion',$this->idUbicacion,PDO::PARAM_STR);
         $consulta->bindParam(':idPlaza',$this->idPlaza,PDO::PARAM_STR);
         $consulta->execute();
+        
+        //Consultar empleado Actualizado
+        $query="EXEC vistaEmpleadoId :idEmpleado";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':idEmpleado',$this->idEmpleado,PDO::PARAM_STR);
+        $consulta->execute();
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $datos;
     }
 
     public function nuevosEmpleados(){

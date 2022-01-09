@@ -1,18 +1,26 @@
-import React,{useContext,useState} from 'react'
+import {useContext, useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import toast, { Toaster } from 'react-hot-toast';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { useSetRecoilState } from 'recoil';
 import { Menu } from '../Menu'
 import {Background} from '../Background';
-import { ReportesContext } from '../../context/reportes/ReportesContext';
 import { TablaReportes } from '../tablas/TablaReportes';
+import { useBuscador } from '../../hooks/useBuscador';
+import { obtenerReportesFiltrados } from '../../services/reportesServices';
+import { reportesState } from '../../atom/AtomTablas';
+import { AuthContext } from '../../context/Auth/AuthContext';
 
 export const Reportes = () => {
-
-  const [visible, setVisible] = useState(false);
+  const setReportes=useSetRecoilState(reportesState);
+  const {tipoUsuario}=useContext(AuthContext);
   const [inputBuscador, setInputBuscador] = useState('')
-  const {buscador,setConsultar}=useContext(ReportesContext);
+
+  const {buscador,reset}=useBuscador({
+    promise:obtenerReportesFiltrados,
+    setState:setReportes,
+  });
 
   const mostrarNotificacion=(error=false,msg)=>{
     if(error){
@@ -27,20 +35,22 @@ export const Reportes = () => {
         <Background titulo="Administración de Reportes">
           <Toaster position="top-right"/>
           <ReportsBox>
-          <FilterBox>
-            <FontAwesomeIcon
-                onClick={()=>{
-                  setConsultar(true);
-                  setInputBuscador('');
-                }}
-                icon={faSyncAlt}
-                style={{ fontSize: "26px", color: "#000000",cursor:'pointer' }}
-              />
-              <FilterTextBox placeholder="¿Desea un archivo en específico?" value={inputBuscador} onChange={(e)=>setInputBuscador(e.target.value)}/>
-              <BtnFilterSearch onClick={()=>{
-                buscador(inputBuscador);
-              }}>Buscar</BtnFilterSearch>
-            </FilterBox>
+            {tipoUsuario==='Administrador'?(
+              <FilterBox>
+              <FontAwesomeIcon
+                  onClick={()=>{
+                    reset();
+                    setInputBuscador('');
+                  }}
+                  icon={faSyncAlt}
+                  style={{ fontSize: "26px", color: "#000000",cursor:'pointer' }}
+                />
+                <FilterTextBox placeholder="¿Desea un archivo en específico?" value={inputBuscador} onChange={(e)=>setInputBuscador(e.target.value)}/>
+                <BtnFilterSearch onClick={()=>{
+                  buscador(inputBuscador);
+                }}>Buscar</BtnFilterSearch>
+              </FilterBox>
+            ):null}
             <ContenedorTabla>
             <TablaReportes mostrarNotificacion={mostrarNotificacion}/>
             </ContenedorTabla>

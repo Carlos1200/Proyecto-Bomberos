@@ -7,10 +7,11 @@ import { AnimatePresence } from 'framer-motion';
 import { useSetRecoilState } from 'recoil';
 import { Menu } from '../Menu'
 import {Background} from '../Background';
-import { empleadosState, TablaEmpleado } from '../tablas/TablaEmpleado';
+import {  TablaEmpleado } from '../tablas/TablaEmpleado';
 import { NuevoEmpleadoModal } from '../modal/NuevoEmpleadoModal';
 import {useBuscador} from '../../hooks/useBuscador';
 import { buscadorEmpleados } from '../../services/empleadosServices';
+import { empleadosState } from '../../atom/AtomTablas';
 
 
 export const Empleados = () => {
@@ -29,6 +30,14 @@ export const Empleados = () => {
 
   const mostrarNotificacionError=(error)=>{
     toast.error(error);
+  }
+
+  const mostrarNotificacionNuevo=(error=false,msg)=>{
+    if(error){
+      toast.error(msg);
+    }else{
+      toast.success('Operación realizada correctamente');
+    }
   }
 
     return (
@@ -62,7 +71,7 @@ export const Empleados = () => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<NuevoEmpleadoModal handleClose={()=>setVisible(false)} />}
+            {visible&&<NuevoEmpleadoModal handleClose={()=>setVisible(false)} mostrarNotificacionNuevo={mostrarNotificacionNuevo} />}
         </AnimatePresence>
       </Menu>
     );

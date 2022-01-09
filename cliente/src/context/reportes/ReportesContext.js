@@ -23,16 +23,17 @@ export const ReportesProvider=({children})=>{
         if(consultar){
             consultarDatos();
         }
+        // eslint-disable-next-line
     },[consultar]);
 
     useEffect(()=>{
         consultarDatos();
+        // eslint-disable-next-line
     },[]);
 
     const consultarDatos=async()=>{
         try {
             const {data}=await Api.get(`/reportes/${tipoUsuario!=="Administrador"?`ObtenerReportesUbicacion.php?nj=${UbicacionUsuario}`:'ObtenerReportes.php'}`);
-            console.log(data);
             dispatch({
                 type:OBTENER_REPORTE,
                 payload:data

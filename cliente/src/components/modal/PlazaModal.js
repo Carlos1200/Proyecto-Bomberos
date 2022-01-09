@@ -7,7 +7,7 @@ import {useSetRecoilState} from 'recoil'
 import * as yup from 'yup'
 import { Modal } from '../Modal'
 import { editarPlaza, nuevaPlaza } from '../../services/plazasServices';
-import { plazasState } from '../tablas/TablaPlaza';
+import { plazasState } from '../../atom/AtomTablas';
 
 const schema=yup.object({
     nombrePlaza:yup.string().required("El nombre de la plaza no debe ir vacía"),
@@ -27,15 +27,15 @@ export const PlazaModal = ({handleClose,plaza,mostrarNotificacion}) => {
       formData.append('idPlaza',plaza.idPlaza);
       formData.append('nombrePlaza',nombrePlaza);
 
-      editarPlaza(formData).then(()=>{
+      editarPlaza(formData).then((res)=>{
         setPlazasState(oldValue=>{
-          const newValue=oldValue.map(item=>{
-            if(item.idPlaza===plaza.idPlaza){
-              item.nombrePlaza=nombrePlaza;
+          return oldValue.map(item=>{
+            if(item.idPlaza===res.idPlaza){
+              return res;
+            }else{
+              return item;
             }
-            return item;
           })
-          return newValue;
         })
         handleClose();
         mostrarNotificacion();

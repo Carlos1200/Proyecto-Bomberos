@@ -1,7 +1,7 @@
 import React,{createContext,useEffect,useReducer} from 'react';
 import AuthReducer from './AuthReducer';
 import {INICIO_SESION,CERRAR_SESION} from '../../types'
-import Api from '../../Api/Api';
+import { verificarSesion } from '../../services/authServices';
 
 export const AuthContext=createContext();
 
@@ -19,31 +19,26 @@ export const AuthProvider=({children})=>{
     const [state, dispatch] = useReducer(AuthReducer, initialState);
 
     useEffect(()=>{
-        obtenerSesion();
-    },[]);
-
-    const obtenerSesion=async()=>{
-        try {
-          const {data}= await Api.get(`/login/Verificar.php`);
-          const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=data;
-          dispatch({
-              type:INICIO_SESION,
-              payload:{
-                idUsuario,
-                NombreUsuario,
-                tipoUsuario,
-                UbicacionUsuario,
-                login
-              }
-          });
-        } catch (error) {
-          console.log({error});
-          dispatch({
-            type:CERRAR_SESION
+        verificarSesion().then(res=>{
+            const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=res;
+            dispatch({
+                type:INICIO_SESION,
+                payload:{
+                  idUsuario,
+                  NombreUsuario,
+                  tipoUsuario,
+                  UbicacionUsuario,
+                  login
+                }
+            });
+        }).catch(error=>{
+            console.log({error});
+            dispatch({
+                type:CERRAR_SESION
             })
-        }
-    }
-
+        });
+    },[]);
+    
     const inicioSesion=(idUsuario,NombreUsuario,tipoUsuario,UbicacionUsuario,login)=>{
         dispatch({
             type:INICIO_SESION,

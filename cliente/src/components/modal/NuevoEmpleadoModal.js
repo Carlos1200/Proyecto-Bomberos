@@ -6,22 +6,23 @@ import { faWindowClose,faUserPlus,faCheck} from '@fortawesome/free-solid-svg-ico
 import {useForm, Controller} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup'
-import { useSetRecoilState } from 'recoil';
 import { Modal } from '../Modal'
-import { UseDatos } from '../../hooks/UseDatos';
 import { ListadoEmpleados } from '../ListadoEmpleados';
 import { UseEmpleados } from '../../hooks/UseEmpleados';
-import { empleadosState } from '../tablas/TablaEmpleado';
-import { nuevosEmpleados } from '../../services/empleadosServices';
+import { getUbicaciones } from '../../services/ubicacionesServices';
+import { getPlazas } from '../../services/plazasServices';
+import { getGrupos } from '../../services/gruposServices';
+import { getPensiones } from '../../services/pensionesServices';
 
 const schema=yup.object({
   nombres:yup.string().required("Los nombres son obligatorios"),
   apellidos:yup.string().required("Los apellidos son obligatorios"),
-  salario:yup.string().test('validar numero positivo',"El salario debe ser positivo",function(value){
-    const numero=Number(value);
-    return (numero>0);
-    
-  }).required("El salario Es obligatorio"),
+  salario: yup
+    .string()
+    .matches(RegExp("^[0-9.]+$"), {
+      message: "El salario debe ser un número positivo",
+    })
+    .required("El salario Es obligatorio"),
   ubicacion:yup.object({
     idUbicacion:yup.string().required("La ubicación no debe ir vacía"),
     nombreUbicacion:yup.string().required("La ubicación no debe ir vacía"),
@@ -45,24 +46,43 @@ const schema=yup.object({
   }),
 })
 
-export const NuevoEmpleadoModal = ({handleClose}) => {
-
-    const [datosUbicacion,cargandoUbicacion] = UseDatos('ubicaciones/ObtenerUbicaciones.php');
-    const [datosPlaza,cargandoPlaza] = UseDatos('plazas/ObtenerPlazas.php');
-    const [datosPension,cargandoPension] = UseDatos('pensiones/ObtenerPensiones.php');
-    const [datosGrupo,cargandoGrupo] = UseDatos('grupos/ObtenerGrupos.php');
+export const NuevoEmpleadoModal = ({handleClose,mostrarNotificacionNuevo}) => {
     const [cargando, setCargando] = useState(true);
     const [empleados, setEmpleados] = useState([]);
-    const setEmpleadosState=useSetRecoilState(empleadosState);
+    const [infoEmpleado, setInfoEmpleado] = useState({
+      ubicaciones:[],
+      plazas:[],
+      pensiones:[],
+      grupos:[]
+    });
+
     
-    const {crearString,nombresCol,apellidosCol,grupoCol,pensionCol,plazaCol,ubicacionCol,salarioCol,fechaCol,selectTop} = UseEmpleados();
+    const {crearString} = UseEmpleados(mostrarNotificacionNuevo,handleClose);
 
 
-  useEffect(()=>{
-    if(!cargandoUbicacion&&!cargandoPlaza&&!cargandoPension&&!cargandoGrupo){
-      setCargando(false);
-    }
-  },[cargandoUbicacion,cargandoPlaza,cargandoPension,cargandoGrupo])
+    useEffect(() => {
+      Promise.all([
+        getUbicaciones(),
+        getPlazas(),
+        getGrupos(),
+        getPensiones(),
+      ])
+        .then(([ubicaciones, plazas, grupos, pensiones]) => {
+          setInfoEmpleado({
+            ubicaciones,
+            plazas,
+            grupos,
+            pensiones,
+          });
+        })
+        .catch(() => {
+          mostrarNotificacionNuevo(true);
+        })
+        .finally(() => {
+          setCargando(false);
+        });
+        // eslint-disable-next-line
+    }, []);
 
     const { register, handleSubmit,formState: { errors },control } = useForm({
       resolver:yupResolver(schema),
@@ -85,8 +105,6 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
         ...empleados,
         data
       ]);
-
-      crearString(data);
       
     }
     const removerEmpleado=(id)=>{
@@ -95,22 +113,7 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
     }
 
     const insertarEmpleados=async()=>{
-      const formData=new FormData();
-      formData.append('nombres',nombresCol);
-      formData.append('apellidos',apellidosCol)
-      formData.append('salarioNominal',salarioCol)
-      formData.append('idGrupo',grupoCol)
-      formData.append('idPension',pensionCol)
-      formData.append('idUbicacion',ubicacionCol)
-      formData.append('idPlaza',plazaCol)
-      formData.append('fechaCreacionEmpleado',fechaCol);
-      formData.append('selectTop',selectTop);
-      nuevosEmpleados(formData).then((res)=>{
-        setEmpleadosState((oldValue)=>[...oldValue,...res]);
-        handleClose();
-      }).catch(error=>{
-        console.log(error.response.data);
-      })
+      crearString(empleados);
     }
 
     return (
@@ -147,7 +150,7 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
                   control={control}
                   render={({ field: { onChange, value } }) =>(
                       <Select 
-                      options={datosUbicacion}
+                      options={infoEmpleado.ubicaciones}
                       getOptionLabel={(ubicacion)=>ubicacion.nombreUbicacion}
                       getOptionValue={(ubicacion)=>ubicacion.idUbicacion}
                       value={value}
@@ -165,7 +168,7 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
                   control={control}
                   render={({ field: { onChange, value } }) =>(
                       <Select 
-                      options={datosPlaza}
+                      options={infoEmpleado.plazas}
                       getOptionLabel={(plaza)=>plaza.nombrePlaza}
                       getOptionValue={(plaza)=>plaza.idPlaza}
                       value={value}
@@ -183,7 +186,7 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
                   control={control}
                   render={({ field: { onChange, value } }) =>(
                       <Select 
-                      options={datosPension}
+                      options={infoEmpleado.pensiones}
                       getOptionLabel={(pension)=>pension.nombrePension}
                       getOptionValue={(pension)=>pension.idPension}
                       value={value}
@@ -201,7 +204,7 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
                   control={control}
                   render={({ field: { onChange, value } }) =>(
                       <Select 
-                      options={datosGrupo}
+                      options={infoEmpleado.grupos}
                       getOptionLabel={(grupo)=>grupo.nombreGrupo}
                       getOptionValue={(grupo)=>grupo.idGrupo}
                       value={value}

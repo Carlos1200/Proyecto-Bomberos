@@ -1,11 +1,11 @@
 import React,{useState,useEffect} from "react";
 import Select from "react-select";
 import styled from "styled-components";
-import Api from "../Api/Api";
+import { detallesEmpleados } from "../services/empleadosServices";
 
 export const EmpleadosSeleccion = ({ empleado, ubicaciones, plazas,grupos,posicion,empleadosFormulario,ultimo, titulo }) => {
 
-    const [empleadoDetalle, setEmpleadoDetalle] = useState();
+    const [empleadoDetalle, setEmpleadoDetalle] = useState([]);
     const [cargando, setCargando] = useState(true);
 
     const [ubicacionesSelect, setUbicacionesSelect] = useState();
@@ -17,6 +17,7 @@ export const EmpleadosSeleccion = ({ empleado, ubicaciones, plazas,grupos,posici
       if(empleadosFormulario.current[posicion]){
         empleadosFormulario.current[posicion].titulo = titulo;
       }
+      // eslint-disable-next-line
     },[titulo])
       
 
@@ -25,30 +26,30 @@ export const EmpleadosSeleccion = ({ empleado, ubicaciones, plazas,grupos,posici
       const date=new Date();
       const fecha= date.toISOString().slice(0, 10);
       setFechaInput(fecha);
-        try {
-            const formData=new FormData();
-            formData.append('idEmpleado',empleado.idEmpleado);
+      const formData=new FormData();
+      formData.append('idEmpleado',empleado.idEmpleado);
 
-            const {data}=await Api.post('/empleados/EmpleadosDetalle.php',formData);
-            setEmpleadoDetalle(data[0]);
-            const empleadoCompleto={
-              ...data[0],
-              idUbicacion:ubicaciones.find(ubicacion=>ubicacion.nombreUbicacion===data[0].nombreUbicacion).idUbicacion,
-              idPlaza:plazas.find(plaza=>plaza.nombrePlaza===data[0].nombrePlaza).idPlaza,
-              idGrupo:grupos.find(grupo=>grupo.nombreGrupo===data[0].nombreGrupo).idGrupo,
-              descripcion:"-",
-              ubicacionAnterior:data[0].nombreUbicacion,
-              plazaAnterior:data[0].nombrePlaza,
-              grupoAnterior:data[0].nombreGrupo,
-              fechaCambio:fecha,
-              
-            }
-
-            empleadosFormulario.current[posicion]=empleadoCompleto;
-            setCargando(false);
-        } catch (error) {
-            console.log(error);
+      detallesEmpleados(formData).then(res=>{
+        setEmpleadoDetalle(res);
+        const empleadoCompleto={
+          ...res,
+          idUbicacion:ubicaciones.find(ubicacion=>ubicacion.nombreUbicacion===res.nombreUbicacion).idUbicacion,
+          idPlaza:plazas.find(plaza=>plaza.nombrePlaza===res.nombrePlaza).idPlaza,
+          idGrupo:grupos.find(grupo=>grupo.nombreGrupo===res.nombreGrupo).idGrupo,
+          descripcion:"-",
+          ubicacionAnterior:res.nombreUbicacion,
+          plazaAnterior:res.nombrePlaza,
+          grupoAnterior:res.nombreGrupo,
+          fechaCambio:fecha,
+          
         }
+        empleadosFormulario.current[posicion]=empleadoCompleto;
+
+      }).catch(error=>{
+        console.log({error});
+      }).finally(()=>{
+        setCargando(false);
+      });
     }
 
     useEffect(()=>{

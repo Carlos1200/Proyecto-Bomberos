@@ -9,7 +9,7 @@ export const nuevoUsuario = (ubicacion)=>
 
 export const actualizarUsuarios = (ubicacion)=>
     Api.post("/usuarios/EditarUsuario.php",ubicacion)
-    .then((res) => res.data);
+    .then((res) => res.data[0]);
 
 export const eliminarUsuarios=(ubicacion)=>
   Api.post("/usuarios/EliminarUsuario.php",ubicacion)

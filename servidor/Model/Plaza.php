@@ -80,11 +80,13 @@ class Plaza extends ActiveRecord{
         $consulta->bindParam(':nombrePlaza',$this->nombrePlaza,PDO::PARAM_STR);
         $consulta->execute();
 
-        if(!self::$db->rowCount()>0){
-            self::$errores[]="No se pudo editar la Plaza";
-        }
+        $query="SELECT * FROM plazaNominal WHERE idPlaza = :idPlaza";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':idPlaza',$this->idPlaza,PDO::PARAM_INT);
+        $consulta->execute();
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
 
-        return self::$errores;
+        return $datos;
     }
 
     public function eliminarPlaza(){

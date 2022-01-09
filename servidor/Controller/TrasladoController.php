@@ -18,8 +18,13 @@
                 $errores=$traslado->crearTraslado();
 
                 if(empty($errores)){
-                    $errores=$traslado->crearTrasladoIndividual();
-                    if(!empty($errores)){
+                    $traslados=$traslado->crearTrasladoIndividual();
+                    $errores=$traslado::getErrores();
+                    if(empty($errores)){
+                        $router->render('traslados/traslados',[
+                            'traslados'=>$traslados
+                        ]);
+                    }else{
                         $router->render('errores/error',[
                             'errores'=>$errores
                         ]);
@@ -79,6 +84,38 @@
             }
         }
 
+        public static function obtenerTrasladosFiltrados(Router $router){
+            $nj=null;
+            $token='';
+            $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+            parse_str($query,$output);
+            $existe=array_key_exists('nj',$output);
+            $existeToken=array_key_exists('token',$output);
+            if($existe){
+                $nj=$output['nj'];
+            }
+    
+            if($existeToken){
+                $token=$output['token'];
+            }
+            $trasladosObj = new Traslado();
+
+            $trasladosObj::VerificarToken($token);
+
+            $errores= $trasladosObj::getErrores();
+
+            if(empty($errores)){
+                $traslados = $trasladosObj->obtenerTrasladosFiltrados($nj);
+                $router->render('traslados/traslados',[
+                    'traslados'=>$traslados
+                ]);
+            } else {
+                $router->render('errores/error',[
+                    'errores'=>$errores
+                ]);
+            }
+        }
+
         public static function actualizarTraslados(Router $router){
             $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
             $token=str_replace("token=","",$query);
@@ -89,14 +126,14 @@
 
             $errores = $traslado->validar(false);
             if(empty($errores)){
-                $errores=$traslado->editarPlaza();
+                // $errores=$traslado->editarPlaza();
                 if(!empty($errores)){
                     $router->render('errores/error',[
                         'errores'=>$errores
                     ]);
                 }
             } else {
-                $router._render('errores/error',[
+                $router->render('errores/error',[
                     'errores'=>$errores
                 ]);
             }
@@ -136,7 +173,7 @@
             $errores=$traslado::getErrores();
 
             if(empty($errores)){
-                $traslados=$traslado->leerTrasladoDetalles();
+                $traslados=$traslado->ObtenerTrasladosDetalles();
                 $errores=$traslado::getErrores();
                 if(empty($errores)){
                     $router->render('traslados/traslados',[

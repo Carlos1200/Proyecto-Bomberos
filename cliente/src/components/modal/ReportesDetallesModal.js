@@ -1,31 +1,28 @@
 import React, {useEffect, useState, useRef} from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWindowClose } from "@fortawesome/free-solid-svg-icons";
+import { faSave, faWindowClose } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "../Modal";
-import { TrasEmpSeleccion } from "../TrasEmpSeleccion";
-import { detallesTraslados } from "../../services/trasladosServices";
+import { obtenerDetallesReportes } from "../../services/reportesServices";
+import { RepEmpSeleccion } from "../RepEmpSeleccion";
+import { useAutorizacion } from "../../hooks/useAutorizacion";
 
-export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificacion}) =>{
+export const ReportesDetallesModal = ({handleClose, reporte, mostrarNotificacion}) =>{
 
-    const [trasladoDetalle, setTrasladoDetalle] = useState([]);
+    const [reportesDetalle, setReportesDetalle] = useState([]);
     const [cargando, setCargando] = useState(true);
-
-    const traslEmplFormulario = useRef();
-
+    const [errores, setErrores] = useState([true]);
+    const ReportEmplFormulario = useRef();
+    const {guardarReporte} = useAutorizacion();
     useEffect(() => {
         obtenerDetalles();
         // eslint-disable-next-line
     }, [])
 
     const obtenerDetalles = async() => {
-            const formData = new FormData();
-            formData.append('idReporteHistorial',traslado.idReporteHistorial);
-            
-            detallesTraslados(formData).then(res => {
-                setTrasladoDetalle(res);
-                traslEmplFormulario.current = res;
-
+            obtenerDetallesReportes(reporte.idReporte).then(res => {
+                setReportesDetalle(res);
+                ReportEmplFormulario.current = {idReporte: reporte.idReporte, empleados: res};
             }).catch(err => {
                 console.log({err});
                 mostrarNotificacion("Ocurrio un error");
@@ -35,7 +32,7 @@ export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificaci
     }
 
     return(
-        <Modal handleClose={handleClose}>
+        <Modal handleClose={handleClose} grande>
             <Contenedor>
                 <div
                     style={{
@@ -55,19 +52,33 @@ export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificaci
                     />
                 </div>
                 <Header>
-                    <Titulo>Detalle de Empleados del Traslado</Titulo>
+                    <Titulo>Reporte de {reporte.creadorJefe}</Titulo>
                 </Header>
                 {!cargando ? (
                 <>
                 <ContenedorEmpleados>
-                    {trasladoDetalle.map((empleado,index) => (
-                    <TrasEmpSeleccion
+                    {reportesDetalle.map((empleado,index) => (
+                    <RepEmpSeleccion
                         key={empleado.idEmpleado}
-                        traslEmplFormulario={traslEmplFormulario}
+                        ReportEmplFormulario={ReportEmplFormulario}
                         posicion={index}
+                        setErrores={setErrores}
+                        erroresArray={errores}
                     />
                     ))}
                 </ContenedorEmpleados>
+                <Btn
+                    type='button'
+                    disabled={errores.includes(true)}
+                    onClick={() => {
+                        guardarReporte(ReportEmplFormulario.current.empleados,ReportEmplFormulario.current.idReporte);
+                    }}>
+                    <Text>Guardar Reporte</Text>
+                    <FontAwesomeIcon
+                        icon={faSave}
+                        style={{ fontSize: "23px", color: "#fff" }}
+                    />
+                </Btn>
                 </>
                 ) : null}
             </Contenedor>
@@ -111,3 +122,26 @@ const ContenedorEmpleados = styled.div`
   }
 `
 ;
+
+const Btn = styled.button`
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #04b99c;
+  opacity: ${props => (props.disabled ? 0.5 : 1)};
+  border-radius: 1rem;
+  margin-top: 1rem;
+  padding: 0 1rem;
+  border: 0;
+  transition: background-color 0.3s ease-in-out;
+  &:hover {
+    background-color: #028671;
+  }
+`;
+
+const Text = styled.p`
+  color: #fff;
+  font-size: 1.5rem;
+  margin-right: 0.7rem;
+`;

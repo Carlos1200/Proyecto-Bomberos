@@ -12,13 +12,12 @@ import {
   faObjectGroup,
   faRandom
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Btn } from "./Btn";
 import Logo from '../assets/LogoBomberos.png';
 import { AuthContext } from "../context/Auth/AuthContext";
-import Api from "../Api/Api";
-import { CerrarSesion } from "./modal/CerrarSesion";
 import { AnimatePresence } from "framer-motion";
+import {CerrarSesion} from './modal/CerrarSesion'
+import { CerrarSesion as Logout } from "../services/authServices";
 
 
 export const Sidebar = () => {
@@ -27,12 +26,11 @@ export const Sidebar = () => {
   const [visible, setVisible] = useState(false);
 
   const cerrar=async()=>{
-    try {
-      await Api.get('/login/Logout.php');
+    Logout().then(()=>{
       cerrarSesion();
-    } catch (error) {
-      console.log({error});
-    }
+    }).catch(err=>{
+      console.log(err);
+    })
   }
 
   return (
@@ -101,14 +99,11 @@ export const Sidebar = () => {
           icono={faFileSignature}
           redirect='generar-reporte'
         />
-        <Boton
-          onClick={()=>{
-            setVisible(true);
-          }}
-        >
-          <FontAwesomeIcon icon={faPowerOff} style={{ fontSize: "20px",marginLeft:'4rem',marginRight:'2rem' }} />
-          Cerrar Sesión
-        </Boton>
+        <Btn
+          titulo='Cerrar Sesión'
+          icono={faPowerOff}
+          onpress={()=>setVisible(true)}
+        />
       </ContenedorButones>
     </Contenedor>
     <AnimatePresence
@@ -123,12 +118,18 @@ export const Sidebar = () => {
 
 const Contenedor = styled.div`
   background-color: #343f56;
+  width: 100%;
   height: 100%;
 `;
 
 const Image = styled.img`
   width: 100px;
   height: 100px;
+  @media (max-width: 768px) {
+    width: 50px;
+    height: 50px;
+    margin: 1rem 0;
+  }
 `;
 
 const ContenedorImagen = styled.div`
@@ -137,7 +138,11 @@ const ContenedorImagen = styled.div`
   align-items: center;
   color: white;
   text-align: center;
-  /* padding: 0.5rem; */
+  @media (max-width: 768px) {
+    p{
+      display: none;
+    }
+  }
 `;
 
 const ContenedorButones = styled.div`
@@ -159,20 +164,4 @@ const ContenedorButones = styled.div`
   border-radius: 20px;       /* roundness of the scroll thumb */
   border: 3px solid #343F56;  /* creates padding around scroll thumb */
 }
-`;
-
-const Boton = styled.button`
-  width: 100%;
-  border: 0;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.8);
-  background-color: transparent;
-  color: white;
-  font-size: 18px;
-  padding: 15px 0;
-  display: flex;
-  justify-content: flex-start;
-  transition: background-color .3s ease-in-out;
-  &:hover {
-    background-color: #222938;
-  }
 `;

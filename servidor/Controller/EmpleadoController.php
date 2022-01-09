@@ -100,8 +100,14 @@ class EmpleadoController{
         $errores=$empleado->validar(false);
 
         if(empty($errores)){
-            $errores=$empleado->editarEmpleado();
-            if(!empty($errores)){
+            $empleados=$empleado->editarEmpleado();
+            $errores=$empleado->getErrores();
+
+            if(empty($errores)){
+                $router->render('empleados/empleados',[
+                    'empleados'=>$empleados
+                ]);
+            }else{
                 $router->render('errores/error',[
                     'errores'=>$errores
                 ]);

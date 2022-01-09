@@ -17,9 +17,9 @@ import { Traslados } from './components/screens/Traslados';
 import { AuthProvider } from './context/Auth/AuthContext';
 import { AdminTraslados } from './components/screens/AdminTraslados';
 import { ReportesProvider } from './context/reportes/ReportesContext';
+import { verificarTraslados } from './services/trasladosServices';
 
 import '../src/index.css';
-import Api from './Api/Api';
 
 const App = () => {
 
@@ -30,14 +30,14 @@ const App = () => {
       
       const formData = new FormData();
       formData.append("fechaActual", fecha);
-      const data = await Api.post('/traslados/VerificarTraslados.php',formData);
-      console.log(data);
+      verificarTraslados(formData)
     },
     [],
   )
 
   useEffect(() => {
     ValidarTraslados();
+    // eslint-disable-next-line
   }, [])
 
   return (

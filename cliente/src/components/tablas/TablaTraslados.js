@@ -1,12 +1,13 @@
-import React,{useContext,useEffect,useState} from "react";
+import React,{useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolderOpen, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
-import Api from '../../Api/Api';
+import { useRecoilState } from "recoil";
 import { Eliminar } from "../modal/Eliminar";
-import { TrasladosModal } from "../modal/TrasladosModal";
 import { TrasladosDetallesModal } from "../modal/TrasladosDetallesModal";
+import { DeleteTraslados, getTraslados } from "../../services/trasladosServices";
+import { trasladosState } from "../../atom/AtomTablas";
 
 
 export const TablaTraslados = ({mostrarNotificacion}) => {
@@ -16,39 +17,30 @@ export const TablaTraslados = ({mostrarNotificacion}) => {
   const [trasladoBorrar, setTrasladoBorrar] = useState(null);  //Id del traslado a Borrar
   const [traslado, setTraslado] = useState();
 
-  //const {cargando,traslados,error}= useContext(TrasladosContext);
-  const [traslados, setTraslados] = useState();
+  const [traslados, setTraslados] = useRecoilState(trasladosState);
   const [cargando, setCargando] = useState(true);
 
-  const ObtenerTraslados = async () =>{
-      try{
-        const {data} = await Api.get('/traslados/ObtenerTraslados.php');
-        setTraslados(data);
-
-        setCargando(false);
-
-      } catch(error){
-        setCargando(false);
-        mostrarNotificacion(true);
-      }
-  }
-
   const eliminarTraslados = async() => {
-    try {
-      const formData=new FormData();
-      formData.append("idReporteHistorial",trasladoBorrar);
-      await Api.post('/traslados/EliminarTraslados.php',formData);
-
-      //setConsultar(true);
+    const formData=new FormData();
+    formData.append("idReporteHistorial",trasladoBorrar);
+    DeleteTraslados(formData).then(()=>{
+      setTraslados(oldValue=>oldValue.filter(traslado=>traslado.idReporteHistorial!==trasladoBorrar));
       setVisibleBorrar(false);
       mostrarNotificacion()
-    } catch (error) {
+    }).catch(error=>{
       mostrarNotificacion(true)
-    }
+    });
   }
 
   useEffect(()=>{
-    ObtenerTraslados();
+    getTraslados().then((data)=>{
+      setTraslados(data);
+    }).catch(()=>{
+      mostrarNotificacion(true);
+    }).finally(()=>{
+      setCargando(false);
+    })
+    // eslint-disable-next-line
   },[])
 
 

@@ -7,8 +7,8 @@ import { AuthContext } from "../../context/Auth/AuthContext";
 import { AnimatePresence } from "framer-motion";
 import { Background } from "../Background";
 import { Menu } from "../Menu";
-import Api from "../../Api/Api";
 import {ReportesModal} from '../modal/ReportesModal'
+import { getEmpleados, ObtenerEmpleadosFiltrados } from "../../services/empleadosServices";
 
 export const GenerarReporte = () => {
   const { NombreUsuario, UbicacionUsuario, tipoUsuario } =
@@ -25,12 +25,15 @@ export const GenerarReporte = () => {
       if (tipoUsuario !== "Administrador") {
         const formData = new FormData();
         formData.append("nombreUbicacion", UbicacionUsuario);
-        const { data } = await Api.post("/empleados/ObtenerEmpleadosFiltrados.php", formData);
-        setEmpleados(data);
+        ObtenerEmpleadosFiltrados(formData).then((res) => {
+          setEmpleados(res);
+        });
       } else {
-        const { data } = await Api.get("/empleados/ObtenerEmpleados.php");
-        setEmpleados(data);
+        getEmpleados().then((data) => {
+          setEmpleados(data);
+        });
       }
+
       setCargando(false);
     } catch (error) {
       console.log(error);
@@ -62,6 +65,11 @@ export const GenerarReporte = () => {
     setEmpleadosSeleccionados([]);
     
   }
+
+  const seleccionarTodos = () => {
+    setEmpleadosSeleccionados([...empleados]);
+    setEmpleados([]);
+  };
 
   const mostrarNotificacion=(error=false)=>{
     if(error){
@@ -112,6 +120,7 @@ export const GenerarReporte = () => {
                           menuPlacement='bottom'
                         />
                       </FilterTextBox>
+                      <BotonSearch onClick={seleccionarTodos}>Seleccionar Todos</BotonSearch>
                     </FilterBox>
                     <ContenedorEnvio>
                       <ListadoEmpleados
@@ -190,7 +199,11 @@ const JefeNombre = styled.p`
   margin-left: 1rem;
 `;
 
-const FilterBox = styled.div``;
+const FilterBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const FilterTextBox = styled.div`
   flex: 1;
@@ -233,5 +246,20 @@ const Boton = styled.button`
   transition: background-color 0.3s ease-in-out;
   &:hover {
     background-color: #e8c410;
+  }
+`;
+
+const BotonSearch = styled.button`
+  padding: 1rem 3rem;
+  border-radius: 2rem;
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: 0;
+  background-color: #343f56;
+  color: white;
+  transition: background-color 0.3s ease-in-out;
+  &:hover {
+    background-color: #151c2b;
   }
 `;

@@ -1,7 +1,7 @@
 <?php
 namespace API\grupos;
 
-include_once "../../cors.php";
+require_once "../../cors.php";
 
 require_once('../../app.php');
     use MVC\Router;

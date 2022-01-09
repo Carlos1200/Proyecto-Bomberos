@@ -123,11 +123,16 @@
             $query->bindParam(":idHistorialTraslados",$this->idHistorialTraslados,PDO::PARAM_STR);
             $query->bindParam(":idEmpleados",$this->idEmpleados,PDO::PARAM_STR);
             $query->execute();
+
             
-            // if(!self::$db->lastInsertId()>0){
-            //     self::$errores[]="No se pudo agregar los traslados";
-            // }
-            return self::$errores;
+            $query="select distinct top(1) h.fechaCreacion, rh.tituloHistorial, rh.idReporteHistorial 
+                from historialTraslados as h
+                INNER JOIN reportesHistorial as rh ON (h.idHistorialTraslados = rh.idHistorialTraslados)
+                order by rh.idReporteHistorial desc";
+            $query=self::$db->prepare($query);
+            $query->execute(); 
+            $resultado=$query->fetchAll(PDO::FETCH_ASSOC);
+            return $resultado;
         }
 
         public function verificarTraslados(){
@@ -146,6 +151,16 @@
         public function obtenerTraslados(){
             $sql = "EXEC mostrarReportesTraslados";
             $query = self::$db->prepare($sql);
+            $query->execute();
+            $resultado=$query->fetchAll(PDO::FETCH_ASSOC);
+
+            return $resultado;
+        }
+
+        public function obtenerTrasladosFiltrados($nombre){
+            $sql = "EXEC buscarReportesTraslados :nombre";
+            $query = self::$db->prepare($sql);
+            $query->bindParam(":nombre",$nombre,PDO::PARAM_STR);
             $query->execute();
             $resultado=$query->fetchAll(PDO::FETCH_ASSOC);
 
