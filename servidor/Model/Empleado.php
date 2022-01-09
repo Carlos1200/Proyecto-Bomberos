@@ -190,6 +190,21 @@ class Empleado extends ActiveRecord{
         }
 
     }
+
+    public function leerEmpleadoDetallesLotes(){
+        
+        if($this->idEmpleado){
+            $query="EXEC leerVariosEmpleadosDetalles :idEmpleado";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(':idEmpleado',$this->idEmpleado,PDO::PARAM_STR);
+            $consulta->execute();
+            $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $datos;
+        }else{
+            self::$errores[]="El id del empleado es obligatorio";
+        }
+
+    }
     
 }
 

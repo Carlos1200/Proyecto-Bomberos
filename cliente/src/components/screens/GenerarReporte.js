@@ -17,6 +17,7 @@ export const GenerarReporte = () => {
   const [empleados, setEmpleados] = useState([]);
   const [empleadosSeleccionados, setEmpleadosSeleccionados] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [disable, setDisable] = useState(false);
 
  
 
@@ -46,6 +47,14 @@ export const GenerarReporte = () => {
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    if(empleados.length===0){
+      setDisable(true);
+    }else{
+      setDisable(false);
+    }
+  }, [empleados]);
+
   const eliminarEmpleado = (id) => {
     const empleadoEliminado = empleadosSeleccionados.find(
       (empleado) => empleado.idEmpleado === id
@@ -69,6 +78,7 @@ export const GenerarReporte = () => {
   const seleccionarTodos = () => {
     setEmpleadosSeleccionados([...empleados]);
     setEmpleados([]);
+    setDisable(true);
   };
 
   const mostrarNotificacion=(error=false)=>{
@@ -120,7 +130,7 @@ export const GenerarReporte = () => {
                           menuPlacement='bottom'
                         />
                       </FilterTextBox>
-                      <BotonSearch onClick={seleccionarTodos}>Seleccionar Todos</BotonSearch>
+                      <BotonSearch disabled={disable} onClick={seleccionarTodos}>Seleccionar Todos</BotonSearch>
                     </FilterBox>
                     <ContenedorEnvio>
                       <ListadoEmpleados
@@ -243,6 +253,7 @@ const Boton = styled.button`
   font-weight: bold;
   border: 0;
   background-color: #ffe459;
+  opacity: ${props => (props.disabled ? 0.5 : 1)};
   transition: background-color 0.3s ease-in-out;
   &:hover {
     background-color: #e8c410;
@@ -257,6 +268,7 @@ const BotonSearch = styled.button`
   font-weight: bold;
   border: 0;
   background-color: #343f56;
+  opacity: ${props => (props.disabled ? 0.5 : 1)};
   color: white;
   transition: background-color 0.3s ease-in-out;
   &:hover {
