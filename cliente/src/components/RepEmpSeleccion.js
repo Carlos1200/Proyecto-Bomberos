@@ -261,7 +261,7 @@ const Textbox = styled.input`
   padding-left: 20px;
   font-size: 5mm;
   margin: 0;
-  width: 40%;
+  width: 50%;
   border-radius: 0.2rem;
   font-family: sans-serif;
 `;

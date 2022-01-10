@@ -34,7 +34,7 @@ export const Login = () => {
       const {NombreUsuario,idUsuario,login,tipoUsuario,UbicacionUsuario}=res;
       inicioSesion(idUsuario,NombreUsuario,tipoUsuario,UbicacionUsuario,login);
       if(res.login){
-        history.push("/usuarios");
+        history.push("/reportes");
       }
     }).catch(error=>{
       if(!error.response){

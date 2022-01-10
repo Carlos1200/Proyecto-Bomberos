@@ -14,14 +14,12 @@ export const ReportesDetallesModal = ({handleClose, reporte, mostrarNotificacion
     const [cargando, setCargando] = useState(true);
     const [errores, setErrores] = useState([true]);
     const [pensiones, setPensiones] = useState([]);
-    console.log(pensiones);
     const ReportEmplFormulario = useRef();
-    const {guardarReporte} = useAutorizacion();
+    const {guardarReporte} = useAutorizacion(handleClose,mostrarNotificacion);
     useEffect(() => {
         obtenerDetalles();
         // eslint-disable-next-line
     }, [])
-
     const obtenerDetalles = async() => {
         Promise.all([obtenerDetallesReportes(reporte.idReporte),getPensiones()])
             .then(([detalles,pensiones]) => {
