@@ -3,7 +3,8 @@ namespace Controller;
 
 use MVC\Router;
 use Model\Reportes;
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class ReportesController{
 
     public static function nuevoReportes(Router $router){
@@ -193,6 +194,34 @@ class ReportesController{
                 'errores'=>$errores
             ]);
         }
+    }
+
+    public static function generarExcel(Router $router){
+        $id=null;
+        $token='';
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        parse_str($query,$output);
+        $existe=array_key_exists('id',$output);
+        $existeToken=array_key_exists('token',$output);
+        if($existe){
+            $id=$output['id'];
+        }
+
+        if($existeToken){
+            $token=$output['token'];
+        }
+
+        $reporte=new Reportes();
+        $reporte::VerificarToken($token);
+        $errores=$reporte::getErrores();
+        if(empty($errores)){
+            
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
+
     }
 
 }

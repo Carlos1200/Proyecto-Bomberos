@@ -14,3 +14,15 @@ Api.get(`/reportes/ObtenerDetallesReporte.php?nj=${idReporte}`)
 
 export const obtenerReportesFiltrados= (nombre='')=>
 Api.get(`/reportes/ObtenerReportesFiltrados.php?nj=${nombre}`).then((res) => res.data);
+
+export const mostrarAutorizacion= (idReporte)=>
+Api.get(`/pdf/VerPdf.php?id=${idReporte}`,{
+  responseType:'blob'
+}).then((res) => {
+  const url = window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'Autorizacion.pdf'); //or any other extension
+    document.body.appendChild(link);
+    link.click();
+});

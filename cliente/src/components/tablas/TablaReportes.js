@@ -11,7 +11,7 @@ import { AnimatePresence } from "framer-motion";
 import { useRecoilState } from "recoil";
 import env from "react-dotenv";
 import { reportesState } from "../../atom/AtomTablas";
-import { obtenerReportes } from "../../services/reportesServices";
+import { mostrarAutorizacion, obtenerReportes } from "../../services/reportesServices";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import { ReportesDetallesModal } from "../modal/ReportesDetallesModal";
 
@@ -66,15 +66,12 @@ export const TablaReportes = ({ mostrarNotificacion }) => {
                     {reporteCol.fechaCreado.split(" ")[0]}
                   </ColumInput>
                   <ColumInput>
-                    <a
-                      href={`${BaseURL}/pdf/VerPdf.php?id=${reporteCol.idAutorizaciones}`}
-                      target='_blank'
-                      rel='noreferrer'>
+                    <BtnAcceder onClick={()=>mostrarAutorizacion(reporteCol.idAutorizaciones)}>
                       <FontAwesomeIcon
                         icon={faLink}
                         style={{ fontSize: "23px", color: "#0801BF" }}
                       />
-                    </a>
+                    </BtnAcceder>
                   </ColumInput>
                   {tipoUsuario === "Administrador" ? (
                     <>
