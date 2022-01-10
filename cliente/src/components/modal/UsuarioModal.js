@@ -54,7 +54,7 @@ export const UsuarioModal = ({handleClose,usuario,mostrarNotificacion}) => {
         password:''
       }
     });
-    const SubmitEdit=async({nombre,ubicacion,nick,tipo})=>{
+    const SubmitEdit=async({nombre,ubicacion,nick,tipo,password})=>{
       
       const formData=new FormData();
       formData.append('idUsuario',usuario.idUsuario);
@@ -62,6 +62,7 @@ export const UsuarioModal = ({handleClose,usuario,mostrarNotificacion}) => {
       formData.append('tipoUsuario',tipo.value);
       formData.append('nickUsuario',nick);
       formData.append('UbicacionUsuario',ubicacion.nombreUbicacion);
+      formData.append('contra',password);
       actualizarUsuarios(formData).then((res)=>{
         setUsuario((oldValue)=>{
           return oldValue.map(item=>{

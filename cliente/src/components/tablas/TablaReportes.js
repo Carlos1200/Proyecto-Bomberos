@@ -2,27 +2,22 @@ import { useState, useContext, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFolderOpen,
-  faTrashAlt,
   faCheck,
   faLink,
+  faFileExcel,
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
 import { useRecoilState } from "recoil";
-import env from "react-dotenv";
 import { reportesState } from "../../atom/AtomTablas";
-import { obtenerReportes } from "../../services/reportesServices";
+import { mostrarAutorizacion, mostrarExcel, obtenerReportes } from "../../services/reportesServices";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import { ReportesDetallesModal } from "../modal/ReportesDetallesModal";
-
-const BaseURL = env.BASE_URL;
 
 export const TablaReportes = ({ mostrarNotificacion }) => {
   const [reportes, setReportes] = useRecoilState(reportesState);
   const { UbicacionUsuario, tipoUsuario } = useContext(AuthContext);
   const [visible, setVisible] = useState(false);
-  const [visibleBorrar, setVisibleBorrar] = useState(false);
-  const [reporteBorrar, setReporteBorrar] = useState(null);
   const [reporte, setReporte] = useState();
   const [cargando, setCargando] = useState(true);
 
@@ -37,8 +32,20 @@ export const TablaReportes = ({ mostrarNotificacion }) => {
       .finally(() => {
         setCargando(false);
       });
+      // eslint-disable-next-line
   }, []);
 
+  const llamarExcel=(idReporte,JefeEstacion,Fecha)=>{
+    mostrarExcel(idReporte,JefeEstacion,Fecha).catch(() => {
+      mostrarNotificacion(true, "Error en el servidor");
+    });
+  }
+
+  const llamarAutorizacion=(idReporte)=>{
+    mostrarAutorizacion(idReporte).catch(() => {
+      mostrarNotificacion(true, "Error en el servidor");
+    });
+  }
   return (
     <Contenedor>
       <ContenedorTabla>
@@ -52,7 +59,7 @@ export const TablaReportes = ({ mostrarNotificacion }) => {
                 {tipoUsuario === "Administrador" ? (
                   <>
                     <ColumnTitle>Acceder</ColumnTitle>
-                    <ColumnTitle>Borrar</ColumnTitle>
+                    <ColumnTitle>Exportar</ColumnTitle>
                   </>
                 ) : null}
                 <ColumnTitle>Verificado</ColumnTitle>
@@ -66,15 +73,12 @@ export const TablaReportes = ({ mostrarNotificacion }) => {
                     {reporteCol.fechaCreado.split(" ")[0]}
                   </ColumInput>
                   <ColumInput>
-                    <a
-                      href={`${BaseURL}/pdf/VerPdf.php?id=${reporteCol.idAutorizaciones}`}
-                      target='_blank'
-                      rel='noreferrer'>
+                    <BtnAcceder onClick={()=>llamarAutorizacion(reporteCol.idAutorizaciones)}>
                       <FontAwesomeIcon
                         icon={faLink}
                         style={{ fontSize: "23px", color: "#0801BF" }}
                       />
-                    </a>
+                    </BtnAcceder>
                   </ColumInput>
                   {tipoUsuario === "Administrador" ? (
                     <>
@@ -89,21 +93,21 @@ export const TablaReportes = ({ mostrarNotificacion }) => {
                           }}>
                           <FontAwesomeIcon
                             icon={faFolderOpen}
-                            style={{ fontSize: "23px", color: "0C9021" }}
+                            style={{ fontSize: "23px", color: "#0C9021" }}
                           />
                         </BtnAcceder>
                       </ColumInput>
                       <ColumInput>
-                        <BtnEliminar
+                        <BtnEXCEL
+                          disabled={reporteCol.verificacion === "0"}
                           onClick={() => {
-                            setVisibleBorrar(true);
-                            setReporteBorrar(reporteCol.idReporte);
+                            llamarExcel(reporteCol.idReporte,reporteCol.creadorJefe,reporteCol.fechaCreado.split(" ")[0]);
                           }}>
                           <FontAwesomeIcon
-                            icon={faTrashAlt}
-                            style={{ fontSize: "23px", color: "FF0000" }}
+                            icon={faFileExcel}
+                            style={{ fontSize: "23px", color: "#016E38" }}
                           />
-                        </BtnEliminar>
+                        </BtnEXCEL>
                       </ColumInput>
                     </>
                   ) : null}
@@ -200,8 +204,9 @@ const BtnAcceder = styled.button`
   background-color: transparent;
   cursor: pointer;
 `;
-const BtnEliminar = styled.button`
+const BtnEXCEL = styled.button`
   border: 0;
+  opacity: ${(props) => (props.disabled ? "0.5" : "1")};
   background-color: transparent;
   cursor: pointer;
 `;

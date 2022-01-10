@@ -6,24 +6,26 @@ import { Modal } from "../Modal";
 import { obtenerDetallesReportes } from "../../services/reportesServices";
 import { RepEmpSeleccion } from "../RepEmpSeleccion";
 import { useAutorizacion } from "../../hooks/useAutorizacion";
+import { getPensiones } from "../../services/pensionesServices";
 
 export const ReportesDetallesModal = ({handleClose, reporte, mostrarNotificacion}) =>{
 
     const [reportesDetalle, setReportesDetalle] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [errores, setErrores] = useState([true]);
+    const [pensiones, setPensiones] = useState([]);
     const ReportEmplFormulario = useRef();
-    const {guardarReporte} = useAutorizacion();
+    const {guardarReporte} = useAutorizacion(handleClose,mostrarNotificacion);
     useEffect(() => {
         obtenerDetalles();
         // eslint-disable-next-line
     }, [])
-
     const obtenerDetalles = async() => {
-            obtenerDetallesReportes(reporte.idReporte).then(res => {
-                console.log(res);
-                setReportesDetalle(res);
-                ReportEmplFormulario.current = {idReporte: reporte.idReporte, empleados: res};
+        Promise.all([obtenerDetallesReportes(reporte.idReporte),getPensiones()])
+            .then(([detalles,pensiones]) => {
+                setReportesDetalle(detalles);
+                setPensiones(pensiones);
+                ReportEmplFormulario.current = {idReporte: reporte.idReporte, empleados: detalles};
             }).catch(err => {
                 console.log({err});
                 mostrarNotificacion("Ocurrio un error");
@@ -65,6 +67,7 @@ export const ReportesDetallesModal = ({handleClose, reporte, mostrarNotificacion
                         posicion={index}
                         setErrores={setErrores}
                         erroresArray={errores}
+                        pensiones={pensiones}
                     />
                     ))}
                 </ContenedorEmpleados>

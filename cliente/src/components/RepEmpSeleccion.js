@@ -18,7 +18,7 @@ const schema = yup.object({
     })
     .required("Los minutos son obligatorios"),
 });
-export const RepEmpSeleccion = ({ ReportEmplFormulario, posicion,setErrores,erroresArray }) => {
+export const RepEmpSeleccion = ({ ReportEmplFormulario, posicion,setErrores,erroresArray,pensiones }) => {
   const [empleado, setEmpleado] = useState();
   const [cargando, setCargando] = useState(true);
   const [validacion, setValidacion] = useState({
@@ -34,13 +34,20 @@ export const RepEmpSeleccion = ({ ReportEmplFormulario, posicion,setErrores,erro
     resolver: yupResolver(schema),
   });
   useEffect(() => {
-    setEmpleado(ReportEmplFormulario.current.empleados[posicion]);
+    const empleadoArreglado=detallesEmpleado();
+    setEmpleado(empleadoArreglado);
     setCargando(false);
     const errorCopy=[...erroresArray];
     errorCopy[posicion]=true;
     setErrores(errorCopy);
     // eslint-disable-next-line
   }, []);
+
+  const detallesEmpleado=()=>{
+    const pension=pensiones.find(pension=>pension.idPension===ReportEmplFormulario.current.empleados[posicion].idPensionActual).nombrePension;
+    ReportEmplFormulario.current.empleados[posicion].nombrePension=pension
+    return ReportEmplFormulario.current.empleados[posicion];
+  }
 
   useEffect(() => {
     if (!cargando) {
@@ -84,7 +91,7 @@ export const RepEmpSeleccion = ({ ReportEmplFormulario, posicion,setErrores,erro
                 <Columna>
                   <Nombres>Salario Nominal:</Nombres>
                   <Span>
-                    $ {Number.parseFloat(empleado.salarioNominal).toFixed(2)}
+                    $ {Number.parseFloat(empleado.salarioActual).toFixed(2)}
                   </Span>
                 </Columna>
               </ContenedorInputs>
@@ -172,6 +179,7 @@ export const RepEmpSeleccion = ({ ReportEmplFormulario, posicion,setErrores,erro
                   <Nombres>Minutos Autorizados Diurnos:</Nombres>
                   <Textbox
                         {...register("minDiurno")}
+                        placeholder={empleado.minutosDiurnosAutorizados}
                         onChange={(e) => {
                             ReportEmplFormulario.current.empleados[posicion].minutosDiurnosAutorizados =
                             e.target.value;
@@ -187,6 +195,7 @@ export const RepEmpSeleccion = ({ ReportEmplFormulario, posicion,setErrores,erro
                   <Nombres>Minutos Autorizados Nocturnos:</Nombres>
                   <Textbox
                   {...register("minNocturno")}
+                  placeholder={empleado.minutosNocturnosAutorizados}
                   onChange={(e) => {
                     ReportEmplFormulario.current.empleados[posicion].minutosNocturnosAutorizados =
                       e.target.value;
@@ -252,7 +261,7 @@ const Textbox = styled.input`
   padding-left: 20px;
   font-size: 5mm;
   margin: 0;
-  width: 40%;
+  width: 50%;
   border-radius: 0.2rem;
   font-family: sans-serif;
 `;

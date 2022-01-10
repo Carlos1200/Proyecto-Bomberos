@@ -48,6 +48,7 @@ export const ReportesModal = ({
     }).finally(()=>{
       setCargandoDetalles(false);
     })
+    // eslint-disable-next-line
   },[]);
 
   const formatearIds=()=>{

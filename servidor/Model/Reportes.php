@@ -93,6 +93,7 @@ class Reportes extends ActiveRecord{
         $this->fechaCreacion=$args['fechaCreacion']??'';
         $this->idPensionActual=$args['idPensionActual']??'';
         $this->salarioActual=$args['salarioActual']??'';
+        $this->idReporte=$args['idReporte']??'';
     }
 
     public function validar()
@@ -416,8 +417,41 @@ class Reportes extends ActiveRecord{
             $consulta->bindParam(":idReporte",$idReporte,PDO::PARAM_STR);
             $consulta->execute();
             $reportes=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            
             return $reportes;
         }
+    }
+    
+    public function actualizarMinutosAutorizados(){
+        if(!$this->idReporte||!$this->minutosDiurnosAutorizados||!$this->minutosNocturnosAutorizados){
+            self::$errores[]="No se ha enviado el id del Reporte";
+        }else{
+            $query="EXEC actualizarMinutosAutorizados :idReporte, :minutosDiurnos, :minutosNocturnos";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(":idReporte",$this->idReporte,PDO::PARAM_STR);
+            $consulta->bindParam(":minutosDiurnos",$this->minutosDiurnosAutorizados,PDO::PARAM_STR);
+            $consulta->bindParam(":minutosNocturnos",$this->minutosNocturnosAutorizados,PDO::PARAM_STR);
+            $consulta->execute();
+        }
+    }
+
+    public function informacionExcel($idReporte){
+        if(is_null($idReporte)){
+            self::$errores[]="No se ha enviado el id del reporte";
+        }else{
+        $query="EXEC imprimirDatosReportePequeño :idReporte";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(":idReporte",$idReporte,PDO::PARAM_STR);
+        $consulta->execute();
+        $reportes=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $reportes;
+        }
+    }
+
+    public function obtenerMes($mes=01){
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+        return $meses[$mes-1];
+        
     }
 }
 

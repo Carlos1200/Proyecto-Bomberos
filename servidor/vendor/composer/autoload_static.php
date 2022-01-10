@@ -7,12 +7,17 @@ namespace Composer\Autoload;
 class ComposerStaticInitc24e21d655c47ee549a8b6092a1aff92
 {
     public static $files = array (
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'Z' => 
+        array (
+            'ZipStream\\' => 10,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
@@ -21,12 +26,18 @@ class ComposerStaticInitc24e21d655c47ee549a8b6092a1aff92
         ),
         'P' => 
         array (
+            'Psr\\SimpleCache\\' => 16,
+            'Psr\\Http\\Message\\' => 17,
+            'Psr\\Http\\Client\\' => 16,
             'PhpOption\\' => 10,
+            'PhpOffice\\PhpSpreadsheet\\' => 25,
             'PDF\\' => 4,
         ),
         'M' => 
         array (
+            'MyCLabs\\Enum\\' => 13,
             'Model\\' => 6,
+            'Matrix\\' => 7,
             'MVC\\' => 4,
         ),
         'G' => 
@@ -40,6 +51,7 @@ class ComposerStaticInitc24e21d655c47ee549a8b6092a1aff92
         'C' => 
         array (
             'Controller\\' => 11,
+            'Complex\\' => 8,
         ),
         'A' => 
         array (
@@ -48,6 +60,10 @@ class ComposerStaticInitc24e21d655c47ee549a8b6092a1aff92
     );
 
     public static $prefixDirsPsr4 = array (
+        'ZipStream\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
+        ),
         'Symfony\\Polyfill\\Php80\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
@@ -60,17 +76,42 @@ class ComposerStaticInitc24e21d655c47ee549a8b6092a1aff92
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
+        'Psr\\SimpleCache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+        ),
+        'Psr\\Http\\Client\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-client/src',
+        ),
         'PhpOption\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
+        ),
+        'PhpOffice\\PhpSpreadsheet\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
         'PDF\\' => 
         array (
             0 => __DIR__ . '/../..' . '/tfpdf',
         ),
+        'MyCLabs\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
+        ),
         'Model\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Model',
+        ),
+        'Matrix\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
         ),
         'MVC\\' => 
         array (
@@ -88,9 +129,23 @@ class ComposerStaticInitc24e21d655c47ee549a8b6092a1aff92
         array (
             0 => __DIR__ . '/../..' . '/Controller',
         ),
+        'Complex\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
+        ),
         'API\\' => 
         array (
             0 => __DIR__ . '/../..' . '/api',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'H' => 
+        array (
+            'HTMLPurifier' => 
+            array (
+                0 => __DIR__ . '/..' . '/ezyang/htmlpurifier/library',
+            ),
         ),
     );
 
@@ -107,6 +162,7 @@ class ComposerStaticInitc24e21d655c47ee549a8b6092a1aff92
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitc24e21d655c47ee549a8b6092a1aff92::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitc24e21d655c47ee549a8b6092a1aff92::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitc24e21d655c47ee549a8b6092a1aff92::$prefixesPsr0;
             $loader->classMap = ComposerStaticInitc24e21d655c47ee549a8b6092a1aff92::$classMap;
 
         }, null, ClassLoader::class);
