@@ -90,7 +90,7 @@ export const Sidebar = () => {
           redirect='admin-traslados'
         />}
         <Btn
-          titulo='Traslados'
+          titulo='Generar un Traslado'
           icono={faExchangeAlt}
           redirect='traslados'
         />

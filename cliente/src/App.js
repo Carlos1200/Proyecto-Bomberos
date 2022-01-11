@@ -16,8 +16,7 @@ import { Grupos } from './components/screens/Grupos';
 import { Traslados } from './components/screens/Traslados';
 import { AuthProvider } from './context/Auth/AuthContext';
 import { AdminTraslados } from './components/screens/AdminTraslados';
-import { ReportesProvider } from './context/reportes/ReportesContext';
-import { verificarTraslados } from './services/trasladosServices';
+import { verificarTraslados, verificarTrasladosEmpleado } from './services/trasladosServices';
 
 import '../src/index.css';
 
@@ -42,13 +41,15 @@ const App = () => {
 
       const formData = new FormData();
       formData.append("fechaActual", fecha);
-      verificarTraslados(formData);
-    }
-
+      verificarTrasladosEmpleado(formData);
+    },
+    [],
   )
 
   useEffect(() => {
     ValidarTraslados();
+    ValidarEmpleadosTrasladados();
+    // eslint-disable-next-line 
   }, [])
 
   return (
@@ -76,9 +77,7 @@ const AppState=({children})=>{
   return(
     <RecoilRoot>
       <AuthProvider>
-        <ReportesProvider>
           {children}
-        </ReportesProvider>
       </AuthProvider>
     </RecoilRoot>
   )

@@ -35,7 +35,7 @@ export const TrasladosDetallesModal = ({handleClose, traslado, mostrarNotificaci
     }
 
     return(
-        <Modal handleClose={handleClose}>
+        <Modal handleClose={handleClose} grande>
             <Contenedor>
                 <div
                     style={{

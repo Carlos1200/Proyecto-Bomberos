@@ -38,11 +38,11 @@ export const ArchivoEmpleadoModal = ({handleClose,notificacion}) => {
       formData.append('fechaCreacionEmpleado',empleado.fechaCreacionEmpleado);
       formData.append('selectTop',empleado.selectTop);
       nuevosEmpleados(formData).then((res)=>{
-        setEmpleados((oldValue)=>[...oldValue,res.data]);
+        setEmpleados((oldValue)=>[...oldValue,...res]);
         handleClose();
         notificacion();
       }).catch(error=>{
-        console.log(error.response.data);
+        notificacion(true,"Error al cargar los empleados");
       }).finally(()=>{
         setCargando(false);
       })

@@ -71,7 +71,7 @@
             $errores=$traslado::getErrores();
 
             if(empty($errores)){
-                $errores=$traslado->verificarTraslados();
+                $errores=$traslado->verificarEmpTraslados();
 
                 if(!empty($errores)){
                     $router->render('errores/error',[

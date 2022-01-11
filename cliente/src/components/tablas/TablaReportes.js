@@ -41,8 +41,8 @@ export const TablaReportes = ({ mostrarNotificacion }) => {
     });
   }
 
-  const llamarAutorizacion=(idReporte)=>{
-    mostrarAutorizacion(idReporte).catch(() => {
+  const llamarAutorizacion=(idReporte,JefeEstacion,Fecha)=>{
+    mostrarAutorizacion(idReporte,JefeEstacion,Fecha).catch(() => {
       mostrarNotificacion(true, "Error en el servidor");
     });
   }
@@ -73,7 +73,7 @@ export const TablaReportes = ({ mostrarNotificacion }) => {
                     {reporteCol.fechaCreado.split(" ")[0]}
                   </ColumInput>
                   <ColumInput>
-                    <BtnAcceder onClick={()=>llamarAutorizacion(reporteCol.idAutorizaciones)}>
+                    <BtnAcceder onClick={()=>llamarAutorizacion(reporteCol.idReporte,reporteCol.creadorJefe,reporteCol.fechaCreado.split(" ")[0])}>
                       <FontAwesomeIcon
                         icon={faLink}
                         style={{ fontSize: "23px", color: "#0801BF" }}

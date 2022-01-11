@@ -227,21 +227,22 @@ class ReportesController{
                 $spreadsheet = new Spreadsheet();
                 
                 $sheet = $spreadsheet->getActiveSheet();
-                $sheet->getStyle('C2:M2')->getAlignment()->setHorizontal(Style\Alignment::HORIZONTAL_CENTER);
-                $sheet->mergeCells('C2:M2');
+                $sheet->getStyle('C2:N2')->getAlignment()->setHorizontal(Style\Alignment::HORIZONTAL_CENTER);
+                $sheet->mergeCells('C2:N2');
                 $sheet->getStyle('I4:L4')->getAlignment()->setHorizontal(Style\Alignment::HORIZONTAL_CENTER);
                 $sheet->mergeCells('I4:L4');
                 $sheet->setCellValue('C2', 'HOJA DE HORAS EXTRAS DEL PERSONAL OPERATIVO');
                 $sheet->getColumnDimension('D')->setWidth(40);
                 $sheet->getColumnDimension('E')->setWidth(13);
-                $sheet->getColumnDimension('F')->setWidth(13);
-                $sheet->getColumnDimension('G')->setWidth(13);
+                $sheet->getColumnDimension('F')->setWidth(20);
+                $sheet->getColumnDimension('G')->setWidth(20);
                 $sheet->getColumnDimension('H')->setWidth(20);
-                $sheet->getColumnDimension('I')->setWidth(13);
-                $sheet->getColumnDimension('J')->setWidth(13);
-                $sheet->getColumnDimension('K')->setWidth(13);
-                $sheet->getColumnDimension('L')->setWidth(13);
+                $sheet->getColumnDimension('I')->setWidth(20);
+                $sheet->getColumnDimension('J')->setWidth(20);
+                $sheet->getColumnDimension('K')->setWidth(20);
+                $sheet->getColumnDimension('L')->setWidth(20);
                 $sheet->getColumnDimension('M')->setWidth(30);
+                $sheet->getColumnDimension('N')->setWidth(30);
 
                 $sheet->setCellValue('D4','HORAS EXTRAS DEL MES DE: ');
                 $sheet->setCellValue('E4',$mes);
@@ -259,23 +260,24 @@ class ReportesController{
                 $sheet->getStyle('I4')->getFill()->getStartColor()->setRGB('FFFF01');
                 
                 // Tabla de datos
-                $sheet->getStyle('C6:M6')->getBorders()->getAllBorders()->setBorderStyle(Style\Border::BORDER_THIN);
-                $sheet->getStyle('C6:M6')->getFont()->setBold(true);
-                $sheet->getStyle('C6:M6')->getAlignment()->setHorizontal(Style\Alignment::HORIZONTAL_CENTER);
+                $sheet->getStyle('C6:N6')->getBorders()->getAllBorders()->setBorderStyle(Style\Border::BORDER_THIN);
+                $sheet->getStyle('C6:N6')->getFont()->setBold(true);
+                $sheet->getStyle('C6:N6')->getAlignment()->setHorizontal(Style\Alignment::HORIZONTAL_CENTER);
                 $sheet->setCellValue('C6', 'N°');
                 $sheet->setCellValue('D6', 'Nombre');
                 $sheet->setCellValue('E6', 'Grupo');
-                $sheet->setCellValue('F6', 'Diurnas');
-                $sheet->setCellValue('G6', 'Nocturnas');
-                $sheet->setCellValue('H6', 'Total Extras');
-                $sheet->setCellValue('I6', 'Diurnas');
-                $sheet->setCellValue('J6', 'Nocturnas');
-                $sheet->setCellValue('K6', 'Autorización');
-                $sheet->setCellValue('L6', 'Firma');
-                $sheet->setCellValue('M6', 'Observación');
+                $sheet->setCellValue('F6', 'Diurnas Normales');
+                $sheet->setCellValue('G6', 'Nocturnas Normales');
+                $sheet->setCellValue('H6', 'Total Normales');
+                $sheet->setCellValue('I6', 'Diurnas Autorizadas');
+                $sheet->setCellValue('J6', 'Nocturnas Autorizadas');
+                $sheet->setCellValue('K6', 'Total Autorizadas');
+                $sheet->setCellValue('L6', 'Total de Horas');
+                $sheet->setCellValue('M6', 'Firma');
+                $sheet->setCellValue('N6', 'Observación');
 
                 for($i=0;$i<$cantidad;$i++){
-                    $sheet->getStyle('C'.($i+7).':M'.($i+7))->getBorders()->getAllBorders()->setBorderStyle(Style\Border::BORDER_THIN);
+                    $sheet->getStyle('C'.($i+7).':N'.($i+7))->getBorders()->getAllBorders()->setBorderStyle(Style\Border::BORDER_THIN);
                     $sheet->getStyle('D'.($i+7))->getFill()->setFillType(Style\Fill::FILL_SOLID);
                     $sheet->getStyle('D'.($i+7))->getFill()->getStartColor()->setRGB('BFBFBF');
                     $sheet->setCellValue('C'.($i+7), $i+1);
@@ -287,15 +289,16 @@ class ReportesController{
                     $sheet->setCellValue('I'.($i+7), $reportes[$i]['minutosDiurnosAutorizados']);
                     $sheet->setCellValue('J'.($i+7), $reportes[$i]['minutosNocturnosAutorizados']);
                     $sheet->setCellValue('K'.($i+7), "=SUM(I".($i+7).":J".($i+7).")");
+                    $sheet->setCellValue('L'.($i+7), "=SUM(H".($i+7).":K".($i+7).")");
                 }
                 $sheet->mergeCells('C'.($cantidad+8).':D'.($cantidad+8));
                 $sheet->getStyle('C'.($cantidad+8))->getFont()->setBold(true);
                 $sheet->setCellValue('C'.($cantidad+8), 'Observaciones');
-                $sheet->mergeCells('C'.($cantidad+9).':M'.($cantidad+10));
-                $sheet->getStyle('C'.($cantidad+9).':M'.($cantidad+10))->getFill()->setFillType(Style\Fill::FILL_SOLID);
-                $sheet->getStyle('C'.($cantidad+9).':M'.($cantidad+10))->getFill()->getStartColor()->setRGB('BFBFBF');
-                $sheet->getStyle('C'.($cantidad+9).':M'.($cantidad+10))->getAlignment()->setHorizontal(Style\Alignment::HORIZONTAL_CENTER);
-                $sheet->getStyle('C'.($cantidad+9).':M'.($cantidad+10))->getAlignment()->setVertical(Style\Alignment::VERTICAL_CENTER);
+                $sheet->mergeCells('C'.($cantidad+9).':N'.($cantidad+10));
+                $sheet->getStyle('C'.($cantidad+9).':N'.($cantidad+10))->getFill()->setFillType(Style\Fill::FILL_SOLID);
+                $sheet->getStyle('C'.($cantidad+9).':N'.($cantidad+10))->getFill()->getStartColor()->setRGB('BFBFBF');
+                $sheet->getStyle('C'.($cantidad+9).':N'.($cantidad+10))->getAlignment()->setHorizontal(Style\Alignment::HORIZONTAL_CENTER);
+                $sheet->getStyle('C'.($cantidad+9).':N'.($cantidad+10))->getAlignment()->setVertical(Style\Alignment::VERTICAL_CENTER);
 
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                 header('Content-Disposition: attachment;filename="myfile.xlsx"');

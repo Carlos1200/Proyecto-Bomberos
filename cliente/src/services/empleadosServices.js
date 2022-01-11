@@ -18,6 +18,9 @@ export const buscadorEmpleados=(nombre)=>Api.post("/empleados/EmpleadosFiltro.ph
 export const ObtenerEmpleadosFiltrados=(ubicacion)=>Api.post("/empleados/ObtenerEmpleadosFiltrados.php",ubicacion)
 .then((res) => res.data);
 
+export const ObtenerEmpleadosFiltradosUbicacion=(ubicacion)=>Api.post("/empleados/ObtenerEmpleadosFiltradosUbicacion.php",ubicacion)
+.then((res) => res.data);
+
 export const detallesEmpleados=(id)=>Api.post("/empleados/EmpleadosDetalle.php",id)
 .then((res) => res.data[0]); 
 

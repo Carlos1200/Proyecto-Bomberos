@@ -99,6 +99,20 @@ class Empleado extends ActiveRecord{
         return $datos;
     }
 
+    public function empleadosFiltradosUbicacion(){
+        if(!$this->nombreUbicacion){
+            self::$errores[]="La ubicación es obligatoria";
+        }else{
+            $query="EXEC busquedaEmpleadosJefe :nombres, :nombreUbicacion";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(':nombres',$this->nombres,PDO::PARAM_STR);
+            $consulta->bindParam(':nombreUbicacion',$this->nombreUbicacion,PDO::PARAM_STR);
+            $consulta->execute();
+            $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $datos;
+        }
+    }
+
     public function ObtenerEmpleadosDetalles(){
         $query="EXEC leerEmpleadoJefe :idEmpleado";
         $consulta=self::$db->prepare($query);

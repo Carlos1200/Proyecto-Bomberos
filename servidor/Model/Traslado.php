@@ -150,7 +150,7 @@
 
         public function verificarEmpTraslados(){
             if($this->fechaActual){
-                $sql="EXEC verificarEmpTraslados :fechaActual";
+                $sql="EXEC VerificarEmpleadoTraslado :fechaActual";
                 $query=self::$db->prepare($sql);
                 $query->bindParam(":fechaActual",$this->fechaActual,PDO::PARAM_STR);
                 $query->execute();

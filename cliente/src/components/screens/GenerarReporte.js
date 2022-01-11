@@ -76,7 +76,7 @@ export const GenerarReporte = () => {
   }
 
   const seleccionarTodos = () => {
-    setEmpleadosSeleccionados([...empleados]);
+    setEmpleadosSeleccionados([...empleadosSeleccionados,...empleados]);
     setEmpleados([]);
     setDisable(true);
   };
