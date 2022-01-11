@@ -30,14 +30,25 @@ const App = () => {
       
       const formData = new FormData();
       formData.append("fechaActual", fecha);
-      verificarTraslados(formData)
+      verificarTraslados(formData);
     },
     [],
   )
 
+  const ValidarEmpleadosTrasladados = useCallback(
+    async () => {
+      const date = new Date();
+      const fecha = date.toISOString().slice(0,10);
+
+      const formData = new FormData();
+      formData.append("fechaActual", fecha);
+      verificarTraslados(formData);
+    }
+
+  )
+
   useEffect(() => {
     ValidarTraslados();
-    // eslint-disable-next-line
   }, [])
 
   return (

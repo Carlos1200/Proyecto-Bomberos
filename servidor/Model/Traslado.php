@@ -148,6 +148,15 @@
             return self::$errores;
         }
 
+        public function verificarEmpTraslados(){
+            if($this->fechaActual){
+                $sql="EXEC verificarEmpTraslados :fechaActual";
+                $query=self::$db->prepare($sql);
+                $query->bindParam(":fechaActual",$this->fechaActual,PDO::PARAM_STR);
+                $query->execute();
+            }
+        }
+
         public function obtenerTraslados(){
             $sql = "EXEC mostrarReportesTraslados";
             $query = self::$db->prepare($sql);
