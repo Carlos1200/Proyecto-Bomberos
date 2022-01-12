@@ -143,7 +143,7 @@ export const NuevoEmpleadoModal = ({handleClose,mostrarNotificacionNuevo}) => {
               <Textbox  {...register("apellidos")} />
               {errors.apellidos&& <TextError>{errors.apellidos.message}</TextError>}
               <Label>Salario</Label>
-              <Textbox  {...register("salario")} type="number" />
+              <Textbox  {...register("salario")} />
               {errors.salario&& <TextError>{errors.salario.message}</TextError>}
               <Label>Ubicacion</Label>
                 <Controller

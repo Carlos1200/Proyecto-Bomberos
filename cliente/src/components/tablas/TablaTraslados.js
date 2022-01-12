@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from "react";
+import React,{useContext, useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolderOpen, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
@@ -8,6 +8,7 @@ import { Eliminar } from "../modal/Eliminar";
 import { TrasladosDetallesModal } from "../modal/TrasladosDetallesModal";
 import { DeleteTraslados, getTraslados } from "../../services/trasladosServices";
 import { trasladosState } from "../../atom/AtomTablas";
+import { AuthContext } from "../../context/Auth/AuthContext";
 
 
 export const TablaTraslados = ({mostrarNotificacion}) => {
@@ -16,6 +17,7 @@ export const TablaTraslados = ({mostrarNotificacion}) => {
   const [visibleBorrar, setVisibleBorrar] = useState(false); //Confirmacion del Boton Borrar
   const [trasladoBorrar, setTrasladoBorrar] = useState(null);  //Id del traslado a Borrar
   const [traslado, setTraslado] = useState();
+  const {tipoUsuario}=useContext(AuthContext)
 
   const [traslados, setTraslados] = useRecoilState(trasladosState);
   const [cargando, setCargando] = useState(true);
@@ -54,7 +56,7 @@ export const TablaTraslados = ({mostrarNotificacion}) => {
             <ColumnTitle>Titulo del Traslado</ColumnTitle>
             <ColumnTitle>Fecha de Creación</ColumnTitle>
             <ColumnTitle>Acceder</ColumnTitle>
-            <ColumnTitle>Borrar</ColumnTitle>
+            {tipoUsuario==="Administrador"&&<ColumnTitle>Borrar</ColumnTitle>}
           </ColumTitleBox>
         </HeadTop>
         <Body>
@@ -73,17 +75,19 @@ export const TablaTraslados = ({mostrarNotificacion}) => {
                 />
               </BtnEditar>
             </ColumInput>
-            <ColumInput>
-            <BtnEliminar onClick={()=>{
-                setVisibleBorrar(true)
-                setTrasladoBorrar(traslado.idReporteHistorial)
-              }}>
-                <FontAwesomeIcon
-                  icon={faTrashAlt}
-                  style={{ fontSize: "23px", color: "FF0000" }}
-                />
-              </BtnEliminar>
-            </ColumInput>
+            {tipoUsuario==="Administrador"&&(
+              <ColumInput>
+              <BtnEliminar onClick={()=>{
+                  setVisibleBorrar(true)
+                  setTrasladoBorrar(traslado.idReporteHistorial)
+                }}>
+                  <FontAwesomeIcon
+                    icon={faTrashAlt}
+                    style={{ fontSize: "23px", color: "FF0000" }}
+                  />
+                </BtnEliminar>
+              </ColumInput>
+            )}
               </ColumInputBox>
             ))}
         </Body>

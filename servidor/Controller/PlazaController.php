@@ -71,13 +71,13 @@ class PlazaController{
     public static function obtenerPlazas(Router $router){
         $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
         $token=str_replace("token=","",$query);
+        $plaza=new Plaza();
+        $plaza::VerificarToken($token);
 
-        Plaza::VerificarToken($token);
-
-        $errores=Plaza::getErrores();
+        $errores=$plaza::getErrores();
 
         if(empty($errores)){
-            $plazas=Plaza::all();
+            $plazas=$plaza->obtenerPlazas();
             $router->render('plazas/plazas',[
                 'plazas'=>$plazas
             ]);

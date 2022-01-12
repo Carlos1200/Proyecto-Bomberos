@@ -30,6 +30,14 @@ class Plaza extends ActiveRecord{
         return self::$errores;
     }
 
+    public function obtenerPlazas(){
+        $query="EXEC leerPlaza";
+        $consulta=self::$db->prepare($query);
+        $consulta->execute();
+        $resultado=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $resultado;
+    }
+
     public function existePlaza(){
         $query="SELECT * FROM ".self::$tabla. " WHERE nombrePlaza = :nombrePlaza";
         $consulta=self::$db->prepare($query);
