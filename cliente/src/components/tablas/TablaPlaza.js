@@ -1,12 +1,17 @@
-import React,{useContext,useEffect,useState} from "react";
+import {useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
-import Api from '../../Api/Api';
+import {
+  useRecoilState,
+} from 'recoil';
 import { PlazaModal } from "../modal/PlazaModal";
 import { Eliminar } from "../modal/Eliminar";
-import { PlazasContext } from "../../context/plazas/PlazasContext";
+import { eliminarPlazas, getPlazas } from "../../services/plazasServices";
+import { plazasState } from "../../atom/AtomTablas";
+
+
 
 
 export const TablaPlaza = ({mostrarNotificacion}) => {
@@ -15,29 +20,35 @@ export const TablaPlaza = ({mostrarNotificacion}) => {
   const [visibleBorrar, setVisibleBorrar] = useState(false);
   const [plazaBorrar, setPlazaBorrar] = useState(null);
   const [plaza, setPlaza] = useState();
-
-  const {cargando,plazas,setConsultar,error}=useContext(PlazasContext);
-
+  const [plazas, setPlazas] = useRecoilState(plazasState);
+  const [cargando, setCargando] = useState(true);
 
   const eliminarPlaza=async()=>{
-    try {
-      const formData=new FormData();
-      formData.append("idPlaza",plazaBorrar);
-      await Api.post('/plazas/EliminarPlaza.php',formData);
-      setConsultar(true);
+    const formData=new FormData();
+    formData.append("idPlaza",plazaBorrar);
+
+    eliminarPlazas(formData).then(()=>{
+      setPlazas(oldValue=>{
+        const newValue=oldValue.filter(item=>item.idPlaza!==plazaBorrar);
+        return newValue;
+      })
       setVisibleBorrar(false);
-      mostrarNotificacion()
-    } catch (error) {
+      mostrarNotificacion();
+    }).catch(err=>{
       mostrarNotificacion(true)
-    }
+    })
   }
 
   useEffect(()=>{
-    if(error){
+    getPlazas().then(res=>{
+      setPlazas(res);
+    }).catch(err=>{
       mostrarNotificacion(true)
-    }
+    }).finally(()=>{
+      setCargando(false);
+    })
     // eslint-disable-next-line
-  },[error])
+  },[])
 
 
   return (

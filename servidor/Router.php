@@ -20,7 +20,6 @@ class Router{
         $urlActual= $_SERVER['REQUEST_URI']??'/';
         $metodo =$_SERVER['REQUEST_METHOD'];
         $path=parse_url($urlActual)['path'];
-
         if($metodo==="GET"){
             $fn = $this->rutasGET[$path]??null;
         }else{

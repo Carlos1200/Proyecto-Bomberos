@@ -30,6 +30,14 @@ class Plaza extends ActiveRecord{
         return self::$errores;
     }
 
+    public function obtenerPlazas(){
+        $query="EXEC leerPlaza";
+        $consulta=self::$db->prepare($query);
+        $consulta->execute();
+        $resultado=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $resultado;
+    }
+
     public function existePlaza(){
         $query="SELECT * FROM ".self::$tabla. " WHERE nombrePlaza = :nombrePlaza";
         $consulta=self::$db->prepare($query);
@@ -50,9 +58,16 @@ class Plaza extends ActiveRecord{
 
         if(!self::$db->lastInsertId()>0){
             self::$errores[]="No se pudo agregar una nueva plaza";
+            return null;
+        }else{
+            $query="SELECT top (1) nombrePlaza, idPlaza from plazaNominal order by idPlaza desc";
+            $consulta=self::$db->prepare($query);
+            $consulta->execute();
+            $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $datos;
         }
 
-        return self::$errores;
+        
     }
 
     public function plazaFiltro(){ 
@@ -73,11 +88,13 @@ class Plaza extends ActiveRecord{
         $consulta->bindParam(':nombrePlaza',$this->nombrePlaza,PDO::PARAM_STR);
         $consulta->execute();
 
-        if(!self::$db->rowCount()>0){
-            self::$errores[]="No se pudo editar la Plaza";
-        }
+        $query="SELECT * FROM plazaNominal WHERE idPlaza = :idPlaza";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':idPlaza',$this->idPlaza,PDO::PARAM_INT);
+        $consulta->execute();
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
 
-        return self::$errores;
+        return $datos;
     }
 
     public function eliminarPlaza(){
@@ -88,7 +105,7 @@ class Plaza extends ActiveRecord{
             $consulta->execute();
 
             if(!self::$db->rowCount() > 0){
-                self::$errores[]="No se Eliminar la Plaza";
+                self::$errores[]="No se Elimino la Plaza";
             }
 
         }else{

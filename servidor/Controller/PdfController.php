@@ -25,6 +25,8 @@ class PdfController{
                 $pdfPropierdades->SetTitle($title,true);
                 $pdfPropierdades->AddFont('DejaVuu','','DejaVuSans.ttf',true);
                 $pdfPropierdades->SetFont('DejaVuu','',10);
+                $pdfPropierdades->Cell(80);
+                $pdfPropierdades->Cell(30,0,$title,0,0,'C');
                 $pdfPropierdades->Ln(10);
                 $pdfPropierdades->MultiCell(0,5,"El jefe ".$datos["creadorJefe"]." ha autorizado los siguientes minutos en la estacion de ".$datos["ubicacionEstacion"].":",0,'L');
                 $pdfPropierdades->Ln(5);

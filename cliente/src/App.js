@@ -1,5 +1,9 @@
-import React from 'react'
+import { useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  RecoilRoot,
+} from 'recoil';
+import env from 'react-dotenv'
 import { Login } from './components/screens/Login';
 import { NuevaCuenta } from './components/screens/NuevaCuenta';
 import { Reportes } from './components/screens/Reportes';
@@ -12,21 +16,35 @@ import RutaPrivada from './components/RutaPrivada';
 import { Grupos } from './components/screens/Grupos';
 import { Traslados } from './components/screens/Traslados';
 import { AuthProvider } from './context/Auth/AuthContext';
-import {UsuariosProvider} from './context/usuarios/UsuariosContext';
 import { AdminTraslados } from './components/screens/AdminTraslados';
-import { EmpleadosProvider } from './context/empleados/EmpleadosContext';
-import { UbicacionesProvider } from './context/ubicaciones/UbicacionesContext';
-import { PlazasProvider } from './context/plazas/PlazasContext';
-import { GrupoProvider } from './context/grupos/GrupoContext';
-import { ReportesProvider } from './context/reportes/ReportesContext';
+import { verificarTraslados, verificarTrasladosEmpleado } from './services/trasladosServices';
 
 import '../src/index.css';
 
 const App = () => {
-  
+
+  const ValidarTraslados = useCallback(
+    async () => {
+      const date=new Date();
+      const fecha= date.toISOString().slice(0, 10);
+      
+      const formData = new FormData();
+      formData.append("fechaActual", fecha);
+      verificarTraslados(formData).then(()=>{
+        verificarTrasladosEmpleado(formData);
+      });
+    },
+    [],
+  );
+
+  useEffect(() => {
+    ValidarTraslados();
+    // eslint-disable-next-line 
+  }, [])
+
   return (
     <AppState>
-      <Router>
+      <Router basename={env.SUB_HOST}>
         <Switch>
           <Route exact path='/' component={Login} />
           <Route exact path='/nueva-cuenta' component={NuevaCuenta} />
@@ -47,22 +65,11 @@ const App = () => {
 
 const AppState=({children})=>{
   return(
-    <AuthProvider>
-      <UsuariosProvider>
-        <EmpleadosProvider>
-          <UbicacionesProvider>
-            <PlazasProvider>
-              <GrupoProvider>
-                <ReportesProvider>
-                  {children}
-                </ReportesProvider>
-              </GrupoProvider>
-            </PlazasProvider>
-          </UbicacionesProvider>
-        </EmpleadosProvider>
-      </UsuariosProvider>
-    </AuthProvider>
-
+    <RecoilRoot>
+      <AuthProvider>
+          {children}
+      </AuthProvider>
+    </RecoilRoot>
   )
 }
 

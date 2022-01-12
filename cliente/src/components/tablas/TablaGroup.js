@@ -1,42 +1,49 @@
-import React,{useContext,useEffect,useState} from "react";
+import {useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
 import { Eliminar } from "../modal/Eliminar";
-import Api from "../../Api/Api";
 import { GrupoModal } from "../modal/GrupoModal";
-import { GrupoContext } from "../../context/grupos/GrupoContext";
+import { eliminarGrupos, getGrupos } from "../../services/gruposServices";
+import { grupoState } from "../../atom/AtomTablas";
 
 
 export const TablaGroup = ({mostrarNotificacion}) => {
 
+  const [grupos, setGrupos] = useRecoilState(grupoState);
+  const [cargando, setCargando] = useState(true)
   const [grupo, setGrupo] = useState();
   const [visible, setVisible] = useState(false);
   const [visibleBorrar, setVisibleBorrar] = useState(false);
   const [grupoBorrar, setGrupoBorrar] = useState(null);
 
-  const {cargando,setConsultar,grupos,error}=useContext(GrupoContext);
+
 
   const eliminarGrupo=async()=>{
-    try {
-      const formData=new FormData();
-      formData.append("idGrupo",grupoBorrar);
-      await Api.post('/grupos/EliminarGrupo.php',formData);
-      setConsultar(true);
+    const formData=new FormData();
+    formData.append("idGrupo",grupoBorrar);
+    eliminarGrupos(formData).then(()=>{
+      setGrupos((oldValue)=> oldValue.filter(grupo=>grupo.idGrupo!==grupoBorrar));
       setVisibleBorrar(false);
-      mostrarNotificacion()
-    } catch (error) {
-      mostrarNotificacion(true)
-    }
+      mostrarNotificacion();
+    }).catch(err=>{
+      mostrarNotificacion(true);
+    });
+  
   }
 
   useEffect(()=>{
-    if(error){
-      mostrarNotificacion(true)
-    }
+    getGrupos().then(res=>{
+      setGrupos(res);
+    }).catch(err=>{
+      mostrarNotificacion(true);
+    }).finally(()=>{
+      setCargando(false);
+    })
     // eslint-disable-next-line
-  },[error])
+  },[])
 
   return (
     <Contenedor>

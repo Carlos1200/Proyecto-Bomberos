@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Select from "react-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,24 +6,26 @@ import { faWindowClose, faUserEdit } from "@fortawesome/free-solid-svg-icons";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useSetRecoilState } from "recoil";
 import { Modal } from "../Modal";
-import { UseDatos } from "../../hooks/UseDatos";
-import Api from "../../Api/Api";
-import { EmpleadosContext } from "../../context/empleados/EmpleadosContext";
+import {
+  detallesEmpleados,
+  editarEmpleados,
+} from "../../services/empleadosServices";
+import { getUbicaciones } from "../../services/ubicacionesServices";
+import { getPlazas } from "../../services/plazasServices";
+import { getGrupos } from "../../services/gruposServices";
+import { getPensiones } from "../../services/pensionesServices";
+import { empleadosState } from "../../atom/AtomTablas";
 
 const schema = yup.object({
   nombres: yup.string().required("Los nombres son obligatorios"),
   apellidos: yup.string().required("Los apellidos son obligatorios"),
   salario: yup
     .string()
-    .test(
-      "validar numero positivo",
-      "El salario debe ser positivo",
-      function (value) {
-        const numero = Number(value);
-        return numero > 0;
-      }
-    )
+    .matches(RegExp("^[0-9.]+$"), {
+      message: "El salario debe ser un número positivo",
+    })
     .required("El salario Es obligatorio"),
   ubicacion: yup.object({
     idUbicacion: yup.string().required("La ubicación no debe ir vacía"),
@@ -47,46 +49,44 @@ export const EditarEmpleadoModal = ({
   handleClose,
   empleadoId,
   notificacion,
-  notificacionError
+  notificacionError,
 }) => {
-  const [datosUbicacion, cargandoUbicacion] = UseDatos("ubicaciones/ObtenerUbicaciones.php");
-  const [datosPlaza, cargandoPlaza] = UseDatos("plazas/ObtenerPlazas.php");
-  const [datosPension, cargandoPension] = UseDatos("pensiones/ObtenerPensiones.php");
-  const [datosGrupo, cargandoGrupo] = UseDatos("grupos/ObtenerGrupos.php");
+  const [infoEmpleado, setInfoEmpleado] = useState();
   const [cargando, setCargando] = useState(true);
   const [detalles, setDetalles] = useState();
+  const setEmpleados = useSetRecoilState(empleadosState);
 
-  const {setConsultar}=useContext(EmpleadosContext);
   useEffect(() => {
-    obtenerDetalles();
-    // eslint-disable-next-line
-  }, []);
-
-  const obtenerDetalles = async () => {
     const formData = new FormData();
     formData.append("idEmpleado", empleadoId);
-    const { data } = await Api.post("/empleados/EmpleadosDetalle.php", formData);
-    setDetalles(data[0]);
-  };
-
-  useEffect(() => {
-    if (
-      !cargandoUbicacion &&
-      !cargandoPlaza &&
-      !cargandoPension &&
-      !cargandoGrupo &&
-      detalles
-    ) {
-      setCargando(false);
-    }
-  }, [
-    cargandoUbicacion,
-    cargandoPlaza,
-    cargandoPension,
-    cargandoGrupo,
-    detalles,
-    notificacionError
-  ]);
+    Promise.all([
+      getUbicaciones(),
+      getPlazas(),
+      getGrupos(),
+      getPensiones(),
+      detallesEmpleados(formData),
+    ])
+      .then(([ubicaciones, plazas, grupos, pensiones, detalles]) => {
+        setInfoEmpleado({
+          ubicaciones,
+          plazas,
+          grupos,
+          pensiones,
+        });
+        setDetalles(detalles);
+      })
+      .catch((error) => {
+        if (!error.response) {
+          notificacionError("Error en el servidor");
+        } else {
+          notificacionError(error.response.data[0]);
+        }
+      })
+      .finally(() => {
+        setCargando(false);
+      });
+      // eslint-disable-next-line
+  }, []);
 
   const {
     handleSubmit,
@@ -96,31 +96,47 @@ export const EditarEmpleadoModal = ({
     resolver: yupResolver(schema),
   });
 
-  const editarEmpleado = async({nombres,apellidos,salario,ubicacion,plaza,pension,grupo}) => {
-    const formData=new FormData();
-    formData.append('idEmpleado',empleadoId);
-    formData.append('nombres',nombres);
-    formData.append('apellidos',apellidos)
-    formData.append('salarioNominal',salario)
-    formData.append('idGrupo',grupo.idGrupo)
-    formData.append('idPension',pension.idPension)
-    formData.append('idUbicacion',ubicacion.idUbicacion)
-    formData.append('idPlaza',plaza.idPlaza)
+  const editarEmpleado = async ({
+    nombres,
+    apellidos,
+    salario,
+    ubicacion,
+    plaza,
+    pension,
+    grupo,
+  }) => {
+    const formData = new FormData();
+    formData.append("idEmpleado", empleadoId);
+    formData.append("nombres", nombres);
+    formData.append("apellidos", apellidos);
+    formData.append("salarioNominal", Number.parseFloat(salario).toFixed(2));
+    formData.append("idGrupo", grupo.idGrupo);
+    formData.append("idPension", pension.idPension);
+    formData.append("idUbicacion", ubicacion.idUbicacion);
+    formData.append("idPlaza", plaza.idPlaza);
 
-    try {
-      setConsultar(false);
-      await Api.post("/empleados/EditarEmpleado.php",formData);
-      setConsultar(true);
-      handleClose();
-      notificacion();
-    } catch (error) {
-      if(!error.response){
-        notificacionError("Error en el servidor")
-      }else{
-        notificacionError(error.response.data[0]);
-      }
-    }
-
+    editarEmpleados(formData)
+      .then((res) => {
+        setEmpleados((oldValue) => {
+           return oldValue.map((empleado) => {
+            if(empleado.idEmpleado===res.idEmpleado){
+              return res;
+            }else{
+              return empleado;
+            }
+          });
+          });
+        handleClose();
+        notificacion();
+      })
+      .catch((error) => {
+        console.log(error);
+        if (!error.response) {
+          notificacionError("Error en el servidor");
+        } else {
+          notificacionError(error.response.data[0]);
+        }
+      });
   };
   return (
     <Modal handleClose={handleClose}>
@@ -169,11 +185,11 @@ export const EditarEmpleadoModal = ({
                   onChange={onChange}
                   value={value}
                   onBlur={onBlur}
-                  type='number'
+                  type='text'
                 />
               )}
               name='salario'
-              defaultValue={detalles.salarioNormal}
+              defaultValue={Number.parseFloat(detalles.salarioNominal).toFixed(2)}
             />
             {errors.salario && <TextError>{errors.salario.message}</TextError>}
             <Label>Ubicacion</Label>
@@ -181,7 +197,7 @@ export const EditarEmpleadoModal = ({
               control={control}
               render={({ field: { onChange, value } }) => (
                 <Select
-                  options={datosUbicacion}
+                  options={infoEmpleado.ubicaciones}
                   getOptionLabel={(ubicacion) => ubicacion.nombreUbicacion}
                   getOptionValue={(ubicacion) => ubicacion.idUbicacion}
                   value={value}
@@ -192,7 +208,7 @@ export const EditarEmpleadoModal = ({
               )}
               name='ubicacion'
               defaultValue={() =>
-                datosUbicacion.find(
+                infoEmpleado.ubicaciones.find(
                   (ubicacion) =>
                     ubicacion.nombreUbicacion === detalles.nombreUbicacion
                 )
@@ -206,7 +222,7 @@ export const EditarEmpleadoModal = ({
               control={control}
               render={({ field: { onChange, value } }) => (
                 <Select
-                  options={datosPlaza}
+                  options={infoEmpleado.plazas}
                   getOptionLabel={(plaza) => plaza.nombrePlaza}
                   getOptionValue={(plaza) => plaza.idPlaza}
                   value={value}
@@ -217,7 +233,7 @@ export const EditarEmpleadoModal = ({
               )}
               name='plaza'
               defaultValue={() =>
-                datosPlaza.find(
+                infoEmpleado.plazas.find(
                   (plaza) => plaza.nombrePlaza === detalles.nombrePlaza
                 )
               }
@@ -230,7 +246,7 @@ export const EditarEmpleadoModal = ({
               control={control}
               render={({ field: { onChange, value } }) => (
                 <Select
-                  options={datosPension}
+                  options={infoEmpleado.pensiones}
                   getOptionLabel={(pension) => pension.nombrePension}
                   getOptionValue={(pension) => pension.idPension}
                   value={value}
@@ -241,7 +257,7 @@ export const EditarEmpleadoModal = ({
               )}
               name='pension'
               defaultValue={() =>
-                datosPension.find(
+                infoEmpleado.pensiones.find(
                   (pension) => pension.nombrePension === detalles.nombrePension
                 )
               }
@@ -254,7 +270,7 @@ export const EditarEmpleadoModal = ({
               control={control}
               render={({ field: { onChange, value } }) => (
                 <Select
-                  options={datosGrupo}
+                  options={infoEmpleado.grupos}
                   getOptionLabel={(grupo) => grupo.nombreGrupo}
                   getOptionValue={(grupo) => grupo.idGrupo}
                   value={value}
@@ -265,7 +281,7 @@ export const EditarEmpleadoModal = ({
               )}
               name='grupo'
               defaultValue={() =>
-                datosGrupo.find(
+                infoEmpleado.grupos.find(
                   (grupo) => grupo.nombreGrupo === detalles.nombreGrupo
                 )
               }
@@ -282,7 +298,7 @@ export const EditarEmpleadoModal = ({
                   marginRight: "1rem",
                 }}
               />
-              <Label>Agregar Empleado</Label>
+              <Label>Editar Empleado</Label>
             </ContenedorBoton>
           </Form>
         )}
@@ -325,6 +341,7 @@ const Textbox = styled.input`
   margin: 0;
   width: 100%;
   border-radius: 0.2rem;
+  font-family: Georgia, "Times New Roman", Times, serif;
 `;
 
 const Form = styled.div`

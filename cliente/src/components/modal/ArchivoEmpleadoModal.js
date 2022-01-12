@@ -1,18 +1,19 @@
-import React,{useContext, useState} from 'react'
+import {useState} from 'react'
 import styled from 'styled-components'
 import XLSX from "xlsx";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose} from '@fortawesome/free-solid-svg-icons';
+import { useSetRecoilState } from 'recoil';
 import { ExcelInput } from '../ExcelInput';
 import { Modal } from '../Modal';
-import Api from '../../Api/Api';
-import { EmpleadosContext } from '../../context/empleados/EmpleadosContext';
+import { nuevosEmpleados } from '../../services/empleadosServices';
+import { empleadosState } from '../../atom/AtomTablas';
 
 export const ArchivoEmpleadoModal = ({handleClose,notificacion}) => {
 
   const [empleado, setEmpleado] = useState(null);
   const [cargando, setCargando] = useState(false);
-  const {setConsultar}=useContext(EmpleadosContext);
+  const setEmpleados=useSetRecoilState(empleadosState);
 
   const exportFile = () => {
 		/* convert state to workbook */
@@ -25,7 +26,6 @@ export const ArchivoEmpleadoModal = ({handleClose,notificacion}) => {
 
 
   const submit=async()=>{
-    setConsultar(false);
     setCargando(true);
       const formData=new FormData();
       formData.append('nombres',empleado.nombres);
@@ -36,17 +36,16 @@ export const ArchivoEmpleadoModal = ({handleClose,notificacion}) => {
       formData.append('idUbicacion',empleado.idUbicacion)
       formData.append('idPlaza',empleado.idPlaza)
       formData.append('fechaCreacionEmpleado',empleado.fechaCreacionEmpleado);
-
-      try {
-      await Api.post("/empleados/CrearEmpleados.php",formData);
-      setConsultar(true);
-      setCargando(false)
-      handleClose();
-      notificacion();
-      } catch (error) {
-        setCargando(false)
-        console.log(error.response.data);
-      }
+      formData.append('selectTop',empleado.selectTop);
+      nuevosEmpleados(formData).then((res)=>{
+        setEmpleados((oldValue)=>[...oldValue,...res]);
+        handleClose();
+        notificacion();
+      }).catch(error=>{
+        notificacion(true,"Error al cargar los empleados");
+      }).finally(()=>{
+        setCargando(false);
+      })
   }
 
     return (

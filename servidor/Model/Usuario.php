@@ -110,8 +110,23 @@ class Usuario extends ActiveRecord{
         
         if(!self::$db->lastInsertId()>0){
             self::$errores[]="No se pudo agregar un nuevo usuario";
+            return null;
+        }else{
+            $query="SELECT top (1) NombreUsuario, nickUsuario,idUsuario,UbicacionUsuario,tipoUsuario from usuarios order by idUsuario desc";
+            $consulta=self::$db->prepare($query);
+            $consulta->execute();
+            $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $datos;
         }
 
+    }
+
+    public function cantidadUsuarios(){
+        $query="SELECT count(*) as cantidad FROM usuarios";
+        $consulta=self::$db->prepare($query);
+        $consulta->execute();
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $datos[0]['cantidad'];
     }
 
     public function actualizarUsuario(){
@@ -124,12 +139,14 @@ class Usuario extends ActiveRecord{
         $consulta->bindParam(':contra',$this->contra,PDO::PARAM_STR);
         $consulta->bindParam(':UbicacionUsuario',$this->UbicacionUsuario,PDO::PARAM_STR);
         $consulta->execute();
-
-        if(!self::$db->rowCount() > 0){
-            self::$errores[]="No se pudo actualizar el usuario";
-        }
-
-        return self::$errores;
+        
+            //Obtener usuario actualizado
+            $query="SELECT * FROM usuarios WHERE idUsuario=:idUsuario";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(':idUsuario',$this->idUsuario,PDO::PARAM_INT);
+            $consulta->execute();
+            $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $datos;
     }
 
     public function validar()

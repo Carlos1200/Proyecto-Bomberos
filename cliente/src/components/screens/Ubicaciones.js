@@ -1,21 +1,29 @@
-import React, { useContext, useState } from 'react'
+import  { useState } from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import toast, { Toaster } from 'react-hot-toast';
 import {  faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { AnimatePresence } from 'framer-motion';
+import {useSetRecoilState} from 'recoil'
 import { Menu } from '../Menu'
 import {Background} from '../Background';
-import { TablaUbicacion } from '../tablas/TablaUbicacion';
 import { UbicacionModal } from '../modal/UbicacionModal';
-import {UbicacionesContext} from '../../context/ubicaciones/UbicacionesContext'
+import { useBuscador } from '../../hooks/useBuscador';
+import { buscadorUbicaciones } from '../../services/ubicacionesServices';
+import { ubicacionesState } from '../../atom/AtomTablas';
+import { TablaUbicacion } from '../tablas/TablaUbicacion';
 
 
 export const Ubicaciones = () => {
+  
+  const setUbicaciones = useSetRecoilState(ubicacionesState);
 
   const [visible, setVisible] = useState(false);
-  const [inputBuscador, setInputBuscador] = useState('')
-  const {buscador,setConsultar}=useContext(UbicacionesContext);
+  const [inputBuscador, setInputBuscador] = useState('');
+  const {buscador,reset}=useBuscador({
+    promise:buscadorUbicaciones,
+    setState:setUbicaciones,
+  })
 
   const mostrarNotificacion=(error=false,msg)=>{
     if(error){
@@ -33,15 +41,17 @@ export const Ubicaciones = () => {
             <FilterBox>
             <FontAwesomeIcon
                 onClick={()=>{
-                  setConsultar(true);
                   setInputBuscador('');
+                  reset();
                 }}
                 icon={faSyncAlt}
                 style={{ fontSize: "26px", color: "#000000",cursor:'pointer' }}
               />
               <FilterTextBox placeholder="¿Desea un archivo en específico?" value={inputBuscador} onChange={(e)=>setInputBuscador(e.target.value)}/>
               <BtnFilterSearch onClick={()=>{
-                buscador(inputBuscador);
+                const formData=new FormData();
+                formData.append('nombreUbicacion',inputBuscador);
+                buscador(formData);
               }}>Buscar</BtnFilterSearch>
             </FilterBox>
             <ContenedorTabla>

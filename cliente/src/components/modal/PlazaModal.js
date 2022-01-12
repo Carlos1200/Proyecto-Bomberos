@@ -1,13 +1,13 @@
-import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose,faSave,} from '@fortawesome/free-solid-svg-icons';
 import {useForm} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
+import {useSetRecoilState} from 'recoil'
 import * as yup from 'yup'
 import { Modal } from '../Modal'
-import Api from '../../Api/Api';
-import { PlazasContext } from '../../context/plazas/PlazasContext';
+import { editarPlaza, nuevaPlaza } from '../../services/plazasServices';
+import { plazasState } from '../../atom/AtomTablas';
 
 const schema=yup.object({
     nombrePlaza:yup.string().required("El nombre de la plaza no debe ir vacía"),
@@ -15,8 +15,7 @@ const schema=yup.object({
 
 export const PlazaModal = ({handleClose,plaza,mostrarNotificacion}) => {
 
-  const {setConsultar}=useContext(PlazasContext);
-
+    const setPlazasState=useSetRecoilState(plazasState);
     const { register, handleSubmit,formState: { errors } } = useForm({
       resolver:yupResolver(schema),
       defaultValues:{
@@ -24,42 +23,46 @@ export const PlazaModal = ({handleClose,plaza,mostrarNotificacion}) => {
       }
     });
     const SubmitEditar=async({nombrePlaza})=>{
-      try {
-        setConsultar(false);
-        const formData=new FormData();
-        formData.append('idPlaza',plaza.idPlaza);
-        formData.append('nombrePlaza',nombrePlaza);
+      const formData=new FormData();
+      formData.append('idPlaza',plaza.idPlaza);
+      formData.append('nombrePlaza',nombrePlaza);
 
-        await Api.post("/plazas/EditarPlaza.php",formData);
-        setConsultar(true);
+      editarPlaza(formData).then((res)=>{
+        setPlazasState(oldValue=>{
+          return oldValue.map(item=>{
+            if(item.idPlaza===res.idPlaza){
+              return res;
+            }else{
+              return item;
+            }
+          })
+        })
         handleClose();
-        mostrarNotificacion()
-      } catch (error) {
-        if(!error.response){
+        mostrarNotificacion();
+      })
+      .catch(err=>{
+        if(!err.response){
           mostrarNotificacion(true,"Error en el servidor")
         }else{
-          mostrarNotificacion(true,error.response.data[0]);
-        }
-      }
+          mostrarNotificacion(true,err.response.data[0]);
+        }}) 
     }
 
     const SubmitNuevo=async({nombrePlaza})=>{
-      try {
-        setConsultar(false);
-        const formData=new FormData();
-        formData.append('nombrePlaza',nombrePlaza);
-
-        await Api.post("/plazas/CrearPlaza.php",formData);
-        setConsultar(true);
+      const formData=new FormData();
+      formData.append('nombrePlaza',nombrePlaza);
+      nuevaPlaza(formData).then((res)=>{
+        setPlazasState(oldValue=>oldValue.concat(res[0]));
         handleClose();
-        mostrarNotificacion()
-      } catch (error) {
-        if(!error.response){
+        mostrarNotificacion();
+      })
+      .catch(err=>{
+        if(!err.response){
           mostrarNotificacion(true,"Error en el servidor")
         }else{
-          mostrarNotificacion(true,error.response.data[0]);
+          mostrarNotificacion(true,err.response.data[0]);
         }
-      }
+      })
     }
 
     return (

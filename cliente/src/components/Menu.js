@@ -10,6 +10,9 @@ const Contenedor = styled.div`
   align-content: stretch;
   justify-content: start;
   overflow-y: hidden;
+  @media (max-width: 768px) {
+    grid-template-columns: 4rem 1fr;
+  }
 `
 
 const ContSidebar = styled.div({

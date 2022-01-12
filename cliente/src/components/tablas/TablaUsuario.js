@@ -1,12 +1,15 @@
-import React,{ useContext, useEffect, useState} from "react";
+import { useEffect, useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
-import {UsuariosContext} from '../../context/usuarios/UsuariosContext';
+import {
+  useRecoilState,
+} from 'recoil';
 import { UsuarioModal } from "../modal/UsuarioModal";
 import { Eliminar } from "../modal/Eliminar";
-import Api from "../../Api/Api";
+import { eliminarUsuarios, getUsuarios } from "../../services/usuariosServices";
+import { usuariosState } from "../../atom/AtomTablas";
 
 
 export const TablaUsuario = ({mostrarNotificacion}) => {
@@ -15,31 +18,33 @@ export const TablaUsuario = ({mostrarNotificacion}) => {
   const [visibleBorrar, setVisibleBorrar] = useState(false);
   const [usuarioBorrar, setUsuarioBorrar] = useState(null);
   const [usuario, setUsuario] = useState();
-
-  const {usuarios,cargando,setConsultar,error}=useContext(UsuariosContext);
-
-
+  const [cargando, setCargando] = useState(true);
+  const [usuarios, setUsuarios] = useRecoilState(usuariosState);
 
 
     const eliminarUsuario=async()=>{
-      try {
         const formData=new FormData();
         formData.append("idUsuario",usuarioBorrar);
-        await Api.post('/usuarios/EliminarUsuario.php',formData);
-        setConsultar(true);
-        setVisibleBorrar(false);
-        mostrarNotificacion();
-      } catch (error) {
-        mostrarNotificacion(true);
-      }
+        eliminarUsuarios(formData)
+        .then(()=>{
+          setUsuarios((oldValue)=> oldValue.filter(usuario=>usuario.idUsuario!==usuarioBorrar));
+          setVisibleBorrar(false);
+          mostrarNotificacion();
+        }).catch(err=>{
+          mostrarNotificacion(true);
+        });
     }
 
     useEffect(()=>{
-      if(error){
-        mostrarNotificacion(true)
-      }
+      getUsuarios().then(res=>{
+        setUsuarios(res);
+      }).catch(err=>{
+        mostrarNotificacion(true);
+      }).finally(()=>{
+        setCargando(false);
+      });
       // eslint-disable-next-line
-    },[error])
+    },[])
 
   return (
     <Contenedor>
@@ -93,7 +98,7 @@ export const TablaUsuario = ({mostrarNotificacion}) => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<UsuarioModal handleClose={()=>setVisible(false)} usuario={usuario} consultarUsuarios={setConsultar} mostrarNotificacion={mostrarNotificacion}/>}
+            {visible&&<UsuarioModal handleClose={()=>setVisible(false)} usuario={usuario}  mostrarNotificacion={mostrarNotificacion}/>}
       </AnimatePresence>
       <AnimatePresence
             initial={false}

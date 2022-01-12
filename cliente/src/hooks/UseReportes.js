@@ -1,11 +1,11 @@
-import { useContext, useRef } from "react";
-import Api from "../Api/Api";
-import { ReportesContext } from "../context/reportes/ReportesContext";
+import { useRef } from "react";
+import { useSetRecoilState } from "recoil";
+import { reportesState } from "../atom/AtomTablas";
+import { crearReportes } from "../services/reportesServices";
 
 export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) => {
 
-  const {setConsultar}=useContext(ReportesContext);
-
+  const setReportes=useSetRecoilState(reportesState);
   //Variables que deben calcularse manualmente
   //Tabla Minutos
   const minutosDiurnos = useRef("");
@@ -43,6 +43,9 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
   const verificacion = useRef("");
   const idUsuario=useRef("");
 
+  const idPensionActual=useRef("");
+  const salarioActual=useRef("");
+
   const GenerarReporte = (
     empleadosArray,
     idUsuarioActual,
@@ -60,9 +63,9 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
       const date=new Date();
       const fecha= date.toISOString().slice(0, 10);
 
-      const valorxMinuto = empleado.salario / 30 / 8 / 60;
+      const valorxMinuto = (((empleado.salario / 30 )/ 8 )/ 60);
       const TotalDiurno = empleado.minutosDiurnos * valorxMinuto;
-      const TotalNocturno = empleado.minutosNocturnos * valorxMinuto * 1.5;
+      const TotalNocturno = (empleado.minutosNocturnos * valorxMinuto )* 1.5;
       const TotalExtras = Math.round((TotalDiurno + TotalNocturno) * 100) / 100;
       const sueldoHorasExtras = empleado.salario + TotalExtras;
 
@@ -103,7 +106,7 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
       const sueldo_ISSS =
         empleado.salario +
         TotalExtras -
-        (empleado.salario * 0.105 +
+        ((empleado.salario * 0.105) +
           ISSS_descuento +
           IPSFA_descuento +
           AFPCRECER_descuento +
@@ -178,6 +181,22 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
       } else {
         const string = `${IdEmpleado.current},${empleado.idEmpleado}`;
         IdEmpleado.current = string;
+      }
+
+      //id de pensiones
+      if(!idPensionActual.current){
+        idPensionActual.current = empleado.idTipoPension;
+      }else{
+        const string = `${idPensionActual.current},${empleado.idTipoPension}`;
+        idPensionActual.current = string;
+      }
+
+      //Salarios
+      if (!salarioActual.current) {
+        salarioActual.current = empleado.salario;
+      } else {
+        const string = `${salarioActual.current},${empleado.salario}`;
+        salarioActual.current = string;
       }
 
       //id de Usuarios
@@ -433,7 +452,6 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
     longitud,
     setCargando
   ) => {
-    try {
       const formData = new FormData();
       formData.append("minutosDiurnosNormales", minutosDiurnos.current);
       formData.append("minutosNocturnosNormales", minutosNocturnos.current);
@@ -487,17 +505,20 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
       formData.append("Verificacion",verificacion.current);
       formData.append("idUsuario",idUsuario.current);
 
-      await Api.post("/reportes/CrearReporte.php", formData);
-      limpiarEmpleados();
-      setCargando(false);
-      setConsultar(true);
-      handleClose();
-      mostrarNotificacion();
-    } catch (error) {
-      console.log({ error });
-      mostrarNotificacion(true);
-      setCargando(false);
-    }
+      formData.append("idPensionActual",idPensionActual.current);
+      formData.append("salarioActual",salarioActual.current);
+
+      crearReportes(formData).then(res=>{
+        setReportes(oldValue=>[res,...oldValue]);
+        limpiarEmpleados();
+        setCargando(false);
+        handleClose();
+        mostrarNotificacion();
+      }).catch(error=>{
+        console.log({ error });
+        mostrarNotificacion(true);
+        setCargando(false);
+      })
   };
 
   return {

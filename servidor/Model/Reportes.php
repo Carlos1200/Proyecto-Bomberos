@@ -47,6 +47,9 @@ class Reportes extends ActiveRecord{
     public $Verificacion;
     public $idAutorizaciones;
     public $idUsuario;
+    public $idPensionActual;
+    public $salarioActual;
+
 
 
     public function __construct($args=[]){
@@ -88,10 +91,21 @@ class Reportes extends ActiveRecord{
         $this->idUsuario=$args['idUsuario']??'';
         $this->Verificacion=$args['Verificacion']??'';
         $this->fechaCreacion=$args['fechaCreacion']??'';
+        $this->idPensionActual=$args['idPensionActual']??'';
+        $this->salarioActual=$args['salarioActual']??'';
+        $this->idReporte=$args['idReporte']??'';
     }
 
     public function validar()
     {
+        if(!$this->idPensionActual)
+        {
+            $this->errors[] = "El id Pension es obligatorio";
+        }
+        if(!$this->salarioActual)
+        {
+            $this->errors[] = "El salario actual es obligatorio";
+        }
         if(!$this->minutosDiurnosNormales&&$this->minutosDiurnosNormales!=='0'){
             self::$errores[]="Los minutos diurnos normales son obligatorios";
         }
@@ -287,9 +301,13 @@ class Reportes extends ActiveRecord{
         $consulta->bindParam(":selectTop",$this->idSelectTop,PDO::PARAM_INT);
         $consulta->execute();
 
-        // if(!self::$db->lastInsertId()>0){
-        //     self::$errores[]="No se pudo agregar el reporte";
-        // }
+        $query="select DISTINCT top(1) autorizaciones.creadorJefe, reportes.fechaCreado, reportes.verificacion, reportes.idReporte, autorizaciones.idAutorizaciones
+        from autorizaciones INNER JOIN reportes on autorizaciones.idAutorizaciones = reportes.idAutorizaciones 
+        order by autorizaciones.idAutorizaciones desc";
+        $consulta=self::$db->prepare($query);
+        $consulta->execute();
+        $resultado=$consulta->fetch(PDO::FETCH_ASSOC);
+        return $resultado;
     }
 
     function generateRandomString($length = 10) {
@@ -339,11 +357,13 @@ class Reportes extends ActiveRecord{
 
     public function DetallesReportes(){
 
-        $query="EXEC ingresarDetallesReporte :sueldoMasHorasExtras, :totalAportHoras, :idEmpleados, :idSelectTop";
+        $query="EXEC ingresarDetallesReporte :sueldoMasHorasExtras, :totalAportHoras, :idEmpleados, :idPensionActual, :salarioActual, :idSelectTop";
         $consulta=self::$db->prepare($query);
         $consulta->bindParam(":sueldoMasHorasExtras",$this->sueldoMasHorasExtras,PDO::PARAM_STR);
         $consulta->bindParam(":totalAportHoras",$this->totalAportHoras,PDO::PARAM_STR);
         $consulta->bindParam(":idEmpleados",$this->idEmpleados,PDO::PARAM_STR);
+        $consulta->bindParam(":idPensionActual",$this->idPensionActual,PDO::PARAM_STR);
+        $consulta->bindParam(":salarioActual",$this->salarioActual,PDO::PARAM_STR);
         $consulta->bindParam(":idSelectTop",$this->idSelectTop,PDO::PARAM_INT);
         $consulta->execute();
 
@@ -381,11 +401,57 @@ class Reportes extends ActiveRecord{
         }else{
             $query="EXEC busquedaReportesUbicacion :ubicacion";
             $consulta=self::$db->prepare($query);
-            $consulta->bindParam(":nombreJefe",$ubicacion,PDO::PARAM_STR);
+            $consulta->bindParam(":ubicacion",$ubicacion,PDO::PARAM_STR);
             $consulta->execute();
             $reportes=$consulta->fetchAll(PDO::FETCH_ASSOC);
             return $reportes;
         }
+    }
+
+    public function leerDetallesReportes($idReporte){
+        if(is_null($idReporte)){
+            self::$errores[]="No se ha enviado el id del reporte";
+        }else{
+            $query="EXEC LeerDetallesReporte :idReporte";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(":idReporte",$idReporte,PDO::PARAM_STR);
+            $consulta->execute();
+            $reportes=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            
+            return $reportes;
+        }
+    }
+    
+    public function actualizarMinutosAutorizados(){
+        if(!$this->idReporte||!$this->minutosDiurnosAutorizados||!$this->minutosNocturnosAutorizados){
+            self::$errores[]="No se ha enviado el id del Reporte";
+        }else{
+            $query="EXEC actualizarMinutosAutorizados :idReporte, :minutosDiurnos, :minutosNocturnos";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(":idReporte",$this->idReporte,PDO::PARAM_STR);
+            $consulta->bindParam(":minutosDiurnos",$this->minutosDiurnosAutorizados,PDO::PARAM_STR);
+            $consulta->bindParam(":minutosNocturnos",$this->minutosNocturnosAutorizados,PDO::PARAM_STR);
+            $consulta->execute();
+        }
+    }
+
+    public function informacionExcel($idReporte){
+        if(is_null($idReporte)){
+            self::$errores[]="No se ha enviado el id del reporte";
+        }else{
+        $query="EXEC imprimirDatosReportePequeño :idReporte";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(":idReporte",$idReporte,PDO::PARAM_STR);
+        $consulta->execute();
+        $reportes=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $reportes;
+        }
+    }
+
+    public function obtenerMes($mes=01){
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+        return $meses[$mes-1];
+        
     }
 }
 

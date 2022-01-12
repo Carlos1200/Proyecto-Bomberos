@@ -4,8 +4,11 @@ import { useDropzone } from "react-dropzone";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileExcel} from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components'
-import { UseDatos } from "../hooks/UseDatos";
 import { UseExcel } from "../hooks/UseExcel";
+import { getUbicaciones } from "../services/ubicacionesServices";
+import { getPlazas } from "../services/plazasServices";
+import { getGrupos } from "../services/gruposServices";
+import { getPensiones } from "../services/pensionesServices";
 
 const getColor = (props) => {
   if (props.isDragAccept) {
@@ -21,22 +24,41 @@ const getColor = (props) => {
 }
 
 export const ExcelInput = ({setEmpleados}) => {
-  const [datosUbicacion,cargandoUbicacion] = UseDatos('ubicaciones/ObtenerUbicaciones.php');
-  const [datosPlaza,cargandoPlaza] = UseDatos('plazas/ObtenerPlazas.php');
-  const [datosPension,cargandoPension] = UseDatos('pensiones/ObtenerPensiones.php');
-  const [datosGrupo,cargandoGrupo] = UseDatos('grupos/ObtenerGrupos.php');
   const [cargando, setCargando] = useState(true);
   const [data, setData] = useState(null);
   const [archivo, setArchivo] = useState(null);
   const [error, setError] = useState(null);
+  const [infoEmpleado, setInfoEmpleado] = useState();
 
   const {verificarEmpleados,procesando,empleadosActualizado}=UseExcel(setError);
 
-  useEffect(()=>{
-    if(!cargandoUbicacion&&!cargandoPlaza&&!cargandoPension&&!cargandoGrupo){
-      setCargando(false);
-    }
-  },[cargandoUbicacion,cargandoPlaza,cargandoPension,cargandoGrupo])
+  useEffect(() => {
+    Promise.all([
+      getUbicaciones(),
+      getPlazas(),
+      getGrupos(),
+      getPensiones(),
+    ])
+      .then(([ubicaciones, plazas, grupos, pensiones]) => {
+        setInfoEmpleado({
+          ubicaciones,
+          plazas,
+          grupos,
+          pensiones,
+        });
+      })
+      .catch((error) => {
+        if (!error.response) {
+          setError("Error en el servidor");
+        } else {
+          setError(error.response.data[0]);
+        }
+      })
+      .finally(() => {
+        setCargando(false);
+      });
+  }, []);
+
 
   const onDrop = useCallback((acceptedFiles,fileRejections) => {
     setError(null)
@@ -68,7 +90,7 @@ export const ExcelInput = ({setEmpleados}) => {
 
   useEffect(()=>{
     if(data){
-      verificarEmpleados(data,datosUbicacion,datosPlaza,datosPension,datosGrupo);
+      verificarEmpleados(data,infoEmpleado.ubicaciones,infoEmpleado.plazas,infoEmpleado.pensiones,infoEmpleado.grupos);
     }
     // eslint-disable-next-line
   },[data]);

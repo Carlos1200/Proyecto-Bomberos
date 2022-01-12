@@ -1,22 +1,31 @@
-import React,{useContext, useState} from 'react'
+import {useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import toast, { Toaster } from 'react-hot-toast';
 import {  faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { AnimatePresence } from 'framer-motion';
+import { useSetRecoilState } from 'recoil';
 import { Menu } from './../Menu';
 import {Background} from '../Background';
 import { TablaGroup } from '../tablas/TablaGroup';
 import { GrupoModal } from '../modal/GrupoModal';
-import {GrupoContext} from '../../context/grupos/GrupoContext'
+import {useBuscador} from '../../hooks/useBuscador'
+import { buscadorGrupos } from '../../services/gruposServices';
+import { grupoState } from '../../atom/AtomTablas';
 
 
 
 export const Grupos = () => {
+
+  const setGrupos=useSetRecoilState(grupoState);
   
   const [visible, setVisible] = useState(false);
   const [inputBuscador, setInputBuscador] = useState('')
-  const {buscador,setConsultar}=useContext(GrupoContext);
+
+  const {reset,buscador}=useBuscador({
+    promise:buscadorGrupos,
+    setState:setGrupos,
+  });
 
   const mostrarNotificacion=(error=false,msg)=>{
     if(error){
@@ -34,7 +43,7 @@ export const Grupos = () => {
             <FilterBox>
             <FontAwesomeIcon
                 onClick={()=>{
-                  setConsultar(true);
+                  reset();
                   setInputBuscador('');
                 }}
                 icon={faSyncAlt}
@@ -42,7 +51,9 @@ export const Grupos = () => {
               />
               <FilterTextBox placeholder="¿Desea un archivo en específico?" value={inputBuscador} onChange={(e)=>setInputBuscador(e.target.value)}/>
               <BtnFilterSearch onClick={()=>{
-                buscador(inputBuscador);
+                const formData=new FormData();
+                formData.append('nombreGrupo',inputBuscador);
+                buscador(formData);
               }}>Buscar</BtnFilterSearch>
             </FilterBox>
             <ContenedorTabla>

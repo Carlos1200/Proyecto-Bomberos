@@ -1,4 +1,4 @@
-import React,{useContext, useEffect, useState} from 'react'
+import { useEffect, useState} from 'react'
 import styled from 'styled-components'
 import Select from 'react-select'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,20 +7,22 @@ import {useForm, Controller} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup'
 import { Modal } from '../Modal'
-import { UseDatos } from '../../hooks/UseDatos';
-import Api from '../../Api/Api';
 import { ListadoEmpleados } from '../ListadoEmpleados';
 import { UseEmpleados } from '../../hooks/UseEmpleados';
-import { EmpleadosContext } from '../../context/empleados/EmpleadosContext';
+import { getUbicaciones } from '../../services/ubicacionesServices';
+import { getPlazas } from '../../services/plazasServices';
+import { getGrupos } from '../../services/gruposServices';
+import { getPensiones } from '../../services/pensionesServices';
 
 const schema=yup.object({
   nombres:yup.string().required("Los nombres son obligatorios"),
   apellidos:yup.string().required("Los apellidos son obligatorios"),
-  salario:yup.string().test('validar numero positivo',"El salario debe ser positivo",function(value){
-    const numero=Number(value);
-    return (numero>0);
-    
-  }).required("El salario Es obligatorio"),
+  salario: yup
+    .string()
+    .matches(RegExp("^[0-9.]+$"), {
+      message: "El salario debe ser un número positivo",
+    })
+    .required("El salario Es obligatorio"),
   ubicacion:yup.object({
     idUbicacion:yup.string().required("La ubicación no debe ir vacía"),
     nombreUbicacion:yup.string().required("La ubicación no debe ir vacía"),
@@ -44,24 +46,43 @@ const schema=yup.object({
   }),
 })
 
-export const NuevoEmpleadoModal = ({handleClose}) => {
-
-    const [datosUbicacion,cargandoUbicacion] = UseDatos('ubicaciones/ObtenerUbicaciones.php');
-    const [datosPlaza,cargandoPlaza] = UseDatos('plazas/ObtenerPlazas.php');
-    const [datosPension,cargandoPension] = UseDatos('pensiones/ObtenerPensiones.php');
-    const [datosGrupo,cargandoGrupo] = UseDatos('grupos/ObtenerGrupos.php');
+export const NuevoEmpleadoModal = ({handleClose,mostrarNotificacionNuevo}) => {
     const [cargando, setCargando] = useState(true);
     const [empleados, setEmpleados] = useState([]);
+    const [infoEmpleado, setInfoEmpleado] = useState({
+      ubicaciones:[],
+      plazas:[],
+      pensiones:[],
+      grupos:[]
+    });
+
     
-    const {crearString,nombresCol,apellidosCol,grupoCol,pensionCol,plazaCol,ubicacionCol,salarioCol,fechaCol} = UseEmpleados();
+    const {crearString} = UseEmpleados(mostrarNotificacionNuevo,handleClose);
 
-    const {setConsultar}=useContext(EmpleadosContext);
 
-  useEffect(()=>{
-    if(!cargandoUbicacion&&!cargandoPlaza&&!cargandoPension&&!cargandoGrupo){
-      setCargando(false);
-    }
-  },[cargandoUbicacion,cargandoPlaza,cargandoPension,cargandoGrupo])
+    useEffect(() => {
+      Promise.all([
+        getUbicaciones(),
+        getPlazas(),
+        getGrupos(),
+        getPensiones(),
+      ])
+        .then(([ubicaciones, plazas, grupos, pensiones]) => {
+          setInfoEmpleado({
+            ubicaciones,
+            plazas,
+            grupos,
+            pensiones,
+          });
+        })
+        .catch(() => {
+          mostrarNotificacionNuevo(true);
+        })
+        .finally(() => {
+          setCargando(false);
+        });
+        // eslint-disable-next-line
+    }, []);
 
     const { register, handleSubmit,formState: { errors },control } = useForm({
       resolver:yupResolver(schema),
@@ -84,8 +105,6 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
         ...empleados,
         data
       ]);
-
-      crearString(data);
       
     }
     const removerEmpleado=(id)=>{
@@ -94,25 +113,7 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
     }
 
     const insertarEmpleados=async()=>{
-      setConsultar(false);
-      const formData=new FormData();
-      formData.append('nombres',nombresCol);
-      formData.append('apellidos',apellidosCol)
-      formData.append('salarioNominal',salarioCol)
-      formData.append('idGrupo',grupoCol)
-      formData.append('idPension',pensionCol)
-      formData.append('idUbicacion',ubicacionCol)
-      formData.append('idPlaza',plazaCol)
-      formData.append('fechaCreacionEmpleado',fechaCol);
-
-      try {
-      await Api.post("/empleados/CrearEmpleados.php",formData);
-      setConsultar(true);
-      handleClose();
-      } catch (error) {
-        console.log(error.response.data);
-      }
-      
+      crearString(empleados);
     }
 
     return (
@@ -142,14 +143,14 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
               <Textbox  {...register("apellidos")} />
               {errors.apellidos&& <TextError>{errors.apellidos.message}</TextError>}
               <Label>Salario</Label>
-              <Textbox  {...register("salario")} type="number" />
+              <Textbox  {...register("salario")} />
               {errors.salario&& <TextError>{errors.salario.message}</TextError>}
               <Label>Ubicacion</Label>
                 <Controller
                   control={control}
                   render={({ field: { onChange, value } }) =>(
                       <Select 
-                      options={datosUbicacion}
+                      options={infoEmpleado.ubicaciones}
                       getOptionLabel={(ubicacion)=>ubicacion.nombreUbicacion}
                       getOptionValue={(ubicacion)=>ubicacion.idUbicacion}
                       value={value}
@@ -167,7 +168,7 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
                   control={control}
                   render={({ field: { onChange, value } }) =>(
                       <Select 
-                      options={datosPlaza}
+                      options={infoEmpleado.plazas}
                       getOptionLabel={(plaza)=>plaza.nombrePlaza}
                       getOptionValue={(plaza)=>plaza.idPlaza}
                       value={value}
@@ -185,7 +186,7 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
                   control={control}
                   render={({ field: { onChange, value } }) =>(
                       <Select 
-                      options={datosPension}
+                      options={infoEmpleado.pensiones}
                       getOptionLabel={(pension)=>pension.nombrePension}
                       getOptionValue={(pension)=>pension.idPension}
                       value={value}
@@ -203,7 +204,7 @@ export const NuevoEmpleadoModal = ({handleClose}) => {
                   control={control}
                   render={({ field: { onChange, value } }) =>(
                       <Select 
-                      options={datosGrupo}
+                      options={infoEmpleado.grupos}
                       getOptionLabel={(grupo)=>grupo.nombreGrupo}
                       getOptionValue={(grupo)=>grupo.idGrupo}
                       value={value}
