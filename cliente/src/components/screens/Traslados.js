@@ -92,6 +92,7 @@ export const Traslados = () => {
 
                 <Select
                   options={empleados}
+                  noOptionsMessage={() => "No hay empleados"}
                   getOptionLabel={(empleado)=>`${empleado.nombres} ${empleado.apellidos}`}
                   getOptionValue={(empleado)=>empleado.idEmpleado}
                   placeholder="Selecciona un empleado"

@@ -20,6 +20,7 @@ import { AdminTraslados } from './components/screens/AdminTraslados';
 import { verificarTraslados, verificarTrasladosEmpleado } from './services/trasladosServices';
 
 import '../src/index.css';
+import { Page404 } from './components/screens/Page404';
 
 const App = () => {
 
@@ -57,6 +58,7 @@ const App = () => {
           <RutaPrivada exact path='/admin-traslados' component={AdminTraslados} />
           <RutaPrivada exact path='/traslados' component={Traslados} />
           <RutaPrivada exact path='/generar-reporte' component={GenerarReporte} />
+          <Route path='*' component={Page404}/>
         </Switch>
       </Router>
     </AppState>
