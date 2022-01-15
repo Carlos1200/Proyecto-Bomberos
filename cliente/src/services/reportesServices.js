@@ -29,6 +29,8 @@ Api.get(`/pdf/VerPdf.php?id=${idReporte}`,{
     link.setAttribute('download', `Autorizacion-${Jefe}-${fecha}.pdf`); //or any other extension
     document.body.appendChild(link);
     link.click();
+}).catch((err)=>{
+  console.log({err});
 });
 
 export const mostrarExcel= (idReporte,Jefe,fecha)=>
