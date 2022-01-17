@@ -121,6 +121,14 @@ class Usuario extends ActiveRecord{
 
     }
 
+    public function cantidadUsuarios(){
+        $query="SELECT count(*) as cantidad FROM usuarios";
+        $consulta=self::$db->prepare($query);
+        $consulta->execute();
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $datos[0]['cantidad'];
+    }
+
     public function actualizarUsuario(){
         $query="EXEC actualizarUsuarios :idUsuario, :NombreUsuario, :tipoUsuario, :nickUsuario, :contra, :UbicacionUsuario";
         $consulta=self::$db->prepare($query);
@@ -131,12 +139,14 @@ class Usuario extends ActiveRecord{
         $consulta->bindParam(':contra',$this->contra,PDO::PARAM_STR);
         $consulta->bindParam(':UbicacionUsuario',$this->UbicacionUsuario,PDO::PARAM_STR);
         $consulta->execute();
-
-        if(!self::$db->rowCount() > 0){
-            self::$errores[]="No se pudo actualizar el usuario";
-        }
-
-        return self::$errores;
+        
+            //Obtener usuario actualizado
+            $query="SELECT * FROM usuarios WHERE idUsuario=:idUsuario";
+            $consulta=self::$db->prepare($query);
+            $consulta->bindParam(':idUsuario',$this->idUsuario,PDO::PARAM_INT);
+            $consulta->execute();
+            $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+            return $datos;
     }
 
     public function validar()

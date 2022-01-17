@@ -8,10 +8,16 @@ export const useBuscador = ({
         })
     }
 
-    const reset=()=>{
-        promise().then(res=>{
-            setState(res);
-        })
+    const reset=(datos)=>{
+        if(datos){
+            promise(datos).then(res=>{
+                setState(res);
+            })
+        }else{
+            promise().then(res=>{
+                setState(res);
+            })
+        }
     }
 
     return {

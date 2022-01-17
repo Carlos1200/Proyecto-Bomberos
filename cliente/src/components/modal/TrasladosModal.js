@@ -4,29 +4,54 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWindowClose,faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "../Modal";
 import { EmpleadosSeleccion } from "../EmpleadosSeleccion";
-import { UseDatos } from "../../hooks/UseDatos";
 import { UseTraslados } from "../../hooks/UseTraslados";
+import { getUbicaciones } from "../../services/ubicacionesServices";
+import { getPlazas } from "../../services/plazasServices";
+import { getGrupos } from "../../services/gruposServices";
 
 export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limpiarEmpleados }) => {
-  const [datosUbicacion, cargandoUbicacion] = UseDatos("ubicaciones/ObtenerUbicaciones.php");
-  const [datosPlaza, cargandoPlaza] = UseDatos("plazas/ObtenerPlazas.php");
-  const [datosGrupo, cargandoGrupo] = UseDatos("grupos/ObtenerGrupos.php");
   
+  const [tituloDetalle, setTituloDetalle] = useState("");
+
   const [cargando, setCargando] = useState(true);
   const empleadosFormulario = useRef([]);
   const [cantidad, setCantidad] = useState(0);
+  const [error, setError] = useState(false);
+  const [infoEmpleado, setInfoEmpleado] = useState({
+    ubicaciones:[],
+    plazas:[],
+    grupos:[]
+  });
 
-  const {PrepararDatos}=UseTraslados();
+  const {PrepararDatos}=UseTraslados(mostrarNotificacion,limpiarEmpleados,handleClose);
+  
 
   useEffect(()=>{
     setCantidad(empleados.length-1);
   },[empleados])
   
   useEffect(() => {
-    if (!cargandoUbicacion && !cargandoPlaza&&!cargandoGrupo) {
-      setCargando(false);
-    }
-  }, [cargandoUbicacion, cargandoPlaza,cargandoGrupo]);
+    Promise.all([
+      getUbicaciones(),
+      getPlazas(),
+      getGrupos(),
+    ])
+      .then(([ubicaciones, plazas, grupos]) => {
+        setInfoEmpleado({
+          ubicaciones,
+          plazas,
+          grupos,
+        });
+      })
+      .catch((error) => {
+        mostrarNotificacion(true);
+      })
+      .finally(() => {
+        setCargando(false);
+      });
+      // eslint-disable-next-line
+  }, []);
+
   return (
     <Modal handleClose={handleClose} grande={true}>
       <Contenedor>
@@ -35,7 +60,7 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
             width: "100%",
             display: "flex",
             justifyContent: "flex-end",
-            margin: "-1.3rem 0",
+            margin: "0 0 -3rem 0",
           }}>
           <FontAwesomeIcon
             icon={faWindowClose}
@@ -48,6 +73,14 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
           />
         </div>
         <Titulo>Traslado de Empleados</Titulo>
+        <InputDiv>
+          <Input value={tituloDetalle} placeholder="Título para el Traslado" onChange={(e)=>{
+            setTituloDetalle(e.target.value);
+            setError(false);
+          }}/>
+        </InputDiv>
+        {error && <TextError>El titulo es obligatorio</TextError>}
+        
         {!cargando ? (
             <>
           <ContenedorEmpleados>
@@ -56,19 +89,22 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
                 key={empleado.idEmpleado}
                 posicion={index}
                 empleado={empleado}
-                ubicaciones={datosUbicacion}
-                plazas={datosPlaza}
-                grupos={datosGrupo}
+                ubicaciones={infoEmpleado.ubicaciones}
+                plazas={infoEmpleado.plazas}
+                grupos={infoEmpleado.grupos}
                 empleadosFormulario={empleadosFormulario}
                 ultimo={cantidad}
+                titulo={tituloDetalle}
               />
             ))}
           </ContenedorEmpleados>
           <Btn type="button" onClick={()=>{
-            PrepararDatos(empleadosFormulario.current)
-            limpiarEmpleados();
-            handleClose();  
-            mostrarNotificacion();
+            if(!tituloDetalle){
+              setError(true);
+            }else{
+
+              PrepararDatos(empleadosFormulario.current)
+            }
           }}>
           <Text>Agregar</Text>
           <FontAwesomeIcon
@@ -133,3 +169,24 @@ const Text=styled.p`
   font-size: 1.5rem;
   margin-right: .7rem;
 `
+const InputDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const Input = styled.input`
+  margin-bottom: 1rem;
+  appearance: none;
+  border: 1px solid #CCCCCC;
+  border-radius: .2rem;
+  padding: .5rem 1rem;
+  width: 50%;
+`
+
+const TextError = styled.p`
+  margin-top: -13px;
+  text-align: center;
+  color: #f39c12;
+  margin-bottom: 0;
+`;

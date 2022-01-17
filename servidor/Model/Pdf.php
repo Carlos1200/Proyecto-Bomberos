@@ -10,9 +10,9 @@ class PDF extends ActiveRecord{
         if(is_null($id)){
             self::$errores[]="No se ha enviado el id";
         }else{
-            $query="SELECT * FROM autorizaciones WHERE idAutorizaciones=:id";
+            $query="EXEC imprimirAutorizaciones :id";
             $consulta=self::$db->prepare($query);
-            $consulta->bindParam(":id",$id,PDO::PARAM_INT);
+            $consulta->bindParam(":id",$id,PDO::PARAM_STR);
             $consulta->execute();
             $resultado=$consulta->fetchAll(\PDO::FETCH_ASSOC);
             if(!$resultado){
@@ -21,6 +21,12 @@ class PDF extends ActiveRecord{
                 return $resultado['0'];
             }
         }            
+    }
+
+    public function obtenerMes($mes=01){
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+        return $meses[$mes-1];
+        
     }
 }
 

@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useContext, useState} from 'react'
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import toast, { Toaster } from 'react-hot-toast';
@@ -7,22 +7,25 @@ import { AnimatePresence } from 'framer-motion';
 import { useSetRecoilState } from 'recoil';
 import { Menu } from '../Menu'
 import {Background} from '../Background';
-import { empleadosState, TablaEmpleado } from '../tablas/TablaEmpleado';
+import {  TablaEmpleado } from '../tablas/TablaEmpleado';
 import { NuevoEmpleadoModal } from '../modal/NuevoEmpleadoModal';
 import {useBuscador} from '../../hooks/useBuscador';
-import { buscadorEmpleados } from '../../services/empleadosServices';
+import { buscadorEmpleados, ObtenerEmpleadosFiltradosUbicacion } from '../../services/empleadosServices';
+import { empleadosState } from '../../atom/AtomTablas';
+import { AuthContext } from '../../context/Auth/AuthContext';
 
 
 export const Empleados = () => {
   const setEmpleados=useSetRecoilState(empleadosState);
+  const {UbicacionUsuario,tipoUsuario}=useContext(AuthContext);
   const [visible, setVisible] = useState(false);
   const [inputBuscador, setInputBuscador] = useState('')
 
   const {buscador,reset}=useBuscador({
-    promise:buscadorEmpleados,
+    promise:tipoUsuario==="Administrador"?buscadorEmpleados:ObtenerEmpleadosFiltradosUbicacion,
     setState:setEmpleados,
   })
-
+  
   const mostrarNotificacion=()=>{
     toast.success('Operación realizada correctamente');
   }
@@ -31,15 +34,30 @@ export const Empleados = () => {
     toast.error(error);
   }
 
+  const mostrarNotificacionNuevo=(error=false,msg)=>{
+    if(error){
+      toast.error(msg);
+    }else{
+      toast.success('Operación realizada correctamente');
+    }
+  }
+
     return (
       <Menu>
-        <Background titulo="Administración de Empleados" notificacion={mostrarNotificacion} insertar={()=>setVisible(true)} >
+        <Background titulo="Administración de Empleados" notificacion={mostrarNotificacionNuevo} insertar={()=>setVisible(true)} >
           <Toaster position="top-right" toastOptions={{style:{zIndex:9999}}} />
           <ReportsBox>
             <FilterBox>
             <FontAwesomeIcon
                 onClick={()=>{
-                  reset();
+                  if(tipoUsuario==="Administrador"){
+                    reset();
+                  }else{
+                    const formData=new FormData();
+                    formData.append('nombres','');
+                    formData.append('nombreUbicacion',UbicacionUsuario);
+                    reset(formData);
+                  }
                   setInputBuscador('');
                 }}
                 icon={faSyncAlt}
@@ -49,6 +67,9 @@ export const Empleados = () => {
               <BtnFilterSearch onClick={()=>{
                 const formData=new FormData();
                 formData.append('nombres',inputBuscador);
+                if(tipoUsuario!=="Administrador"){
+                  formData.append('nombreUbicacion',UbicacionUsuario);
+                }
                 buscador(formData);
               }}>Buscar</BtnFilterSearch>
             </FilterBox>
@@ -62,7 +83,7 @@ export const Empleados = () => {
             initial={false}
             exitBeforeEnter={true}
             onExitComplete={() => null}>
-            {visible&&<NuevoEmpleadoModal handleClose={()=>setVisible(false)} />}
+            {visible&&<NuevoEmpleadoModal handleClose={()=>setVisible(false)} mostrarNotificacionNuevo={mostrarNotificacionNuevo} />}
         </AnimatePresence>
       </Menu>
     );

@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
@@ -7,16 +7,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
-import { atom, useRecoilState } from "recoil";
+import {  useRecoilState } from "recoil";
 import { EditarEmpleadoModal } from "../modal/EditarEmpleadoModal";
 import { Eliminar } from "../modal/Eliminar";
 import { VerDetallesEmpleadosModal } from "../modal/VerDetallesEmpleadosModal";
-import { eliminarEmpleados, getEmpleados } from "../../services/empleadosServices";
+import { eliminarEmpleados, getEmpleados, ObtenerEmpleadosFiltrados } from "../../services/empleadosServices";
+import { empleadosState } from "../../atom/AtomTablas";
+import { AuthContext } from "../../context/Auth/AuthContext";
 
-export const empleadosState = atom({
-  key: 'empleadosState',
-  default: [],
-});
+
 
 export const TablaEmpleado = ({ notificacion, notificacionError }) => {
   const [visible, setVisible] = useState(false);
@@ -26,6 +25,7 @@ export const TablaEmpleado = ({ notificacion, notificacionError }) => {
   const [empleado, setEmpleado] = useState();
   const [empleadoDetalle, setEmpleadoDetalle] = useState();
   const [cargando, setCargando] = useState(true);
+  const {tipoUsuario,UbicacionUsuario}=useContext(AuthContext);
   const [empleados, setEmpleados] = useRecoilState(empleadosState);
 
   const eliminarEmpleado = async () => {
@@ -45,18 +45,39 @@ export const TablaEmpleado = ({ notificacion, notificacionError }) => {
   };
 
   useEffect(() => {
-    getEmpleados().then((empleados) => {
-      setEmpleados(empleados);
-    }).catch((error) => {
-      if (error.response) {
-        notificacionError(error.response.data[0] || "Ocurrió un error");
-      } else {
-        notificacionError("Ocurrió un error");
-      }
-    }).finally(() => {
-      setCargando(false);
-    });
+    obtenerEmpleados();
+    // eslint-disable-next-line
   }, [])
+
+  const obtenerEmpleados=()=>{
+    if(tipoUsuario==="Administrador"){
+      getEmpleados().then((empleados) => {
+        setEmpleados(empleados);
+      }).catch((error) => {
+        if (error.response) {
+          notificacionError(error.response.data[0] || "Ocurrió un error");
+        } else {
+          notificacionError("Ocurrió un error");
+        }
+      }).finally(() => {
+        setCargando(false);
+      });
+    }else{
+      const formData = new FormData();
+      formData.append("nombreUbicacion", UbicacionUsuario);
+      ObtenerEmpleadosFiltrados(formData).then((empleados) => {
+        setEmpleados(empleados);
+      }).catch((error) => {
+        if (error.response) {
+          notificacionError(error.response.data[0] || "Ocurrió un error");
+        } else {
+          notificacionError("Ocurrió un error");
+        }
+      }).finally(() => {
+        setCargando(false);
+      });
+    }
+  }
 
   return (
     <Contenedor>

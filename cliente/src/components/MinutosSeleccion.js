@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Api from "../Api/Api";
 
 const schema = yup.object({
   minDiurno: yup
@@ -25,9 +24,10 @@ export const MinutosSeleccion = ({
   minutosFormulario,
   posicion,
   setErrores,
-  erroresArray
+  erroresArray,
+  pensiones,
 }) => {
-  const [empleadoDetalle, setEmpleadoDetalle] = useState();
+  const [empleadoDetalle, setEmpleadoDetalle] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [validacion, setValidacion] = useState({
     validacionDiurno: true,
@@ -73,27 +73,21 @@ export const MinutosSeleccion = ({
     }
   };
 
-  const obtenerDetalles = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("idEmpleado", empleado.idEmpleado);
+  const obtenerDetalles = () => {
+      
+        setEmpleadoDetalle(empleado);
+        const empleadoCompleto = {
+          ...empleado,
+          minutosDiurnos: "0",
+          minutosNocturnos: "0",
+          salario:Number(empleado.salarioNominal),
+          idTipoPension:pensiones.filter(pension=>pension.nombrePension===empleado.nombrePension)[0].idPension,
+        };
+  
+        minutosFormulario.current[posicion] = empleadoCompleto;
 
-      const { data } = await Api.post("/empleados/EmpleadosDetalle.php", formData);
-      const resp=await Api.get('/pensiones/ObtenerPensiones.php');
-      setEmpleadoDetalle(data[0]);
-      const empleadoCompleto = {
-        ...data[0],
-        minutosDiurnos: "0",
-        minutosNocturnos: "0",
-        salario:Number(data[0].salarioNormal),
-        idTipoPension:resp.data.filter(pension=>pension.nombrePension===data[0].nombrePension)[0].idPension,
-      };
+        setCargando(false);
 
-      minutosFormulario.current[posicion] = empleadoCompleto;
-      setCargando(false);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   return (
@@ -196,13 +190,6 @@ const ContenedorInfo = styled.div`
   padding: 0 1rem;
 `;
 
-// const Fecha = styled.input`
-//   margin-bottom: 1rem;
-//   appearance: none;
-//   border: 1px solid #cccccc;
-//   border-radius: 0.2rem;
-//   padding: 0.5rem 1rem;
-// `;
 
 const TextError = styled.p`
   margin-top: -13px;

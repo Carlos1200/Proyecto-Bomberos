@@ -431,8 +431,8 @@ function GetStringWidth($s)
 	}
 	else {
 		$l = strlen($s);
-		for($i=0;$i<$l;$i++)
-			$w += $cw[$s[$i]];
+		// for($i=0;$i<$l;$i++)
+		// 	$w += $cw[$s[$i]];
 	}
 	return $w*$this->FontSize/1000;
 }

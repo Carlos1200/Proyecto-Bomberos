@@ -8,7 +8,7 @@ require_once('../../app.php');
     $router= new Router();
     use Controller\ReportesController;
 
-    $router->get('/api/reportes/ObtenerDetallesReportes.php',[ReportesController::class,'leerDetallesReportes']);
+    $router->get('/api/reportes/ObtenerDetallesReporte.php',[ReportesController::class,'leerDetallesReportes']);
 
     $router->comprobarRutas();
     

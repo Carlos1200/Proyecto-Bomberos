@@ -41,6 +41,14 @@ class Ubicacion extends ActiveRecord{
         }
     }
 
+    public function obtenerUbicaciones(){
+        $query="EXEC leerUbicacion";
+        $consulta=self::$db->prepare($query);
+        $consulta->execute();
+        $resultado=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $resultado;
+    }
+
     public function ubicacionFiltro(){ 
         $query="EXEC busquedaUbicaciones :nombreUbicacion";
         $consulta=self::$db->prepare($query);
@@ -77,7 +85,13 @@ class Ubicacion extends ActiveRecord{
         $consulta->bindParam(':idUbicacion',$this->idUbicacion,PDO::PARAM_INT);
         $consulta->bindParam(':nombreUbicacion',$this->nombreUbicacion,PDO::PARAM_STR);
         $consulta->execute();
-        return self::$errores;
+        
+        $query="SELECT * FROM ubicacionEmpleado WHERE idUbicacion = :idUbicacion";
+        $consulta=self::$db->prepare($query);
+        $consulta->bindParam(':idUbicacion',$this->idUbicacion,PDO::PARAM_INT);
+        $consulta->execute();
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $datos;
     }
 
     public function eliminarUbicacion(){

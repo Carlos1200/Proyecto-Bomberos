@@ -69,6 +69,27 @@ class EmpleadoController{
         }
     }
 
+    public static function empleadosFiltradosUbicacion(Router $router){
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        $token=str_replace("token=","",$query);
+
+        $empleado=new Empleado($_POST);
+
+        $empleado::VerificarToken($token);
+        $errores=$empleado::getErrores();
+
+        if(empty($errores)){
+            $empleados=$empleado->empleadosFiltradosUbicacion();
+            $router->render('empleados/empleados',[
+                'empleados'=>$empleados
+            ]);
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
+    }
+
     public static function obtenerEmpleadosDetalle(Router $router){
         $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
         $token=str_replace("token=","",$query);
@@ -100,8 +121,14 @@ class EmpleadoController{
         $errores=$empleado->validar(false);
 
         if(empty($errores)){
-            $errores=$empleado->editarEmpleado();
-            if(!empty($errores)){
+            $empleados=$empleado->editarEmpleado();
+            $errores=$empleado->getErrores();
+
+            if(empty($errores)){
+                $router->render('empleados/empleados',[
+                    'empleados'=>$empleados
+                ]);
+            }else{
                 $router->render('errores/error',[
                     'errores'=>$errores
                 ]);
@@ -177,6 +204,34 @@ class EmpleadoController{
 
         if(empty($errores)){
             $empleados=$empleado->leerEmpleadoDetalles();
+            $errores=$empleado::getErrores();
+            if(empty($errores)){
+                $router->render('empleados/empleados',[
+                    'empleados'=>$empleados
+                ]);
+            }else{
+                $router->render('errores/error',[
+                    'errores'=>$errores
+                ]);
+            }
+
+        }else{
+            $router->render('errores/error',[
+                'errores'=>$errores
+            ]);
+        }
+    }
+
+    public static function ObtenerDetallesEmpleadosLotes(Router $router){
+        $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
+        $token=str_replace("token=","",$query);
+        
+        $empleado=new Empleado($_POST);
+        $empleado::VerificarToken($token);
+        $errores=$empleado::getErrores();
+
+        if(empty($errores)){
+            $empleados=$empleado->leerEmpleadoDetallesLotes();
             $errores=$empleado::getErrores();
             if(empty($errores)){
                 $router->render('empleados/empleados',[

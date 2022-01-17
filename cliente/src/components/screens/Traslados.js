@@ -5,10 +5,10 @@ import Select from 'react-select'
 import { Menu } from './../Menu';
 import {Background} from '../Background';
 import { AuthContext } from '../../context/Auth/AuthContext';
-import Api from '../../Api/Api';
 import { ListadoEmpleados } from '../ListadoEmpleados';
 import { AnimatePresence } from 'framer-motion';
 import { TrasladosModal } from '../modal/TrasladosModal';
+import { getEmpleados, ObtenerEmpleadosFiltrados } from '../../services/empleadosServices';
 
 
 
@@ -22,15 +22,18 @@ export const Traslados = () => {
 
   const obtenerEmpleados=async()=>{
     try {
-      if(tipoUsuario!=="Administrador"){
-        const formData=new FormData();
-        formData.append('nombreUbicacion',UbicacionUsuario);
-        const { data } = await Api.post("/empleados/ObtenerEmpleadosFiltrados.php", formData);
-        setEmpleados(data);
-      }else{
-        const { data } = await Api.get("/empleados/ObtenerEmpleados.php");
-        setEmpleados(data);
+      if (tipoUsuario !== "Administrador") {
+        const formData = new FormData();
+        formData.append("nombreUbicacion", UbicacionUsuario);
+        ObtenerEmpleadosFiltrados(formData).then((res) => {
+          setEmpleados(res);
+        });
+      } else {
+        getEmpleados().then((data) => {
+          setEmpleados(data);
+        });
       }
+
       setCargando(false);
     } catch (error) {
       console.log(error);
@@ -89,6 +92,7 @@ export const Traslados = () => {
 
                 <Select
                   options={empleados}
+                  noOptionsMessage={() => "No hay empleados"}
                   getOptionLabel={(empleado)=>`${empleado.nombres} ${empleado.apellidos}`}
                   getOptionValue={(empleado)=>empleado.idEmpleado}
                   placeholder="Selecciona un empleado"

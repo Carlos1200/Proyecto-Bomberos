@@ -7,7 +7,7 @@ import {useSetRecoilState} from 'recoil'
 import * as yup from 'yup'
 import { Modal } from '../Modal'
 import { actualizarUbicacion, nuevaUbicacion } from '../../services/ubicacionesServices';
-import { ubicacionesState } from '../tablas/TablaUbicacion';
+import { ubicacionesState } from '../../atom/AtomTablas';
 
 const schema=yup.object({
   ubicacionNombre:yup.string().required("La ubicación no debe ir vacía"),
@@ -29,15 +29,15 @@ export const UbicacionModal = ({handleClose,ubicacion,mostrarNotificacion}) => {
       formData.append('nombreUbicacion',ubicacionNombre);
 
       actualizarUbicacion(formData)
-      .then(()=>{
+      .then((res)=>{
         setUbicacionesState(oldValue=>{
-          const newValue=oldValue.map(item=>{
-            if(item.idUbicacion===ubicacion.idUbicacion){
-              item.nombreUbicacion=ubicacionNombre;
+          return oldValue.map(item=>{
+            if(item.idUbicacion===res.idUbicacion){
+              return res;
+            }else{
+              return item;
             }
-            return item;
-          })
-          return newValue;
+          });
         })
         handleClose();
         mostrarNotificacion();

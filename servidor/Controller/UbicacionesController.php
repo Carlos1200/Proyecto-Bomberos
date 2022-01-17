@@ -51,13 +51,13 @@ class UbicacionesController{
     public static function obtenerUbicacion(Router $router){
         $query=parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY);
         $token=str_replace("token=","",$query);
+        $ubicacion=new Ubicacion();
+        $ubicacion::VerificarToken($token);
 
-        Ubicacion::VerificarToken($token);
-
-        $errores=Ubicacion::getErrores();
+        $errores=$ubicacion::getErrores();
 
         if(empty($errores)){
-            $ubicaciones=Ubicacion::all();
+            $ubicaciones=$ubicacion->obtenerUbicaciones();
             $router->render('ubicaciones/ubicaciones',[
                 'ubicaciones'=>$ubicaciones
             ]);
@@ -99,8 +99,13 @@ class UbicacionesController{
         $errores=$ubicacion->validar(false);
 
         if(empty($errores)){
-            $errores=$ubicacion->editarUbicacion();
-            if(!empty($errores)){
+            $ubicaciones=$ubicacion->editarUbicacion();
+            $errores=$ubicacion::getErrores();
+            if(empty($errores)){
+                $router->render('ubicaciones/ubicaciones',[
+                    'ubicaciones'=>$ubicaciones
+                ]);
+            }else{
                 $router->render('errores/error',[
                     'errores'=>$errores
                 ]);

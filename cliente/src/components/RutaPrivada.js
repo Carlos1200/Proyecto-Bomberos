@@ -1,13 +1,16 @@
 import React, { useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import {AuthContext} from '../context/Auth/AuthContext';
+import { Loading } from './Loading';
 
 
 const RutaPrivada = ({ component: Component, ...props  }) => {
 
+    
+
     const {login,cargando} = useContext(AuthContext);
     if(cargando){
-      return <p>Cargando...</p>
+      return <Loading/>
     }
 
     return ( 

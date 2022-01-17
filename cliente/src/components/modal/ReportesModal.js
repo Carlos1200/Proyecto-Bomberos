@@ -8,6 +8,8 @@ import { AnimatePresence } from "framer-motion";
 import { AutorizacionModal } from "./AutorizacionModal";
 import { UseReportes } from "../../hooks/UseReportes";
 import { AuthContext } from "../../context/Auth/AuthContext";
+import { detallesEmpleadosLotes } from "../../services/empleadosServices";
+import { getPensiones } from "../../services/pensionesServices";
 
 export const ReportesModal = ({
   handleClose,
@@ -21,8 +23,11 @@ export const ReportesModal = ({
 
   const minutosFormulario = useRef([]);
   const [cantidad, setCantidad] = useState(0);
+  const [empleadosDetallados, setEmpleadosDetallados] = useState([]);
+  const [pensiones, setPensiones] = useState([]);
   const [errores, setErrores] = useState([true]);
   const [autorizacionModal, setAutorizacionModal] = useState(false);
+  const [cargandoDetalles, setCargandoDetalles] = useState(true);
   const [cargando, setCargando] = useState(false);
   const { GenerarReporte } = UseReportes(mostrarNotificacion,
     limpiarEmpleados,
@@ -30,6 +35,34 @@ export const ReportesModal = ({
   useEffect(() => {
     setCantidad(empleados.length - 1);
   }, [empleados]);
+
+  useEffect(()=>{
+    const idEmpleados=formatearIds();
+    const formData=new FormData();
+    formData.append('idEmpleado',idEmpleados);
+    Promise.all([detallesEmpleadosLotes(formData),getPensiones()]).then(([empleadosLotes,pensiones])=>{
+      setEmpleadosDetallados(empleadosLotes);
+      setPensiones(pensiones);  
+    }).catch((error)=>{
+      mostrarNotificacion(true);
+    }).finally(()=>{
+      setCargandoDetalles(false);
+    })
+    // eslint-disable-next-line
+  },[]);
+
+  const formatearIds=()=>{
+    let ids = '';
+    empleados.forEach((empleado)=>{
+      if(!ids){
+        ids = empleado.idEmpleado;
+      }else{
+        ids = ids + ',' + empleado.idEmpleado;
+      }
+    });
+    return ids;
+  }
+
   return (
     <>
       <Modal handleClose={handleClose}>
@@ -54,7 +87,7 @@ export const ReportesModal = ({
           <Titulo>Ingreso de Minutos por empleado</Titulo>
           {cargando?<Error>Subiendo los datos, puede tomar unos minutos</Error>:null}
           <ContenedorMinutos>
-            {empleados.map((empleado, index) => (
+            {!cargandoDetalles&&empleadosDetallados.map((empleado, index) => (
               <MinutosSeleccion
                 key={empleado.idEmpleado}
                 posicion={index}
@@ -62,6 +95,7 @@ export const ReportesModal = ({
                 minutosFormulario={minutosFormulario}
                 ultimo={cantidad}
                 setErrores={setErrores}
+                pensiones={pensiones}
                 erroresArray={errores}
               />
             ))}
