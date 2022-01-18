@@ -121,6 +121,14 @@ class Usuario extends ActiveRecord{
 
     }
 
+    public function cantidadUsuarios(){
+        $query="SELECT count(*) as cantidad FROM usuarios";
+        $consulta=self::$db->prepare($query);
+        $consulta->execute();
+        $datos=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $datos[0]['cantidad'];
+    }
+
     public function actualizarUsuario(){
         $query="EXEC actualizarUsuarios :idUsuario, :NombreUsuario, :tipoUsuario, :nickUsuario, :contra, :UbicacionUsuario";
         $consulta=self::$db->prepare($query);

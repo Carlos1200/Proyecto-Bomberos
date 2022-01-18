@@ -3,7 +3,7 @@ import { useSetRecoilState } from "recoil";
 import { trasladosState } from "../atom/AtomTablas";
 import { crearTraslados } from "../services/trasladosServices";
 
-export const UseTraslados = (mostrarNotificacion) => {
+export const UseTraslados = (mostrarNotificacion,limpiarEmpleados,handleClose) => {
     
     const empleadoRef = useRef({});
     const setTraslados=useSetRecoilState(trasladosState);
@@ -63,7 +63,9 @@ export const UseTraslados = (mostrarNotificacion) => {
 
         crearTraslados(formData).then((res) => {
             setTraslados(oldValue=>[res,...oldValue]);
+            limpiarEmpleados();
             mostrarNotificacion();
+            handleClose();
         }).catch((err) => {
             console.log({err});
             mostrarNotificacion(true);

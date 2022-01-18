@@ -41,6 +41,14 @@ class Ubicacion extends ActiveRecord{
         }
     }
 
+    public function obtenerUbicaciones(){
+        $query="EXEC leerUbicacion";
+        $consulta=self::$db->prepare($query);
+        $consulta->execute();
+        $resultado=$consulta->fetchAll(PDO::FETCH_ASSOC);
+        return $resultado;
+    }
+
     public function ubicacionFiltro(){ 
         $query="EXEC busquedaUbicaciones :nombreUbicacion";
         $consulta=self::$db->prepare($query);

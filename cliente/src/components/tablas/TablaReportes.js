@@ -10,7 +10,11 @@ import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
 import { useRecoilState } from "recoil";
 import { reportesState } from "../../atom/AtomTablas";
-import { mostrarAutorizacion, mostrarExcel, obtenerReportes } from "../../services/reportesServices";
+import {
+  mostrarAutorizacion,
+  mostrarExcel,
+  obtenerReportes,
+} from "../../services/reportesServices";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import { ReportesDetallesModal } from "../modal/ReportesDetallesModal";
 
@@ -32,20 +36,20 @@ export const TablaReportes = ({ mostrarNotificacion }) => {
       .finally(() => {
         setCargando(false);
       });
-      // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
-  const llamarExcel=(idReporte,JefeEstacion,Fecha)=>{
-    mostrarExcel(idReporte,JefeEstacion,Fecha).catch(() => {
+  const llamarExcel = (idReporte, JefeEstacion, Fecha) => {
+    mostrarExcel(idReporte, JefeEstacion, Fecha).catch(() => {
       mostrarNotificacion(true, "Error en el servidor");
     });
-  }
+  };
 
-  const llamarAutorizacion=(idReporte,JefeEstacion,Fecha)=>{
-    mostrarAutorizacion(idReporte,JefeEstacion,Fecha).catch(() => {
+  const llamarAutorizacion = (idAutorizaciones, JefeEstacion, Fecha) => {
+    mostrarAutorizacion(idAutorizaciones, JefeEstacion, Fecha).catch(() => {
       mostrarNotificacion(true, "Error en el servidor");
     });
-  }
+  };
   return (
     <Contenedor>
       <ContenedorTabla>
@@ -73,7 +77,14 @@ export const TablaReportes = ({ mostrarNotificacion }) => {
                     {reporteCol.fechaCreado.split(" ")[0]}
                   </ColumInput>
                   <ColumInput>
-                    <BtnAcceder onClick={()=>llamarAutorizacion(reporteCol.idReporte,reporteCol.creadorJefe,reporteCol.fechaCreado.split(" ")[0])}>
+                    <BtnAcceder
+                      onClick={() =>
+                        llamarAutorizacion(
+                          reporteCol.idReporte,
+                          reporteCol.creadorJefe,
+                          reporteCol.fechaCreado.split(" ")[0]
+                        )
+                      }>
                       <FontAwesomeIcon
                         icon={faLink}
                         style={{ fontSize: "23px", color: "#0801BF" }}
@@ -101,7 +112,11 @@ export const TablaReportes = ({ mostrarNotificacion }) => {
                         <BtnEXCEL
                           disabled={reporteCol.verificacion === "0"}
                           onClick={() => {
-                            llamarExcel(reporteCol.idReporte,reporteCol.creadorJefe,reporteCol.fechaCreado.split(" ")[0]);
+                            llamarExcel(
+                              reporteCol.idReporte,
+                              reporteCol.creadorJefe,
+                              reporteCol.fechaCreado.split(" ")[0]
+                            );
                           }}>
                           <FontAwesomeIcon
                             icon={faFileExcel}

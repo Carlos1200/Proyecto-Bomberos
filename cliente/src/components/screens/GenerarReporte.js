@@ -111,6 +111,7 @@ export const GenerarReporte = () => {
                       <FilterTextBox>
                         <Select
                           options={empleados}
+                          noOptionsMessage={() => "No hay empleados"}
                           getOptionLabel={(empleado) =>
                             `${empleado.nombres} ${empleado.apellidos}`
                           }

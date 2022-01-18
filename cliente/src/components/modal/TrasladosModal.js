@@ -23,7 +23,7 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
     grupos:[]
   });
 
-  const {PrepararDatos}=UseTraslados(mostrarNotificacion);
+  const {PrepararDatos}=UseTraslados(mostrarNotificacion,limpiarEmpleados,handleClose);
   
 
   useEffect(()=>{
@@ -104,8 +104,6 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
             }else{
 
               PrepararDatos(empleadosFormulario.current)
-              limpiarEmpleados();
-              handleClose();
             }
           }}>
           <Text>Agregar</Text>

@@ -78,11 +78,24 @@ class LoginController{
         $errores=$usuario->getErrores();
 
         if(empty($errores)){
-            $autenticado=$usuario->verificarSesion();
-
-            $router->render('usuarios/autenticar',[
-                'autenticado'=>$autenticado
-            ]);
+            if(intval($usuario->cantidadUsuarios())>0){
+                $autenticado=$usuario->verificarSesion();
+    
+                $router->render('usuarios/autenticar',[
+                    'autenticado'=>$autenticado
+                ]);
+            }else{
+                //Crear usuario
+                $usuarioNuevo=new Usuario([
+                    'NombreUsuario'=>'Administrador',
+                    'tipoUsuario'=>'Administrador',
+                    'nickUsuario'=>'admin',
+                    'UbicacionUsuario'=>'Central',
+                    'contra'=>'123456',
+                ]);
+                $usuarioNuevo->hashearContra();
+                $usuarioNuevo->crearUsuario();
+            }
         }else{
             $router->render('errores/error',[
                 'errores'=>$errores

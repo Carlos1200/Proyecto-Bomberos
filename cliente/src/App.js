@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import {
   RecoilRoot,
 } from 'recoil';
+import env from 'react-dotenv'
 import { Login } from './components/screens/Login';
 import { NuevaCuenta } from './components/screens/NuevaCuenta';
 import { Reportes } from './components/screens/Reportes';
@@ -19,6 +20,7 @@ import { AdminTraslados } from './components/screens/AdminTraslados';
 import { verificarTraslados, verificarTrasladosEmpleado } from './services/trasladosServices';
 
 import '../src/index.css';
+import { Page404 } from './components/screens/Page404';
 
 const App = () => {
 
@@ -29,32 +31,21 @@ const App = () => {
       
       const formData = new FormData();
       formData.append("fechaActual", fecha);
-      verificarTraslados(formData);
+      verificarTraslados(formData).then(()=>{
+        verificarTrasladosEmpleado(formData);
+      });
     },
     [],
-  )
-
-  const ValidarEmpleadosTrasladados = useCallback(
-    async () => {
-      const date = new Date();
-      const fecha = date.toISOString().slice(0,10);
-
-      const formData = new FormData();
-      formData.append("fechaActual", fecha);
-      verificarTrasladosEmpleado(formData);
-    },
-    [],
-  )
+  );
 
   useEffect(() => {
     ValidarTraslados();
-    ValidarEmpleadosTrasladados();
     // eslint-disable-next-line 
   }, [])
 
   return (
     <AppState>
-      <Router>
+      <Router basename={env.SUB_HOST}>
         <Switch>
           <Route exact path='/' component={Login} />
           <Route exact path='/nueva-cuenta' component={NuevaCuenta} />
@@ -67,6 +58,7 @@ const App = () => {
           <RutaPrivada exact path='/admin-traslados' component={AdminTraslados} />
           <RutaPrivada exact path='/traslados' component={Traslados} />
           <RutaPrivada exact path='/generar-reporte' component={GenerarReporte} />
+          <Route path='*' component={Page404}/>
         </Switch>
       </Router>
     </AppState>
