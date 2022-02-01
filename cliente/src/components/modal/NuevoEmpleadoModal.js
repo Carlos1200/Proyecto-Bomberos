@@ -1,4 +1,4 @@
-import { useEffect, useState} from 'react'
+import { useEffect, useState,useContext} from 'react'
 import styled from 'styled-components'
 import Select from 'react-select'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,6 +13,7 @@ import { getUbicaciones } from '../../services/ubicacionesServices';
 import { getPlazas } from '../../services/plazasServices';
 import { getGrupos } from '../../services/gruposServices';
 import { getPensiones } from '../../services/pensionesServices';
+import {AuthContext} from '../../context/Auth/AuthContext';
 
 const schema=yup.object({
   nombres:yup.string().required("Los nombres son obligatorios"),
@@ -48,6 +49,7 @@ const schema=yup.object({
 
 export const NuevoEmpleadoModal = ({handleClose,mostrarNotificacionNuevo}) => {
     const [cargando, setCargando] = useState(true);
+    const [cargandoProceso, setCargandoProceso] = useState(false);
     const [empleados, setEmpleados] = useState([]);
     const [infoEmpleado, setInfoEmpleado] = useState({
       ubicaciones:[],
@@ -55,9 +57,9 @@ export const NuevoEmpleadoModal = ({handleClose,mostrarNotificacionNuevo}) => {
       pensiones:[],
       grupos:[]
     });
-
+    const {tipoUsuario,UbicacionUsuario} = useContext(AuthContext);
     
-    const {crearString} = UseEmpleados(mostrarNotificacionNuevo,handleClose);
+    const {crearString} = UseEmpleados(mostrarNotificacionNuevo,handleClose,setCargandoProceso);
 
 
     useEffect(() => {
@@ -90,8 +92,8 @@ export const NuevoEmpleadoModal = ({handleClose,mostrarNotificacionNuevo}) => {
     const agregarEmpleado=({nombres,apellidos,ubicacion,salario,plaza,pension,grupo,creado})=>{
       const data={
         id:empleados.length+1,
-        nombres,
-        apellidos,
+        nombres:nombres.replace(/[, ]+/g, " ").trim(),
+        apellidos:apellidos.replace(/[, ]+/g, " ").trim(),
         salario,
         ubicacion:ubicacion.idUbicacion,
         plaza:plaza.idPlaza,
@@ -113,6 +115,7 @@ export const NuevoEmpleadoModal = ({handleClose,mostrarNotificacionNuevo}) => {
     }
 
     const insertarEmpleados=async()=>{
+      
       crearString(empleados);
     }
 
@@ -157,10 +160,17 @@ export const NuevoEmpleadoModal = ({handleClose,mostrarNotificacionNuevo}) => {
                       placeholder="Selecciona una Ubicación"
                       onChange={onChange}
                       menuPlacement="auto"
+                      isDisabled={tipoUsuario!=="Administrador"}
                     />
                     )
                   }
                   name="ubicacion"
+                  defaultValue={() =>
+                    infoEmpleado.ubicaciones.find(
+                      (ubicacion) =>
+                        ubicacion.nombreUbicacion === UbicacionUsuario
+                    )
+                  }
                 />
                 {errors.ubicacion&& <TextError>{errors.ubicacion.nombreUbicacion.message}</TextError>}
               <Label>Plaza</Label>
@@ -217,22 +227,31 @@ export const NuevoEmpleadoModal = ({handleClose,mostrarNotificacionNuevo}) => {
                   name="grupo"
                 />
                 {errors.grupo&& <TextError>{errors.grupo.nombreGrupo.message}</TextError>}
+                <Centrar>
                 <ContenedorBoton onClick={handleSubmit(agregarEmpleado)}>
                   <FontAwesomeIcon icon={faUserPlus} style={{fontSize:'2rem', color:'#343f56', marginRight:'1rem'}}/>
                   <Label>Agregar Empleado</Label>
                 </ContenedorBoton>
+                </Centrar>
             </Form>
 
-                  <div style={{gridArea:'table'}}>
+                  <ContenedorEmpleados style={{gridArea:'table'}}>
           <ListadoEmpleados Empleados={empleados} eliminaListado={removerEmpleado}/>
-                  </div>
+                  </ContenedorEmpleados>
 
             {empleados.length!==0&&(
               <div style={{gridArea:'btn'}}>
-              <ContenedorBoton onClick={insertarEmpleados}>
+                <Centrar>
+              <ContenedorBoton 
+              onClick={()=>{
+                setCargandoProceso(true);
+                insertarEmpleados()
+                }}
+                 disabled={cargandoProceso}>
                     <FontAwesomeIcon icon={faCheck} style={{fontSize:'2rem', color:'#67BB6F', marginRight:'1rem'}}/>
                     <Label>Completado</Label>
               </ContenedorBoton>
+                </Centrar>
             </div>
             )}
           </>
@@ -244,10 +263,10 @@ export const NuevoEmpleadoModal = ({handleClose,mostrarNotificacionNuevo}) => {
 }
 
 const Contenedor=styled.div`
-    /* background-color: red; */
+/* background-color: red; */
     width: 100%;
     height: 100%;
-`
+    `
 
 const ContenedorForms=styled.div`
   display: grid;
@@ -270,32 +289,63 @@ const ContenedorForms=styled.div`
     'form table'
     'form table'
     'form btn';
-`
-
-const Titulo=styled.h2`
+    `
+    
+    const Titulo=styled.h2`
     font-weight: bold;
     margin: 0 auto;
-`
-const Header=styled.div`
+    `
+    const Header=styled.div`
     width:100%;
     display:flex;
     flex-direction: row;
     /* justify-content:space-between; */
     align-items: center;
     margin-bottom: 2rem;
-`
+    `
+    
+    const Form=styled.div`
+    overflow-y: auto;
+    height: 55vh;
+    border-right: 3px solid rgba(0,0,0,0.2);
+    padding-right: 2rem;
+    grid-area: form;
+    &::-webkit-scrollbar {
+      width: 12px; /* width of the entire scrollbar */
+    }
+  
+    &::-webkit-scrollbar-track {
+      background: #e2e2e2; /* color of the tracking area */
+      border-radius: 2rem;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      background-color: #343f56; /* color of the scroll thumb */
+      border-radius: 20px; /* roundness of the scroll thumb */
+      border: 3px solid #e2e2e2; /* creates padding around scroll thumb */
+    }
+    `
 
-const Form=styled.div`
-  overflow-y: scroll;
-  height: 24rem;
-  border-right: 3px solid rgba(0,0,0,0.2);
-  padding-right: 2rem;
-  grid-area: form;
-&::-webkit-scrollbar {
-display: none;
-} 
-`
+    const ContenedorEmpleados = styled.div`
+  overflow-y: auto;
+  height: 55vh;
+  &::-webkit-scrollbar {
+    width: 12px; /* width of the entire scrollbar */
+  }
 
+  &::-webkit-scrollbar-track {
+    background: #e2e2e2; /* color of the tracking area */
+    border-radius: 2rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #343f56; /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+    border: 3px solid #e2e2e2; /* creates padding around scroll thumb */
+  }
+`
+;
+    
 const Label=styled.p`
     font-size: 1.5rem;
     margin-bottom: 1rem;
@@ -313,12 +363,21 @@ const Textbox = styled.input`
   border-radius: 0.2rem;
 `;
 
-const ContenedorBoton=styled.div`
+const Centrar=styled.div`
+  display:flex;
+  justify-content:center;
+  align-items:center;
+`
+
+const ContenedorBoton=styled.button`
   display: flex;
   justify-content: center;
+  background-color:transparent;
   align-items: center;
   cursor: pointer;
   margin-top: 1rem;
+  border:0;
+  opacity:${props=>props.disabled?'0.5':'1'}
 `
 const TextError=styled.p`
   margin-top: -13px;
@@ -327,3 +386,4 @@ const TextError=styled.p`
   margin-top: 0.5rem;
   margin-bottom: 0;
 `;
+

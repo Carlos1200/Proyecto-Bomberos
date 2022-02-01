@@ -18,7 +18,7 @@ const schema = yup.object({
     })
     .required("Los minutos son obligatorios"),
 });
-export const RepEmpSeleccion = ({ ReportEmplFormulario, posicion,setErrores,erroresArray,pensiones }) => {
+export const RepEmpSeleccion = ({ ReportEmplFormulario, posicion,setErrores,erroresArray,pensiones,isAdmin }) => {
   const [empleado, setEmpleado] = useState();
   const [cargando, setCargando] = useState(true);
   const [validacion, setValidacion] = useState({
@@ -178,6 +178,7 @@ export const RepEmpSeleccion = ({ ReportEmplFormulario, posicion,setErrores,erro
                 <Columna>
                   <Nombres>Minutos Autorizados Diurnos:</Nombres>
                   <Textbox
+                  disabled={!isAdmin}
                         {...register("minDiurno")}
                         placeholder={empleado.minutosDiurnosAutorizados}
                         onChange={(e) => {
@@ -194,6 +195,7 @@ export const RepEmpSeleccion = ({ ReportEmplFormulario, posicion,setErrores,erro
                 <Columna>
                   <Nombres>Minutos Autorizados Nocturnos:</Nombres>
                   <Textbox
+                  disabled={!isAdmin}
                   {...register("minNocturno")}
                   placeholder={empleado.minutosNocturnosAutorizados}
                   onChange={(e) => {
@@ -267,10 +269,10 @@ const Textbox = styled.input`
 `;
 
 const Span = styled.span`
-
+  color:#717171;
   width: 100%;
   text-align: center;
-  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-family:sans-serif, 'Times New Roman', Times, serif;
 `;
 
 const ContenedorInfo = styled.div`

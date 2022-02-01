@@ -1,4 +1,4 @@
-import { useState,useEffect, useContext } from "react";
+import { useState,useEffect, useContext,useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
@@ -49,7 +49,7 @@ export const TablaEmpleado = ({ notificacion, notificacionError }) => {
     // eslint-disable-next-line
   }, [])
 
-  const obtenerEmpleados=()=>{
+  const obtenerEmpleados=useCallback(()=>{
     if(tipoUsuario==="Administrador"){
       getEmpleados().then((empleados) => {
         setEmpleados(empleados);
@@ -77,7 +77,7 @@ export const TablaEmpleado = ({ notificacion, notificacionError }) => {
         setCargando(false);
       });
     }
-  }
+  },[]);
 
   return (
     <Contenedor>

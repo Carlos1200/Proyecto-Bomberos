@@ -3,10 +3,9 @@ import { useSetRecoilState } from 'recoil';
 import { empleadosState } from '../atom/AtomTablas';
 import { nuevosEmpleados } from '../services/empleadosServices';
 
-export const UseEmpleados = (mostrarNotificacionNuevo,handleClose) => {
+export const UseEmpleados = (mostrarNotificacionNuevo,handleClose,setCargando) => {
 
     const setEmpleadosState=useSetRecoilState(empleadosState);
-
     const nombresCol = useRef('');
     const apellidosCol = useRef('');
     const ubicacionCol = useRef('');
@@ -17,7 +16,6 @@ export const UseEmpleados = (mostrarNotificacionNuevo,handleClose) => {
     const fechaCol = useRef('');
     const selectTop = useRef(0);
     const crearString=(empleados)=>{
-
         empleados.forEach(empleado => {
 
             if(!nombresCol.current){
@@ -100,11 +98,13 @@ export const UseEmpleados = (mostrarNotificacionNuevo,handleClose) => {
           mostrarNotificacionNuevo();
         }).catch(()=>{
           mostrarNotificacionNuevo(true);
+        }).finally(()=>{
+            setCargando(false);
         })
       }
 
     return{
-        crearString
+        crearString,
     }
 
 }

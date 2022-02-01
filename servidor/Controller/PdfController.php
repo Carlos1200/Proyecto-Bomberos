@@ -25,7 +25,6 @@ class PdfController{
                 $mes=$pdf->obtenerMes(strftime("%m",$date));
                 $year=strftime("%Y",$date);
                 $imagenurl=dirname(__DIR__)."/LogoBomberos.png";
-                $pdfPropierdades->AddPage();
                 $title = 'Autorización Minutos Extras';
                 $pdfPropierdades->SetTitle($title,true);
                 $pdfPropierdades->AddFont('DejaVuu','','DejaVuSans.ttf',true);
@@ -39,9 +38,12 @@ class PdfController{
                 $pdfPropierdades->Cell(0,0,$title,0,0,'C');
                 $pdfPropierdades->SetFont('DejaVuu','',10);
                 $pdfPropierdades->Ln(10);
-                $pdfPropierdades->MultiCell(0,5,"Se ha autorizado el reporte del mes ".$mes." del año ".$year.", autorizado por el jefe ".$datos["creadorJefe"].". El jefe ha autorizado los siguientes minutos en la estación ".$datos["ubicacionEstacion"].":",0,'L');
+                $pdfPropierdades->MultiCell(0,5,"Se ha autorizado el reporte con ".$datos["cantidadEmpleados"]." empleados del mes ".$mes." del año ".$year.", autorizado por el jefe ".$datos["creadorJefe"].". El jefe ha autorizado los siguientes minutos en la estación ".$datos["ubicacionEstacion"].":",0,'L');
                 $pdfPropierdades->Ln(5);
                 $pdfPropierdades->MultiCell(0,7,"Se autorizaron un total de ".$datos["sumatoriaHorasDiurnasNormales"]." minutos extras diurnos, ".$datos["sumatoriaHorasNocturnasNormales"]." minutos extras nocturnos, teniendo la cantidad de ".$datos["sumatoriaHorasTotalesNormales"]." minutos extras totales.",0,'L');
+                $pdfPropierdades->SetFont('DejaVuu','',15);
+                $pdfPropierdades->Ln(12);
+                $pdfPropierdades->Cell(0,0,"Id Reporte: ".$datos['idReporte'],0,0,'C');
                 $pdfPropierdades->Output('I',"Autorizacion.pdf",true);
             }else{
                 $router->render('errores/error',[

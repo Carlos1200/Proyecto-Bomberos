@@ -3,7 +3,7 @@ import { useSetRecoilState } from "recoil";
 import { trasladosState } from "../atom/AtomTablas";
 import { crearTraslados } from "../services/trasladosServices";
 
-export const UseTraslados = (mostrarNotificacion,limpiarEmpleados,handleClose) => {
+export const UseTraslados = (mostrarNotificacion,limpiarEmpleados,handleClose,setCargando) => {
     
     const empleadoRef = useRef({});
     const setTraslados=useSetRecoilState(trasladosState);
@@ -69,6 +69,8 @@ export const UseTraslados = (mostrarNotificacion,limpiarEmpleados,handleClose) =
         }).catch((err) => {
             console.log({err});
             mostrarNotificacion(true);
+        }).finally(()=>{
+            setCargando(false);
         });
     }
 

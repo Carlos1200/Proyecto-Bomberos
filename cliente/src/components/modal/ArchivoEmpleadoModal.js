@@ -71,7 +71,7 @@ export const ArchivoEmpleadoModal = ({handleClose,notificacion}) => {
                   <Btn onClick={exportFile} style={{marginRight:'2rem'}}>
                     Plantilla
                   </Btn>
-                  <Btn disabled={empleado?false:true} onClick={()=>submit()} >
+                  <Btn disabled={empleado?false:true||cargando} onClick={()=>submit()} >
                     Guardar Empleados
                   </Btn>
                 </div>
@@ -105,6 +105,7 @@ const Btn=styled.button`
   font-weight: bold;
   background-color: #67BB6F;
   border: 0;
+  opacity:${props=>props.disabled?'0.5':'1'};
   &:hover{
     background-color:#0C9021 ;
   }

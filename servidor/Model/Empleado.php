@@ -179,9 +179,6 @@ class Empleado extends ActiveRecord{
             $consulta->bindParam(':idEmpleado',$this->idEmpleado,PDO::PARAM_INT);
             $consulta->execute();
 
-            if(!self::$db->rowCount() > 0){
-                self::$errores[]="No se Eliminar el Empleado";
-            }
 
         }else{
             self::$errores[]="El id del empleado es obligatorio";

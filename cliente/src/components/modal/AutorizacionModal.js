@@ -31,6 +31,7 @@ export const AutorizacionModal = ({handleClose,enviarDatos}) => {
           <Header>
             <Titulo>¿Está seguro de generar el siguiente reporte?</Titulo>
             <Informacion>Enviar el siguiente reporte significa que usted está autorizando con su usuario la creacion de un reporte con la información de las horas extras trabajadas por cada uno de los empleados detallados en la pantalla anterior.</Informacion>
+            <Informacion>De la misma manera, al aceptar la autorización de este reporte, se compromete a crear y ejecutar todos los procedimientos para el cálculo de los reportes, dicha información no podrá ser modificada, alterada o eliminada después de ser autorizada, razón por la cuál, se recomienda revisar que se hallan digitado correctamente todso los datos.</Informacion>
             <Informacion>Dichos minutos digitados serán revisados y autorizados por un superior, el documento generado podrá ser nuevamente visualizado en la pantalla de "Administración de Reportes"</Informacion>
           </Header>
           <ContenedorWarning>

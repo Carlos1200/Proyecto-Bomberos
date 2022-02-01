@@ -106,7 +106,7 @@ const Label=styled.p`
 const Valor=styled.p`
   margin-left: 1rem;
   font-size: 1.1rem;
-  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-family:sans-serif, 'Times New Roman', Times, serif;
 `
 
 const ContValor=styled.div`

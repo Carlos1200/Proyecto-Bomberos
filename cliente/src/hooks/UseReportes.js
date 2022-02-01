@@ -3,7 +3,7 @@ import { useSetRecoilState } from "recoil";
 import { reportesState } from "../atom/AtomTablas";
 import { crearReportes } from "../services/reportesServices";
 
-export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) => {
+export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose,setCargandoProceso) => {
 
   const setReportes=useSetRecoilState(reportesState);
   //Variables que deben calcularse manualmente
@@ -518,6 +518,8 @@ export const UseReportes = (mostrarNotificacion,limpiarEmpleados,handleClose) =>
         console.log({ error });
         mostrarNotificacion(true);
         setCargando(false);
+      }).finally(()=>{
+        setCargandoProceso(false);
       })
   };
 

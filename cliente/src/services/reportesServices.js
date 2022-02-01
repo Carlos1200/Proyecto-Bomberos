@@ -23,7 +23,8 @@ export const mostrarAutorizacion= (idReporte,Jefe,fecha)=>
 Api.get(`/pdf/VerPdf.php?id=${idReporte}`,{
   responseType:'blob'
 }).then((res) => {
-  const url = window.URL.createObjectURL(new Blob([res.data]));
+  
+    const url = window.URL.createObjectURL(new Blob([res.data]));
     const link = document.createElement('a');
     link.href = url;
     link.setAttribute('download', `Autorizacion-${Jefe}-${fecha}.pdf`); //or any other extension

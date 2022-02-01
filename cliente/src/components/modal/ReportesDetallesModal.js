@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState, useRef, useContext} from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faWindowClose } from "@fortawesome/free-solid-svg-icons";
@@ -7,15 +7,18 @@ import { obtenerDetallesReportes } from "../../services/reportesServices";
 import { RepEmpSeleccion } from "../RepEmpSeleccion";
 import { useAutorizacion } from "../../hooks/useAutorizacion";
 import { getPensiones } from "../../services/pensionesServices";
+import {AuthContext} from '../../context/Auth/AuthContext'
 
 export const ReportesDetallesModal = ({handleClose, reporte, mostrarNotificacion}) =>{
 
     const [reportesDetalle, setReportesDetalle] = useState([]);
     const [cargando, setCargando] = useState(true);
+    const [cargandoProceso, setCargandoProceso] = useState(false);
     const [errores, setErrores] = useState([true]);
     const [pensiones, setPensiones] = useState([]);
+    const { tipoUsuario } = useContext(AuthContext);
     const ReportEmplFormulario = useRef();
-    const {guardarReporte} = useAutorizacion(handleClose,mostrarNotificacion);
+    const {guardarReporte} = useAutorizacion(handleClose,mostrarNotificacion,setCargandoProceso);
     useEffect(() => {
         obtenerDetalles();
         // eslint-disable-next-line
@@ -68,13 +71,16 @@ export const ReportesDetallesModal = ({handleClose, reporte, mostrarNotificacion
                         setErrores={setErrores}
                         erroresArray={errores}
                         pensiones={pensiones}
+                        isAdmin={tipoUsuario==="Administrador"}
                     />
                     ))}
                 </ContenedorEmpleados>
+                {tipoUsuario==="Administrador"?(
                 <Btn
                     type='button'
-                    disabled={errores.includes(true)}
+                    disabled={errores.includes(true)|| cargandoProceso}
                     onClick={() => {
+                        setCargandoProceso(true)
                         guardarReporte(ReportEmplFormulario.current.empleados,ReportEmplFormulario.current.idReporte);
                     }}>
                     <Text>Guardar Reporte</Text>
@@ -83,6 +89,7 @@ export const ReportesDetallesModal = ({handleClose, reporte, mostrarNotificacion
                         style={{ fontSize: "23px", color: "#fff" }}
                     />
                 </Btn>
+                ):null}
                 </>
                 ) : null}
             </Contenedor>
@@ -139,6 +146,7 @@ const Btn = styled.button`
   padding: 0 1rem;
   border: 0;
   transition: background-color 0.3s ease-in-out;
+  opacity:${props=>props.disabled?'0.5':'1'};
   &:hover {
     background-color: #028671;
   }

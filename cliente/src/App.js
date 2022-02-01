@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { CacheSwitch } from 'react-router-cache-route'
 import {
   RecoilRoot,
 } from 'recoil';
@@ -46,7 +47,7 @@ const App = () => {
   return (
     <AppState>
       <Router basename={env.SUB_HOST}>
-        <Switch>
+        <CacheSwitch >
           <Route exact path='/' component={Login} />
           <Route exact path='/nueva-cuenta' component={NuevaCuenta} />
           <RutaPrivada exact path='/reportes' component={Reportes} />
@@ -59,7 +60,7 @@ const App = () => {
           <RutaPrivada exact path='/traslados' component={Traslados} />
           <RutaPrivada exact path='/generar-reporte' component={GenerarReporte} />
           <Route path='*' component={Page404}/>
-        </Switch>
+        </CacheSwitch>
       </Router>
     </AppState>
   );

@@ -60,12 +60,8 @@ export const TablaReportes = ({ mostrarNotificacion }) => {
                 <ColumnTitle>Jefe de Estacion</ColumnTitle>
                 <ColumnTitle>Fecha del Reporte</ColumnTitle>
                 <ColumnTitle>Autorizaciones</ColumnTitle>
-                {tipoUsuario === "Administrador" ? (
-                  <>
-                    <ColumnTitle>Acceder</ColumnTitle>
-                    <ColumnTitle>Exportar</ColumnTitle>
-                  </>
-                ) : null}
+                <ColumnTitle>Acceder</ColumnTitle>
+                <ColumnTitle>Exportar</ColumnTitle>
                 <ColumnTitle>Verificado</ColumnTitle>
               </ColumTitleBox>
             </HeadTop>
@@ -91,8 +87,6 @@ export const TablaReportes = ({ mostrarNotificacion }) => {
                       />
                     </BtnAcceder>
                   </ColumInput>
-                  {tipoUsuario === "Administrador" ? (
-                    <>
                       <ColumInput>
                         <BtnAcceder
                           onClick={() => {
@@ -124,9 +118,6 @@ export const TablaReportes = ({ mostrarNotificacion }) => {
                           />
                         </BtnEXCEL>
                       </ColumInput>
-                    </>
-                  ) : null}
-
                   <ColumInput>
                     <FontAwesomeIcon
                       icon={faCheck}
@@ -157,12 +148,6 @@ export const TablaReportes = ({ mostrarNotificacion }) => {
           />
         )}
       </AnimatePresence>
-      {/* <AnimatePresence
-            initial={false}
-            exitBeforeEnter={true}
-            onExitComplete={() => null}>
-            {visibleBorrar&&<Eliminar handleClose={()=>setVisibleBorrar(false)}  eliminar={eliminarPlaza}/>}
-      </AnimatePresence> */}
     </Contenedor>
   );
 };

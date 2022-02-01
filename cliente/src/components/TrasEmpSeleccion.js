@@ -24,35 +24,35 @@ export const TrasEmpSeleccion = ({ traslEmplFormulario, posicion}) => {
                 <ContenedorColumnas>
                   <div>
                     <ContenedorInfo>
-                      <Nombres>
+                      <Nombres color='#404FB6' >
                         Plaza Anterior: <Span>{traslEmpDetalle.plazaAnterior}</Span>
                       </Nombres>
-                      <Nombres>
+                      <Nombres color='#06286E'>
                         Plaza Actual: <Span>{traslEmpDetalle.plazaActual}</Span>
                       </Nombres>
-                      <Nombres>
+                      <Nombres color='#E9B315'>
                         Próxima Plaza: <Span>{traslEmpDetalle.plazaNueva}</Span>
                       </Nombres>
                     </ContenedorInfo>
                     <ContenedorInfo>
-                      <Nombres>
+                      <Nombres color='#404FB6'>
                         Ubicación Anterior: <Span>{traslEmpDetalle.ubicacionAnterior}</Span>
                       </Nombres>
-                      <Nombres>
+                      <Nombres color='#06286E'>
                         Ubicación Actual: <Span>{traslEmpDetalle.ubicacionActual}</Span>
                       </Nombres>
-                      <Nombres>
+                      <Nombres color='#E9B315'>
                         Próxima Ubicación: <Span>{traslEmpDetalle.ubicacionNueva}</Span>
                       </Nombres>
                     </ContenedorInfo>
                     <ContenedorInfo>
-                      <Nombres>
+                      <Nombres color='#404FB6'>
                         Grupo Anterior: <Span>{traslEmpDetalle.grupoAnterior}</Span>
                       </Nombres>
-                      <Nombres>
+                      <Nombres color='#06286E'>
                         Grupo Actual: <Span>{traslEmpDetalle.grupoActual}</Span>
                       </Nombres>
-                      <Nombres>
+                      <Nombres color='#E9B315'>
                         Próximo Grupo: <Span>{traslEmpDetalle.grupoNuevo}</Span>
                       </Nombres>
                     </ContenedorInfo>
@@ -60,7 +60,9 @@ export const TrasEmpSeleccion = ({ traslEmplFormulario, posicion}) => {
                 </ContenedorColumnas>
                 <div>
                   <Nombres>Descripción</Nombres>
-                  <Nombres>{traslEmpDetalle.descripcion}</Nombres>
+                  <InfoEmpleadoDetalle>{traslEmpDetalle.descripcion}</InfoEmpleadoDetalle>
+                  <Nombres>Fecha de Traslado</Nombres>
+                  <InfoEmpleadoDetalle>{traslEmpDetalle.fechaCambio}</InfoEmpleadoDetalle>
                 </div>
               </Informacion>
               </>
@@ -80,7 +82,6 @@ const Contenedor = styled.div`
 const Informacion = styled.div`
   display:grid;
   grid-template-columns: 20% 55% 25%;
-  grid-gap: .5rem;
  `
 const InfoNombres = styled.div`
   display:flex;
@@ -94,12 +95,14 @@ const ContenedorColumnas = styled.div`
 `;
 
 const Nombres = styled.p`
+  color:${props=>props.color?props.color:'#000'};
   font-size: 0.9rem;
   font-weight: bold;
   text-align: center;
 `;
 
 const Span = styled.span`
+  display:block;
   color: #717171;
 `;
 
@@ -109,3 +112,9 @@ const ContenedorInfo = styled.div`
   gap: 1rem;
   padding: 0 1rem;
 `;
+
+const InfoEmpleadoDetalle=styled.p`
+  font-size: 0.9rem;
+  text-align: center;
+  margin-right:.5rem;
+`

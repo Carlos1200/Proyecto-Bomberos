@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useContext } from "react";
 import styled from "styled-components";
 import Select from "react-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +17,7 @@ import { getPlazas } from "../../services/plazasServices";
 import { getGrupos } from "../../services/gruposServices";
 import { getPensiones } from "../../services/pensionesServices";
 import { empleadosState } from "../../atom/AtomTablas";
+import {AuthContext} from '../../context/Auth/AuthContext';
 
 const schema = yup.object({
   nombres: yup.string().required("Los nombres son obligatorios"),
@@ -55,6 +56,7 @@ export const EditarEmpleadoModal = ({
   const [cargando, setCargando] = useState(true);
   const [detalles, setDetalles] = useState();
   const setEmpleados = useSetRecoilState(empleadosState);
+  const {tipoUsuario} = useContext(AuthContext);
 
   useEffect(() => {
     const formData = new FormData();
@@ -204,6 +206,7 @@ export const EditarEmpleadoModal = ({
                   placeholder='Selecciona una Ubicación'
                   onChange={onChange}
                   menuPlacement='auto'
+                  isDisabled={tipoUsuario!=="Administrador"}
                 />
               )}
               name='ubicacion'
@@ -308,7 +311,6 @@ export const EditarEmpleadoModal = ({
 };
 
 const Contenedor = styled.div`
-  /* background-color: red; */
   width: 100%;
   height: 100%;
 `;
@@ -321,7 +323,6 @@ const Header = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
-  /* justify-content:space-between; */
   align-items: center;
   margin-top: 2rem;
 `;

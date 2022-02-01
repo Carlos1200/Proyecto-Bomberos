@@ -176,7 +176,6 @@ class EmpleadoController{
         
         $empleado=new Empleado($_POST);
         $empleado::VerificarToken($token);
-        $empleado::verificarAdmin();
         $errores=$empleado::getErrores();
 
         if(empty($errores)){

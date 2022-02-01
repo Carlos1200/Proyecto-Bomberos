@@ -14,6 +14,7 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
   const [tituloDetalle, setTituloDetalle] = useState("");
 
   const [cargando, setCargando] = useState(true);
+  const [cargandoProceso, setCargandoProceso] = useState(false);
   const empleadosFormulario = useRef([]);
   const [cantidad, setCantidad] = useState(0);
   const [error, setError] = useState(false);
@@ -23,7 +24,7 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
     grupos:[]
   });
 
-  const {PrepararDatos}=UseTraslados(mostrarNotificacion,limpiarEmpleados,handleClose);
+  const {PrepararDatos}=UseTraslados(mostrarNotificacion,limpiarEmpleados,handleClose,setCargandoProceso);
   
 
   useEffect(()=>{
@@ -98,11 +99,11 @@ export const TrasladosModal = ({ handleClose, empleados,mostrarNotificacion,limp
               />
             ))}
           </ContenedorEmpleados>
-          <Btn type="button" onClick={()=>{
+          <Btn type="button" disabled={cargandoProceso} onClick={()=>{
             if(!tituloDetalle){
               setError(true);
             }else{
-
+              setCargandoProceso(true);
               PrepararDatos(empleadosFormulario.current)
             }
           }}>
@@ -158,6 +159,7 @@ const Btn=styled.button`
     padding: 0 1rem;
     border: 0;
     transition: background-color .3s ease-in-out;
+    opacity:${props=>props.disabled?'0.5':'1'};
     &:hover{
       background-color: #028671;
 

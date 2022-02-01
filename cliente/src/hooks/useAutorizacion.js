@@ -3,7 +3,7 @@ import { useSetRecoilState } from "recoil";
 import { reportesState } from "../atom/AtomTablas";
 import { ActualizarReporte } from "../services/reportesServices";
 
-export const useAutorizacion = (handleClose,mostrarNotificacion) => {
+export const useAutorizacion = (handleClose,mostrarNotificacion,setCargandoProceso) => {
     const empleadosNuevos = useRef({});
     const setReportes=useSetRecoilState(reportesState);
     const guardarReporte=(empleados,idReporte)=>{
@@ -36,6 +36,8 @@ export const useAutorizacion = (handleClose,mostrarNotificacion) => {
         }).catch(err=>{
             console.log({err});
             mostrarNotificacion(true,"Ocurrio un error");
+        }).finally(()=>{
+            setCargandoProceso(false)
         })
     }
     

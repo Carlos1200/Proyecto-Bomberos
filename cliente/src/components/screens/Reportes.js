@@ -45,7 +45,10 @@ export const Reportes = () => {
                   icon={faSyncAlt}
                   style={{ fontSize: "26px", color: "#000000",cursor:'pointer' }}
                 />
-                <FilterTextBox placeholder="¿Desea un archivo en específico?" value={inputBuscador} onChange={(e)=>setInputBuscador(e.target.value)}/>
+                <FilterTextBox 
+                  placeholder="¿Desea un archivo en específico?"
+                  value={inputBuscador}
+                  onChange={(e)=>setInputBuscador(e.target.value)}/>
                 <BtnFilterSearch onClick={()=>{
                   buscador(inputBuscador);
                 }}>Buscar</BtnFilterSearch>

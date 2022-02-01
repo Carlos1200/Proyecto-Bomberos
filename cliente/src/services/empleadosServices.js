@@ -25,4 +25,4 @@ export const detallesEmpleados=(id)=>Api.post("/empleados/EmpleadosDetalle.php",
 .then((res) => res.data[0]); 
 
 export const detallesEmpleadosLotes=(id)=>Api.post("/empleados/EmpleadosDetallesLotes.php",id)
-.then((res) => res.data); 
+.then((res) => res.data);   

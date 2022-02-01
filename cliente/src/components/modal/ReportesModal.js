@@ -29,9 +29,11 @@ export const ReportesModal = ({
   const [autorizacionModal, setAutorizacionModal] = useState(false);
   const [cargandoDetalles, setCargandoDetalles] = useState(true);
   const [cargando, setCargando] = useState(false);
+  const [cargandoProceso, setCargandoProceso] = useState(false);
   const { GenerarReporte } = UseReportes(mostrarNotificacion,
     limpiarEmpleados,
-    handleClose);
+    handleClose,
+    setCargandoProceso);
   useEffect(() => {
     setCantidad(empleados.length - 1);
   }, [empleados]);
@@ -102,7 +104,7 @@ export const ReportesModal = ({
           </ContenedorMinutos>
           <Btn
             type='button'
-            disabled={errores.includes(true)}
+            disabled={errores.includes(true) || cargandoProceso}
             onClick={() => {
               setAutorizacionModal(true);
             }}>
@@ -122,6 +124,7 @@ export const ReportesModal = ({
           <AutorizacionModal
             handleClose={() => setAutorizacionModal(false)}
             enviarDatos={() => {
+              setCargandoProceso(true);
               const horasDiurnas = minutosFormulario.current.reduce(
                 (acumulador, minutos) => {
                   return acumulador + Number(minutos.minutosDiurnos);
@@ -197,6 +200,7 @@ const Btn = styled.button`
   padding: 0 1rem;
   border: 0;
   transition: background-color 0.3s ease-in-out;
+  opacity:${props=>props.disabled?'0.5':'1'};
   &:hover {
     background-color: #028671;
   }
